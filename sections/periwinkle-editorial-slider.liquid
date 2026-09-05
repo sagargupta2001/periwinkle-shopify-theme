@@ -1,0 +1,911 @@
+{% liquid
+  assign section_id = 'periwinkle-editorial-' | append: section.id
+%}
+
+<section
+  id="{{ section_id }}"
+  class="periwinkle-editorial"
+>
+  {% if section.settings.botanical_illustration != blank %}
+    <div class="periwinkle-editorial__botanical" aria-hidden="true">
+      {{
+        section.settings.botanical_illustration
+        | image_url: width: 900
+        | image_tag: loading: 'lazy', class: 'periwinkle-editorial__botanical-image', alt: ''
+      }}
+    </div>
+  {% endif %}
+
+  <div class="periwinkle-editorial__inner page-width">
+    {%- comment -%}
+      LEFT: Editorial content
+    {%- endcomment -%}
+
+    <div class="periwinkle-editorial__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="periwinkle-editorial__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="periwinkle-editorial__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="periwinkle-editorial__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        {% if section.settings.button_link != blank %}
+          <a
+            href="{{ section.settings.button_link }}"
+            class="periwinkle-editorial__button"
+          >
+            {{ section.settings.button_label }}
+            <span aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    {%- comment -%}
+      RIGHT: Craft collection carousel
+    {%- endcomment -%}
+
+    <div class="periwinkle-editorial__carousel-wrapper">
+      <div
+        class="periwinkle-editorial__carousel"
+        role="region"
+        aria-label="Explore our craft collections"
+      >
+        <div class="periwinkle-editorial__track">
+          {% for block in section.blocks %}
+            {% assign selected_collection = block.settings.collection %}
+
+            <article
+              class="periwinkle-editorial__card"
+              {{ block.shopify_attributes }}
+            >
+              {%- comment -%}
+                Image
+              {%- endcomment -%}
+
+              {% if block.settings.image != blank %}
+                {% if block.settings.link != blank %}
+                  <a
+                    href="{{ block.settings.link }}"
+                    class="periwinkle-editorial__image-link"
+                    aria-label="{{ block.settings.title | escape }}"
+                  >
+                {% elsif selected_collection != blank %}
+                  <a
+                    href="{{ selected_collection.url }}"
+                    class="periwinkle-editorial__image-link"
+                    aria-label="{{ selected_collection.title | escape }}"
+                  >
+                {% else %}
+                  <div class="periwinkle-editorial__image-link">
+                {% endif %}
+
+                <div class="periwinkle-editorial__image-wrapper">
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '480, 720, 960, 1200',
+                      sizes: '(min-width: 990px) 30vw, 90vw',
+                      class: 'periwinkle-editorial__image',
+                      alt: block.settings.image.alt
+                    | default: block.settings.title
+                  }}
+                </div>
+
+                {% if block.settings.link != blank or selected_collection != blank %}
+                  </a>
+                {% else %}
+                  </div>
+                {% endif %}
+
+              {% elsif selected_collection != blank and selected_collection.featured_image != blank %}
+                <a
+                  href="{{ selected_collection.url }}"
+                  class="periwinkle-editorial__image-link"
+                  aria-label="{{ selected_collection.title | escape }}"
+                >
+                  <div class="periwinkle-editorial__image-wrapper">
+                    {{
+                      selected_collection.featured_image
+                      | image_url: width: 1200
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '480, 720, 960, 1200',
+                        sizes: '(min-width: 990px) 30vw, 90vw',
+                        class: 'periwinkle-editorial__image',
+                        alt: selected_collection.title
+                    }}
+                  </div>
+                </a>
+
+              {% else %}
+                <div class="periwinkle-editorial__image-wrapper">
+                  {{ 'image' | placeholder_svg_tag: 'periwinkle-editorial__placeholder' }}
+                </div>
+              {% endif %}
+
+              {%- comment -%}
+                Card content
+              {%- endcomment -%}
+
+              <div class="periwinkle-editorial__card-content">
+                {% if block.settings.title != blank %}
+                  <h3 class="periwinkle-editorial__card-title">
+                    {{ block.settings.title }}
+                  </h3>
+
+                {% elsif selected_collection != blank %}
+                  <h3 class="periwinkle-editorial__card-title">
+                    {{ selected_collection.title }}
+                  </h3>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <div class="periwinkle-editorial__card-description">
+                    {{ block.settings.description }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.link != blank %}
+                  <a
+                    href="{{ block.settings.link }}"
+                    class="periwinkle-editorial__card-link"
+                  >
+                    Explore
+                    <span aria-hidden="true">→</span>
+                  </a>
+
+                {% elsif selected_collection != blank %}
+                  <a
+                    href="{{ selected_collection.url }}"
+                    class="periwinkle-editorial__card-link"
+                  >
+                    Explore
+                    <span aria-hidden="true">→</span>
+                  </a>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      {%- comment -%}
+        Carousel arrows.
+        They are shown only when there are more than two cards.
+      {%- endcomment -%}
+
+      {% if section.blocks.size > 2 %}
+        <div class="periwinkle-editorial__controls">
+          <button
+            type="button"
+            class="periwinkle-editorial__arrow periwinkle-editorial__arrow--prev"
+            aria-label="Previous craft collection"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+
+          <button
+            type="button"
+            class="periwinkle-editorial__arrow periwinkle-editorial__arrow--next"
+            aria-label="Next craft collection"
+          >
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+    /* =========================================================
+     BOTANICAL DECORATION
+     ========================================================= */
+
+  #{{ section_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  #{{ section_id }} .periwinkle-editorial__botanical {
+    position: absolute;
+
+    left: -55px;
+    bottom: -55px;
+
+    width: 260px;
+
+    z-index: 0;
+    pointer-events: none;
+
+    opacity: 0.10;
+  }
+
+  #{{ section_id }} .periwinkle-editorial__botanical-image {
+    display: block;
+
+    width: 100%;
+    height: auto;
+  }
+
+      /* =========================================================
+         SECTION
+         ========================================================= */
+
+      #{{ section_id }} {
+        background: {{ section.settings.background_color }};
+        color: {{ section.settings.text_color }};
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+
+
+      /* =========================================================
+         MAIN LAYOUT
+         ========================================================= */
+
+      #{{ section_id }} .periwinkle-editorial__inner {
+         position: relative;
+         z-index: 1;
+
+        display: grid;
+        grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.7fr);
+        gap: 48px;
+        align-items: center;
+      }
+
+
+      /* =========================================================
+         LEFT EDITORIAL CONTENT
+         ========================================================= */
+
+      #{{ section_id }} .periwinkle-editorial__content {
+        max-width: 440px;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__eyebrow {
+        margin: 0 0 16px;
+
+        font-size: 1.2rem;
+        line-height: 1.2;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+
+        opacity: 0.7;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__heading {
+        margin: 0 0 20px;
+
+        font-size: clamp(3.2rem, 4vw, 5rem);
+        line-height: 1.05;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__description {
+        margin-bottom: 30px;
+
+        font-size: 1.5rem;
+        line-height: 1.65;
+
+        opacity: 0.85;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__button {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+
+        color: inherit;
+
+        font-size: 1.4rem;
+        line-height: 1.4;
+
+        text-decoration: none;
+
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 5px;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__button:hover {
+        opacity: 0.7;
+      }
+
+
+      /* =========================================================
+         CAROUSEL
+         ========================================================= */
+
+      #{{ section_id }} .periwinkle-editorial__carousel-wrapper {
+        position: relative;
+        min-width: 0;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__carousel {
+        width: 100%;
+        overflow: hidden;
+        touch-action: pan-y;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__track {
+        display: flex;
+        gap: 24px;
+
+        transition: transform 450ms ease;
+
+        will-change: transform;
+      }
+
+
+      /*
+        TWO CARDS VISIBLE ON DESKTOP
+      */
+
+      #{{ section_id }} .periwinkle-editorial__card {
+        flex: 0 0 calc((100% - 24px) / 2);
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+      }
+
+
+      /* =========================================================
+         CARD IMAGE
+         ========================================================= */
+
+      #{{ section_id }} .periwinkle-editorial__image-link {
+        display: block;
+
+        color: inherit;
+        text-decoration: none;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__image-wrapper {
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 4 / 5;
+
+        overflow: hidden;
+
+        background: #EEE9DF;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__image {
+        display: block;
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+
+        transition: transform 600ms ease;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__image-link:hover
+      .periwinkle-editorial__image {
+        transform: scale(1.025);
+      }
+
+      #{{ section_id }} .periwinkle-editorial__placeholder {
+        width: 100%;
+        height: 100%;
+      }
+
+
+      /* =========================================================
+         CARD CONTENT
+         ========================================================= */
+
+      #{{ section_id }} .periwinkle-editorial__card-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        padding-top: 18px;
+        padding-right: 20px;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__card-title {
+        margin: 0 0 8px;
+
+        font-size: clamp(2rem, 2.4vw, 3rem);
+        line-height: 1.15;
+
+        /*
+        Gives both cards room for a two-line title
+        without forcing a rigid pixel height.
+        */
+        min-height: calc(2 * 1.15em);
+      }
+
+      #{{ section_id }} .periwinkle-editorial__card-description {
+        max-width: 440px;
+
+        font-size: 1.3rem;
+        line-height: 1.55;
+
+        opacity: 0.75;
+
+        /*
+        Keeps descriptions visually aligned.
+        */
+        min-height: calc(3 * 1.55em);
+      }
+
+      #{{ section_id }} .periwinkle-editorial__card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-top: auto;
+        padding-top: 14px;
+
+        align-self: flex-start;
+
+        color: inherit;
+
+        font-size: 1.3rem;
+        line-height: 1.4;
+
+        text-decoration: none;
+
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 4px;
+      }
+
+      #{{ section_id }} .periwinkle-editorial__card-link:hover {
+        opacity: 0.7;
+      }
+
+
+      /* =========================================================
+         CAROUSEL CONTROLS
+         ========================================================= */
+
+
+      #{{ section_id }} .periwinkle-editorial__controls {
+      position: absolute;
+
+      top: 40%;
+      left: -24px;
+      right: -24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      z-index: 5;
+
+      pointer-events: none;
+    }
+
+
+    #{{ section_id }} .periwinkle-editorial__arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 46px;
+      height: 46px;
+
+      padding: 0;
+
+      border: 1px solid #2E2C35;
+      border-radius: 50%;
+
+      background: #FAF8F3;
+      color: #2E2C35;
+
+      cursor: pointer;
+
+      pointer-events: auto;
+
+      transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        transform 200ms ease;
+    }
+
+
+    #{{ section_id }} .periwinkle-editorial__arrow:hover {
+      background: #4F4A70;
+      color: #FAF8F3;
+
+      transform: scale(1.05);
+    }
+
+
+    #{{ section_id }} .periwinkle-editorial__arrow:focus-visible {
+      outline: 2px solid #4F4A70;
+      outline-offset: 3px;
+    }
+
+      /* =========================================================
+         MOBILE
+         ========================================================= */
+
+      @media screen and (max-width: 989px) {
+        #{{ section_id }} .periwinkle-editorial__botanical {
+          width: 180px;
+          left: -55px;
+          bottom: -35px;
+          opacity: 0.08;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__inner {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__content {
+          max-width: 600px;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__heading {
+          font-size: clamp(3rem, 8vw, 4.5rem);
+        }
+
+        /*
+          One card visible on mobile.
+        */
+
+        #{{ section_id }} .periwinkle-editorial__card {
+          flex: 0 0 100%;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__track {
+          gap: 16px;
+        }
+
+         #{{ section_id }} .periwinkle-editorial__card-title {
+          min-height: 0;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__card-description {
+          min-height: 0;
+        }
+
+        /*
+          Keep arrows vertically centred over the image.
+        */
+
+        #{{ section_id }} .periwinkle-editorial__controls {
+          top: 38%;
+          left: -10px;
+          right: -10px;
+        }
+
+        #{{ section_id }} .periwinkle-editorial__arrow {
+          width: 42px;
+          height: 42px;
+        }
+
+      }
+
+
+      /* =========================================================
+         REDUCED MOTION
+         ========================================================= */
+
+      @media (prefers-reduced-motion: reduce) {
+
+        #{{ section_id }} .periwinkle-editorial__track,
+        #{{ section_id }} .periwinkle-editorial__image {
+          transition: none;
+        }
+
+      }
+</style>
+
+<script>
+  (() => {
+    const section = document.getElementById('{{ section_id }}');
+
+    if (!section) return;
+
+    const carousel = section.querySelector('.periwinkle-editorial__carousel');
+
+    const track = section.querySelector('.periwinkle-editorial__track');
+
+    const cards = section.querySelectorAll('.periwinkle-editorial__card');
+
+    const previous = section.querySelector('.periwinkle-editorial__arrow--prev');
+
+    const next = section.querySelector('.periwinkle-editorial__arrow--next');
+
+    if (!carousel || !track || cards.length <= 2) return;
+
+    let currentIndex = 0;
+
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    function getVisibleCards() {
+      return window.innerWidth <= 989 ? 1 : 2;
+    }
+
+    function getGap() {
+      const styles = window.getComputedStyle(track);
+
+      return parseFloat(styles.columnGap || styles.gap || 0);
+    }
+
+    function updateSlider() {
+      const visibleCards = getVisibleCards();
+
+      const maxIndex = Math.max(0, cards.length - visibleCards);
+
+      currentIndex = Math.min(currentIndex, maxIndex);
+
+      const cardWidth = cards[0].getBoundingClientRect().width;
+
+      const distance = currentIndex * (cardWidth + getGap());
+
+      track.style.transform = `translateX(-${distance}px)`;
+    }
+
+    function nextSlide() {
+      const visibleCards = getVisibleCards();
+
+      const maxIndex = Math.max(0, cards.length - visibleCards);
+
+      /*
+        Loop back to the beginning.
+      */
+
+      if (currentIndex >= maxIndex) {
+        currentIndex = 0;
+      } else {
+        currentIndex += 1;
+      }
+
+      updateSlider();
+    }
+
+    function previousSlide() {
+      const visibleCards = getVisibleCards();
+
+      const maxIndex = Math.max(0, cards.length - visibleCards);
+
+      /*
+        Loop to the end.
+      */
+
+      if (currentIndex <= 0) {
+        currentIndex = maxIndex;
+      } else {
+        currentIndex -= 1;
+      }
+
+      updateSlider();
+    }
+
+    if (next) {
+      next.addEventListener('click', nextSlide);
+    }
+
+    if (previous) {
+      previous.addEventListener('click', previousSlide);
+    }
+
+    /* =======================================================
+       POINTER / TOUCH SWIPE
+       ======================================================= */
+
+    carousel.addEventListener('pointerdown', (event) => {
+      startX = event.clientX;
+      currentX = startX;
+
+      isDragging = true;
+
+      track.style.transition = 'none';
+
+      carousel.setPointerCapture?.(event.pointerId);
+    });
+
+    carousel.addEventListener('pointermove', (event) => {
+      if (!isDragging) return;
+
+      currentX = event.clientX;
+    });
+
+    carousel.addEventListener('pointerup', () => {
+      if (!isDragging) return;
+
+      isDragging = false;
+
+      track.style.transition = '';
+
+      const difference = currentX - startX;
+
+      if (Math.abs(difference) > 50) {
+        if (difference < 0) {
+          nextSlide();
+        } else {
+          previousSlide();
+        }
+      } else {
+        updateSlider();
+      }
+    });
+
+    carousel.addEventListener('pointercancel', () => {
+      isDragging = false;
+
+      track.style.transition = '';
+
+      updateSlider();
+    });
+
+    window.addEventListener('resize', updateSlider);
+
+    updateSlider();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Peri editorial slider",
+  "tag": "section",
+  "class": "section",
+
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "botanical_illustration",
+      "label": "Botanical illustration"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE ART OF CRAFT"
+    },
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Stories woven by hand"
+    },
+
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover the traditions, techniques and skilled hands behind the pieces we bring to Periwinkle.</p>"
+    },
+
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Explore our collections"
+    },
+
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EEE9DF"
+    },
+
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#2E2C35"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Craft card",
+
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Craft process image"
+        },
+
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "The Block Print Edit"
+        },
+
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>From hand-carved wooden blocks to layers of colour, discover the timeless craft behind every print.</p>"
+        },
+
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Custom link"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Periwinkle editorial slider",
+
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "The Block Print Edit",
+            "description": "<p>From hand-carved wooden blocks to layers of colour, discover the timeless craft behind every print.</p>"
+          }
+        },
+
+        {
+          "type": "card",
+          "settings": {
+            "title": "Chikankari: The Lucknow Hand",
+            "description": "<p>Delicate embroidery, generations of skill and the quiet beauty of handwork from Lucknow.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
