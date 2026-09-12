@@ -1,0 +1,70 @@
+{% comment %}
+  Renders the header logo lockup.
+
+  settings.logo is the icon and settings.logo_text an optional wordmark beside it, so a brand
+  mark that would otherwise stack icon-over-text can sit horizontally and keep the header short.
+  With no wordmark set this renders exactly as Dawn does, and with no logo at all it falls back
+  to the shop name.
+
+  Accepts:
+  - logo_position: {String} section.settings.logo_position. Only the sizes hint depends on it:
+    a centred logo is half the viewport on mobile, an aligned one is capped by its own width.
+
+  Usage:
+  {% render 'header-logo', logo_position: section.settings.logo_position %}
+{% endcomment %}
+
+{%- liquid
+  assign logo_alt = settings.logo.alt | default: shop.name | escape
+  assign has_wordmark = false
+  if settings.logo_text != blank
+    assign has_wordmark = true
+  endif
+-%}
+
+{%- if settings.logo != blank -%}
+  {%- liquid
+    assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio
+    assign wordmark_width = settings.logo_text_width
+    assign wordmark_height = wordmark_width | divided_by: settings.logo_text.aspect_ratio
+  -%}
+  <div class="header__heading-logo-wrapper{% if has_wordmark %} header__heading-logo-wrapper--lockup{% if settings.logo_text_hide_mobile %} header__heading-logo-wrapper--hide-text-mobile{% endif %}{% endif %}">
+    {%- if logo_position == 'middle-center' -%}
+      {% capture sizes %}(min-width: 750px) {{ settings.logo_width }}px, 50vw{% endcapture %}
+    {%- else -%}
+      {% capture sizes %}(max-width: {{ settings.logo_width | times: 2 }}px) 50vw, {{ settings.logo_width }}px{% endcapture %}
+    {%- endif -%}
+    {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+    {{
+      settings.logo
+      | image_url: width: 600
+      | image_tag:
+        class: 'header__heading-logo header__heading-logo--icon motion-reduce',
+        widths: widths,
+        height: logo_height,
+        width: settings.logo_width,
+        alt: logo_alt,
+        sizes: sizes,
+        preload: true
+    }}
+
+    {%- if has_wordmark -%}
+      {% capture wordmark_sizes %}{{ wordmark_width }}px{% endcapture %}
+      {% capture wordmark_widths %}{{ wordmark_width }}, {{ wordmark_width | times: 1.5 | round }}, {{ wordmark_width | times: 2 }}{% endcapture %}
+      {{
+        settings.logo_text
+        | image_url: width: 800
+        | image_tag:
+          class: 'header__heading-logo header__heading-logo--text motion-reduce',
+          widths: wordmark_widths,
+          height: wordmark_height,
+          width: wordmark_width,
+          alt: '',
+          sizes: wordmark_sizes,
+          preload: true
+      }}
+    {%- endif -%}
+  </div>
+{%- else -%}
+  <span class="h2">{{ shop.name }}</span>
+{%- endif -%}

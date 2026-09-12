@@ -2502,6 +2502,34 @@ input[type='checkbox'] {
   transition: width 0.3s cubic-bezier(0.52, 0, 0.61, 0.99);
 }
 
+/* Logo lockup
+   Present only when a wordmark is set in Theme settings > Logo. The icon and wordmark sit on one
+   row so a mark that would otherwise stack icon-over-text stops driving the header's height.
+   width: auto lets the row size to its contents instead of filling the grid cell -- the stacked
+   single-image logo still wants the 100% above. */
+.header__heading-logo-wrapper--lockup {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--logo-lockup-gap, 1.2rem);
+}
+
+/* No width here on purpose: each image is sized by its own width attribute, and a CSS width
+   would override that and fall back to the file's intrinsic size. */
+.header__heading-logo-wrapper--lockup .header__heading-logo {
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .header__heading-logo-wrapper--lockup {
+    gap: var(--logo-lockup-gap-mobile, 0.8rem);
+  }
+
+  .header__heading-logo-wrapper--hide-text-mobile .header__heading-logo--text {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 989px) {
   .header__heading,
   .header__heading-link {
