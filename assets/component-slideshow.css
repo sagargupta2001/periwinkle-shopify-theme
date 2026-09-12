@@ -132,9 +132,10 @@ slideshow-component:not(.page-width) .slider-buttons {
 }
 
 /* Overlay controls
-   Opt-in via the slideshow section's "Show controls over image" setting. Arrows float over the
-   slide on desktop; on mobile they are dropped in favour of swiping and the dots sit over the
-   bottom of the image.
+   Opt-in via the slideshow section's "Show controls over image" setting. The dots sit over the
+   bottom of the slide at every width and no arrows are shown: autoplay plus a draggable slider
+   already move between slides, and an uncluttered hero beats two buttons floating over the
+   artwork.
 
    Every rule is qualified with slideshow-component on purpose. These override .slider-buttons
    from component-slider.css, which later sections re-emit, so that file can land after this one
@@ -144,70 +145,43 @@ slideshow-component:not(.page-width) .slider-buttons {
    only ever competes with the slides, never with the sticky header group. */
 slideshow-component .slideshow__controls--overlay {
   position: absolute;
-  inset: 0;
+  /* Only the dot strip sits over the image. A full-slide overlay would cover the slide's own
+     buttons and links. */
+  inset: auto 0 0 0;
   z-index: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1.6rem;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 var(--slideshow-dots-offset, 1.6rem);
   border: 0;
-  /* The overlay spans the whole slide, so only the controls themselves take pointer events. */
   pointer-events: none;
 }
 
+/* Covers the prev/next arrows and the autoplay toggle, which all carry .slider-button.
+   They stay in the markup deliberately: SlideshowComponent moves between slides by clicking the
+   prev/next buttons, so dragging would break if they were removed from the DOM. */
 slideshow-component .slideshow__controls--overlay .slider-button {
-  pointer-events: auto;
-  width: 4.4rem;
-  height: 4.4rem;
-  border-radius: 50%;
-  background: rgb(var(--color-background));
-  color: rgb(var(--color-foreground));
-  border: 0.1rem solid rgba(var(--color-foreground), 0.19);
-}
-
-slideshow-component .slideshow__controls--overlay .slider-button:hover {
-  background: rgb(var(--color-button));
-  color: rgb(var(--color-button-text));
-}
-
-/* Autoplay toggle is hidden while the overlay controls are in use. */
-slideshow-component .slideshow__controls--overlay .slideshow__autoplay {
   display: none;
 }
 
-@media screen and (min-width: 750px) {
-  /* Desktop navigates with the arrows, so the dots would be redundant. */
-  slideshow-component .slideshow__controls--overlay .slider-counter {
-    display: none;
-  }
+slideshow-component .slideshow__controls--overlay .slider-counter {
+  pointer-events: auto;
 }
 
-@media screen and (max-width: 749px) {
-  /* Mobile swipes instead of tapping arrows; the dots stay as a position indicator. */
-  slideshow-component .slideshow__controls--overlay .slider-button {
-    display: none;
-  }
+/* Dots read against whatever the slide's photography happens to be underneath. */
+slideshow-component .slideshow__controls--overlay .slider-counter__link--dots .dot {
+  border-color: rgb(var(--color-background));
+  box-shadow: 0 0 0.4rem rgba(var(--color-shadow), 0.4);
+}
 
-  /* Release the full-slide overlay so only the dot strip sits over the image. */
+slideshow-component .slideshow__controls--overlay .slider-counter__link--active.slider-counter__link--dots .dot {
+  background-color: rgb(var(--color-background));
+}
+
+@media screen and (min-width: 750px) {
+  /* A full-height hero needs more breathing room under the dots than a phone does. */
   slideshow-component .slideshow__controls--overlay {
-    inset: auto 0 0 0;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0 0 1.6rem;
-  }
-
-  slideshow-component .slideshow__controls--overlay .slider-counter {
-    pointer-events: auto;
-  }
-
-  /* Dots read against whatever the slide's photography happens to be underneath. */
-  slideshow-component .slideshow__controls--overlay .slider-counter__link--dots .dot {
-    border-color: rgb(var(--color-background));
-    box-shadow: 0 0 0.4rem rgba(var(--color-shadow), 0.4);
-  }
-
-  slideshow-component .slideshow__controls--overlay .slider-counter__link--active.slider-counter__link--dots .dot {
-    background-color: rgb(var(--color-background));
+    --slideshow-dots-offset: 2.4rem;
   }
 }
 
