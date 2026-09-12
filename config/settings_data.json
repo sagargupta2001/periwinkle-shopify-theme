@@ -9,8 +9,9 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/Periwinkle_By_Sherry_Logo.svg",
-    "logo_width": 150,
+    "logo": "shopify://shop_images/logo.svg",
+    "logo_width": 50,
+    "logo_text": "shopify://shop_images/logo-text.svg",
     "favicon": "shopify://shop_images/final_logo.svg",
     "type_header_font": "cormorant_n4",
     "heading_scale": 100,
