@@ -2342,6 +2342,13 @@ input[type='checkbox'] {
   top: 0;
 }
 
+/* While the menu drawer is open the header section has to outrank the announcement bar, so the
+   drawer and its backdrop -- both fixed elements inside this section -- can cover the whole
+   viewport. HeaderDrawer adds and removes .menu-open around the drawer's lifetime. */
+.section-header.menu-open {
+  z-index: 5;
+}
+
 /* Sticky announcement bar.
    Opt-in via the announcement bar section's "Sticky announcement bar" setting, which adds
    .utility-bar--sticky. The bar pins to the top of the viewport and the sticky header pins
@@ -2633,15 +2640,34 @@ input[type='checkbox'] {
   margin-right: -1.2rem;
 }
 
+/* Nav drawer backdrop.
+   Fixed to the viewport rather than hung below the header, so it covers the header and the
+   announcement bar as well. It can only paint above them because .section-header is lifted over
+   the announcement bar while the drawer is open -- see .section-header.menu-open above. */
 .header__icon--menu[aria-expanded='true']::before {
   content: '';
-  top: 100%;
-  left: 0;
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
-  width: 100%;
+  inset: 0;
   display: block;
-  position: absolute;
+  position: fixed;
+  z-index: 4;
   background: rgba(var(--color-foreground), 0.5);
+  opacity: 0;
+  transition: opacity var(--duration-default) ease;
+}
+
+/* Blur where it is supported, with the flat scrim above as the fallback. Kept low: a heavy blur
+   over a full page is expensive to composite on older Android hardware. */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .header__icon--menu[aria-expanded='true']::before {
+    background: rgba(var(--color-foreground), 0.25);
+    -webkit-backdrop-filter: blur(0.6rem);
+    backdrop-filter: blur(0.6rem);
+  }
+}
+
+/* menu-opening lands a tick after aria-expanded, so the scrim fades in with the panel slide. */
+.menu-drawer-container.menu-opening > .header__icon--menu[aria-expanded='true']::before {
+  opacity: 1;
 }
 
 details .header__icon-close {

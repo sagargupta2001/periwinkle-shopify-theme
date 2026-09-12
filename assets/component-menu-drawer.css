@@ -2,6 +2,9 @@
   position: initial;
 }
 
+/* These backdrop rules belong to the facets filter drawer, the other <menu-drawer> on the site.
+   The nav drawer is <header-drawer> and has never matched them -- its backdrop comes from
+   .header__icon--menu[aria-expanded='true']::before in base.css. */
 .js menu-drawer > details > summary::before,
 .js menu-drawer > details[open]:not(.menu-opening) > summary::before {
   content: '';
@@ -19,20 +22,14 @@
   transition: opacity 0s, visibility 0s;
 }
 
-menu-drawer > details[open] > summary::before {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity var(--duration-default) ease, visibility var(--duration-default) ease;
-}
-
 .menu-drawer {
-  position: absolute;
+  position: fixed;
   transform: translateX(-100%);
   visibility: hidden;
-  z-index: 3;
+  z-index: 5;
   left: 0;
-  top: 100%;
-  width: 100%;
+  top: 0;
+  width: min(80%, 40rem);
   padding: 0;
   background-color: rgb(var(--color-background));
   overflow-x: hidden;
@@ -43,8 +40,9 @@ menu-drawer > details[open] > summary::before {
 }
 
 .js .menu-drawer {
-  height: calc(100vh - 100%);
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
+  /* dvh tracks the mobile browser chrome as it collapses; vh is the fallback for older engines. */
+  height: 100vh;
+  height: 100dvh;
 }
 
 .js details[open] > .menu-drawer,
@@ -64,7 +62,6 @@ details[open].menu-opening > .menu-drawer__submenu {
 
 @media screen and (min-width: 750px) {
   .menu-drawer {
-    width: 40rem;
     border-width: 0 var(--drawer-border-width) 0 0;
     border-style: solid;
     border-color: rgba(var(--color-foreground), var(--drawer-border-opacity));
@@ -73,7 +70,57 @@ details[open].menu-opening > .menu-drawer__submenu {
 
 .menu-drawer__inner-container {
   position: relative;
+  /* Rows, so the bar keeps its height and the navigation takes the rest and scrolls inside it. */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   height: 100%;
+}
+
+/* The drawer's own bar: logo left, close right. */
+.menu-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: 1.2rem 1.6rem;
+  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
+}
+
+.menu-drawer__logo {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  text-decoration: none;
+  line-height: 0;
+}
+
+/* The header lockup fixes its images against shrinking so the two never separate. In a narrow
+   drawer they need to give way instead, and height: auto keeps the aspect ratio as they do. */
+.menu-drawer__logo .header__heading-logo {
+  flex-shrink: 1;
+  min-width: 0;
+  height: auto;
+}
+
+.menu-drawer__dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* 4.4rem is the minimum comfortable touch target. */
+  width: 4.4rem;
+  height: 4.4rem;
+  margin-right: -1.2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+}
+
+.menu-drawer__dismiss .svg-wrapper {
+  width: 1.8rem;
+  height: 1.8rem;
 }
 
 .menu-drawer__navigation-container {
@@ -82,6 +129,10 @@ details[open].menu-opening > .menu-drawer__submenu {
   align-content: space-between;
   overflow-y: auto;
   height: 100%;
+  /* Positioning context for the sliding submenus. Without this they resolve against
+     .menu-drawer__inner-container and cover the drawer's own bar, taking the close button with
+     it -- from inside a category there would then be no way to dismiss the drawer. */
+  position: relative;
 }
 
 .menu-drawer__navigation {
@@ -143,6 +194,9 @@ details[open].menu-opening > .menu-drawer__submenu {
   z-index: 1;
   transform: translateX(100%);
   visibility: hidden;
+  /* A long category list has to scroll inside the panel now that the drawer bar takes a fixed
+     slice of the height above it. */
+  overflow-y: auto;
 }
 
 .js .menu-drawer__submenu .menu-drawer__submenu {
