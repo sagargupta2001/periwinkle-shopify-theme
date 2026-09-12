@@ -1,0 +1,149 @@
+{% comment %}
+  Renders a mega menu whose second-level links are collection cards rather than a text list.
+
+  A card shows the collection's own poster image with its title beneath.
+
+  Card mode is decided by the content, not by a setting: a menu renders as cards only when every
+  one of its child links resolves to a collection with a poster image, and otherwise falls back to
+  the plain text list. A part-filled row reads as broken rather than as work in progress, and the
+  all-or-nothing rule makes it obvious what to do to earn cards -- give every collection in that
+  menu a poster. Menus upgrade themselves as the artwork lands, with nothing to switch on.
+
+  Third-level links are not rendered in card mode: a card row is a flat set of destinations by
+  design. Use the plain mega menu ("Mega menu" under Menu type) for menus that need three levels.
+
+  Usage:
+  {% render 'header-mega-menu-cards' %}
+{% endcomment %}
+
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        {%- if link.links != blank -%}
+          <header-menu>
+            <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu mega-menu--cards">
+              <summary
+                id="HeaderMenu-{{ link.handle }}"
+                class="header__menu-item list-menu__item link focus-inset"
+              >
+                <span
+                  {%- if link.child_active %}
+                    class="header__active-menu-item"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </span>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </summary>
+              <div
+                id="MegaMenu-Content-{{ forloop.index }}"
+                class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+                tabindex="-1"
+              >
+                {%- liquid
+                  assign posters = 0
+                  for childlink in link.links
+                    if childlink.type == 'collection_link'
+                      assign child_collection = childlink.object
+                      if child_collection.image != blank or child_collection.featured_image != blank
+                        assign posters = posters | plus: 1
+                      endif
+                    endif
+                  endfor
+
+                  assign show_cards = false
+                  if posters > 0 and posters == link.links.size
+                    assign show_cards = true
+                  endif
+                -%}
+                {%- if show_cards -%}
+                  <div class="page-width">
+                    {%- comment -%}
+                      The row scrolls rather than wraps: a dozen portrait cards on several rows
+                      would make the panel taller than the viewport. Native overflow keeps it
+                      keyboard- and trackpad-scrollable without any JavaScript.
+                    {%- endcomment -%}
+                    <ul class="mega-menu__cards" role="list">
+                      {%- for childlink in link.links -%}
+                        {%- liquid
+                          assign card_collection = childlink.object
+                          assign card_image = blank
+
+                          if childlink.type == 'collection_link'
+                            if card_collection.image != blank
+                              assign card_image = card_collection.image
+                            elsif card_collection.featured_image != blank
+                              assign card_image = card_collection.featured_image
+                            endif
+                          endif
+                        -%}
+                        <li class="mega-menu__cards-item">
+                          <a
+                            id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                            href="{{ childlink.url }}"
+                            class="mega-menu-card link{% if childlink.current %} mega-menu-card--active{% endif %}"
+                            {% if childlink.current %}
+                              aria-current="page"
+                            {% endif %}
+                          >
+                            <div class="mega-menu-card__media media media--transparent ratio">
+                              {{
+                                card_image
+                                | image_url: width: 600
+                                | image_tag:
+                                  loading: 'lazy',
+                                  widths: '200, 300, 400, 600',
+                                  sizes: '(min-width: 990px) 200px, 40vw',
+                                  alt: ''
+                              }}
+                            </div>
+                            <span class="mega-menu-card__title">{{ childlink.title | escape }}</span>
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- else -%}
+                  <ul class="mega-menu__list page-width mega-menu__list--condensed" role="list">
+                    {%- for childlink in link.links -%}
+                      <li>
+                        <a
+                          id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                          href="{{ childlink.url }}"
+                          class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %}"
+                          {% if childlink.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{ childlink.title | escape }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
+            </details>
+          </header-menu>
+        {%- else -%}
+          <a
+            id="HeaderMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span
+              {%- if link.current %}
+                class="header__active-menu-item"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>

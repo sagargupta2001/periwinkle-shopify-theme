@@ -1,0 +1,79 @@
+/* Mega menu, collection card variant
+   Loaded only when Menu type is "Mega menu with collection cards". Layers on top of
+   component-mega-menu.css, which still supplies the panel itself (.mega-menu__content). */
+
+.mega-menu--cards .mega-menu__content {
+  padding-bottom: 2.4rem;
+  padding-top: 2.4rem;
+  /* The card row owns its own horizontal scrolling; the panel must not add a second one. */
+  overflow-x: hidden;
+}
+
+.mega-menu__cards {
+  --mega-menu-card-width: 20rem;
+  --mega-menu-card-ratio: 125%; /* 4:5 portrait, matching the collection poster artwork. */
+
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0 0 0.4rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Room for the scrollbar so it never overlaps the titles. */
+  scrollbar-color: rgba(var(--color-foreground), 0.4) rgba(var(--color-foreground), 0.1);
+  scrollbar-width: thin;
+}
+
+.mega-menu__cards-item {
+  flex: 0 0 var(--mega-menu-card-width);
+  scroll-snap-align: start;
+}
+
+.mega-menu-card {
+  display: block;
+  text-decoration: none;
+  color: rgb(var(--color-foreground));
+}
+
+.mega-menu-card__media {
+  --ratio-percent: var(--mega-menu-card-ratio);
+
+  border-radius: var(--media-radius, 0);
+  margin-bottom: 0.8rem;
+}
+
+.mega-menu-card__media img {
+  transition: transform var(--duration-long, 0.5s) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mega-menu-card__title {
+  display: block;
+  line-height: calc(1 + 0.3 / var(--font-body-scale));
+  text-align: center;
+  text-decoration: none;
+}
+
+.mega-menu-card:hover .mega-menu-card__media img {
+  transform: scale(1.04);
+}
+
+.mega-menu-card:hover .mega-menu-card__title,
+.mega-menu-card--active .mega-menu-card__title {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mega-menu-card:hover .mega-menu-card__media img {
+    transform: none;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .mega-menu__cards {
+    --mega-menu-card-width: 16rem;
+
+    gap: 1.6rem;
+  }
+}

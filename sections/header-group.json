@@ -43,7 +43,7 @@
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
-        "menu_type_desktop": "mega",
+        "menu_type_desktop": "mega_cards",
         "sticky_header_type": "always",
         "show_line_separator": true,
         "color_scheme": "scheme-1",
