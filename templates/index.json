@@ -91,18 +91,13 @@
         "slide_Gzenrm",
         "slide_ihny3m"
       ],
-      "custom_css": [
-        ".slideshow__controls {position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; pointer-events: none;}",
-        ".slideshow__controls .slider-counter {display: none;}",
-        ".slideshow__controls .slider-button {pointer-events: auto; width: 44px; height: 44px; border-radius: 50%; background: #faf8f3; color: #2e2c35; border: 1px solid #2e2c3530;}",
-        ".slideshow__controls .slider-button:hover {background: #4f4a70; color: #faf8f3;}",
-        ".slideshow__autoplay {display: none !important;}"
-      ],
+      "custom_css": [],
       "name": "t:sections.slideshow.presets.name",
       "settings": {
         "layout": "full_bleed",
         "slide_height": "large",
         "slider_visual": "dots",
+        "controls_overlay": true,
         "auto_rotate": true,
         "change_slides_speed": 7,
         "image_behavior": "none",

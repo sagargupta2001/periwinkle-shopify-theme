@@ -330,20 +330,25 @@
   class StickyHeader extends HTMLElement {
     constructor() {
       super();
-      this.setHeaderHeight = this.setHeaderHeight.bind(this);
+      this.setStickyOffsets = this.setStickyOffsets.bind(this);
     }
 
     connectedCallback() {
       this.header = document.querySelector('.section-header');
-      this.mobileMediaQuery = window.matchMedia('(max-width: 990px)');
+      // Only a sticky announcement bar shifts the header down; a static one scrolls away.
+      this.stickyAnnouncementBar = document.querySelector('.announcement-bar-section:has(.utility-bar--sticky)');
       this.headerIsAlwaysSticky =
         this.getAttribute('data-sticky-type') === 'always' ||
         this.getAttribute('data-sticky-type') === 'reduce-logo-size';
       this.headerBounds = {};
 
-      this.setHeaderHeight();
+      this.setStickyOffsets();
 
-      this.mobileMediaQuery.addEventListener('change', this.setHeaderHeight);
+      // Both heights change without a scroll or breakpoint event: the logo shrinks once
+      // scrolled past, and announcement text rewraps as the viewport narrows.
+      this.resizeObserver = new ResizeObserver(this.setStickyOffsets);
+      this.resizeObserver.observe(this.header);
+      if (this.stickyAnnouncementBar) this.resizeObserver.observe(this.stickyAnnouncementBar);
 
       if (this.headerIsAlwaysSticky) {
         this.header.classList.add('shopify-section-header-sticky');
@@ -362,12 +367,17 @@
       this.createObserver();
     }
 
-    setHeaderHeight() {
-      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+    setStickyOffsets() {
+      const styles = document.documentElement.style;
+      styles.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      styles.setProperty(
+        '--announcement-bar-height',
+        `${this.stickyAnnouncementBar ? this.stickyAnnouncementBar.offsetHeight : 0}px`
+      );
     }
 
     disconnectedCallback() {
-      this.mobileMediaQuery.removeEventListener('change', this.setHeaderHeight);
+      this.resizeObserver.disconnect();
       this.removeEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
       window.removeEventListener('scroll', this.onScrollHandler);
     }

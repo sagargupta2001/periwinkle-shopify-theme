@@ -131,6 +131,104 @@ slideshow-component:not(.page-width) .slider-buttons {
   border-left: 0;
 }
 
+/* Overlay controls
+   Opt-in via the slideshow section's "Show controls over image" setting. Arrows float over the
+   slide on desktop; on mobile they are dropped in favour of swiping and the dots sit over the
+   bottom of the image.
+
+   Every rule is qualified with slideshow-component on purpose. These override .slider-buttons
+   from component-slider.css, which later sections re-emit, so that file can land after this one
+   in the cascade -- the element selector wins on specificity instead of on load order.
+
+   Keep the z-index at 1: slideshow-component isolates its stacking context (see below), so this
+   only ever competes with the slides, never with the sticky header group. */
+slideshow-component .slideshow__controls--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.6rem;
+  border: 0;
+  /* The overlay spans the whole slide, so only the controls themselves take pointer events. */
+  pointer-events: none;
+}
+
+slideshow-component .slideshow__controls--overlay .slider-button {
+  pointer-events: auto;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.19);
+}
+
+slideshow-component .slideshow__controls--overlay .slider-button:hover {
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+/* Autoplay toggle is hidden while the overlay controls are in use. */
+slideshow-component .slideshow__controls--overlay .slideshow__autoplay {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  /* Desktop navigates with the arrows, so the dots would be redundant. */
+  slideshow-component .slideshow__controls--overlay .slider-counter {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  /* Mobile swipes instead of tapping arrows; the dots stay as a position indicator. */
+  slideshow-component .slideshow__controls--overlay .slider-button {
+    display: none;
+  }
+
+  /* Release the full-slide overlay so only the dot strip sits over the image. */
+  slideshow-component .slideshow__controls--overlay {
+    inset: auto 0 0 0;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 1.6rem;
+  }
+
+  slideshow-component .slideshow__controls--overlay .slider-counter {
+    pointer-events: auto;
+  }
+
+  /* Dots read against whatever the slide's photography happens to be underneath. */
+  slideshow-component .slideshow__controls--overlay .slider-counter__link--dots .dot {
+    border-color: rgb(var(--color-background));
+    box-shadow: 0 0 0.4rem rgba(var(--color-shadow), 0.4);
+  }
+
+  slideshow-component .slideshow__controls--overlay .slider-counter__link--active.slider-counter__link--dots .dot {
+    background-color: rgb(var(--color-background));
+  }
+}
+
+/* Contain the slideshow's own stacking context so no control or slide z-index can ever paint
+   over the sticky header group, whatever value it is given. */
+slideshow-component {
+  isolation: isolate;
+}
+
+@media screen and (max-width: 749px) {
+  /* Slideshows run taller than other banners on mobile, where the image is the whole story. */
+  .slideshow.banner--large:not(.banner--mobile-bottom):not(.banner--adapt) .banner__content {
+    min-height: 46rem;
+  }
+
+  .slideshow.banner--large.banner--mobile-bottom:not(.banner--adapt) .banner__media,
+  .slideshow.banner--large.banner--stacked:not(.banner--mobile-bottom):not(.banner--adapt) > .banner__media {
+    height: 46rem;
+  }
+}
+
 .slideshow__control-wrapper {
   display: flex;
 }

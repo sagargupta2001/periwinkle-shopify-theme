@@ -768,8 +768,12 @@ class SliderComponent extends HTMLElement {
     // This should be refactored as part of https://github.com/Shopify/dawn/issues/2057
     if (!this.slider || !this.nextButton) return;
 
+    // scrollLeft and sliderItemOffset disagree for a frame after a viewport resize: the
+    // browser has not re-clamped scrollLeft to the new, narrower slide width yet. Clamping
+    // keeps currentPage a valid 1-based index instead of running past the last slide.
     const previousPage = this.currentPage;
-    this.currentPage = Math.round(this.slider.scrollLeft / this.sliderItemOffset) + 1;
+    const page = Math.round(this.slider.scrollLeft / this.sliderItemOffset) + 1;
+    this.currentPage = Number.isFinite(page) ? Math.min(Math.max(page, 1), this.sliderItemsToShow.length) : 1;
 
     if (this.currentPageElement && this.pageTotalElement) {
       this.currentPageElement.textContent = this.currentPage;
@@ -953,8 +957,13 @@ class SlideshowComponent extends SliderComponent {
       link.classList.remove('slider-counter__link--active');
       link.removeAttribute('aria-current');
     });
-    this.sliderControlButtons[this.currentPage - 1].classList.add('slider-counter__link--active');
-    this.sliderControlButtons[this.currentPage - 1].setAttribute('aria-current', true);
+
+    // No matching link when the slider is laid out but not visible, so nothing measures.
+    const activeLink = this.sliderControlButtons[this.currentPage - 1];
+    if (!activeLink) return;
+
+    activeLink.classList.add('slider-counter__link--active');
+    activeLink.setAttribute('aria-current', true);
   }
 
   autoPlayToggle() {
