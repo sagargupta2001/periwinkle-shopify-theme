@@ -22,6 +22,25 @@
     </summary>
     <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}">
       <div class="menu-drawer__inner-container">
+        {%- comment -%}
+          The drawer covers the viewport, so it carries its own bar: the site logo to keep the
+          brand in view, and a close button, since the hamburger it was opened from is now behind
+          the drawer.
+        {%- endcomment -%}
+        <div class="menu-drawer__header">
+          <a href="{{ routes.root_url }}" class="menu-drawer__logo link focus-inset">
+            {%- render 'header-logo', logo_position: section.settings.logo_position, preload: false -%}
+          </a>
+          <button
+            type="button"
+            class="menu-drawer__dismiss link focus-inset"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            <span class="svg-wrapper">
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </span>
+          </button>
+        </div>
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">

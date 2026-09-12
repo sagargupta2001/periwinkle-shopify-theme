@@ -1131,6 +1131,9 @@
           },
           "options__3": {
             "label": "Drawer"
+          },
+          "options__4": {
+            "label": "Mega menu with collection cards"
           }
         },
         "show_line_separator": {

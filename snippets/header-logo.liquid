@@ -9,6 +9,8 @@
   Accepts:
   - logo_position: {String} section.settings.logo_position. Only the sizes hint depends on it:
     a centred logo is half the viewport on mobile, an aligned one is capped by its own width.
+  - preload: {Boolean} Defaults to true. Pass false for a second copy on the page, such as the
+    one in the menu drawer, so the same image is not preloaded twice.
 
   Usage:
   {% render 'header-logo', logo_position: section.settings.logo_position %}
@@ -19,6 +21,11 @@
   assign has_wordmark = false
   if settings.logo_text != blank
     assign has_wordmark = true
+  endif
+
+  assign preload_logo = true
+  if preload == false
+    assign preload_logo = false
   endif
 -%}
 
@@ -45,7 +52,7 @@
         width: settings.logo_width,
         alt: logo_alt,
         sizes: sizes,
-        preload: true
+        preload: preload_logo
     }}
 
     {%- if has_wordmark -%}
@@ -61,7 +68,7 @@
           width: wordmark_width,
           alt: '',
           sizes: wordmark_sizes,
-          preload: true
+          preload: preload_logo
       }}
     {%- endif -%}
   </div>

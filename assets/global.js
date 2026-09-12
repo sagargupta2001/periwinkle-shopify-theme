@@ -435,8 +435,17 @@ class MenuDrawer extends HTMLElement {
       summary.addEventListener('click', this.onSummaryClick.bind(this))
     );
     this.querySelectorAll(
-      'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)'
+      'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button):not(.menu-drawer__dismiss)'
     ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this)));
+
+    // The dismiss button closes the whole drawer, not the submenu it happens to sit in, so it is
+    // excluded above and wired to closeMenuDrawer instead. Focus returns to the summary that
+    // opened the drawer, which is what the drawer is covering.
+    this.querySelectorAll('.menu-drawer__dismiss').forEach((button) =>
+      button.addEventListener('click', (event) =>
+        this.closeMenuDrawer(event, this.mainDetailsToggle.querySelector('summary'))
+      )
+    );
   }
 
   onKeyUp(event) {
