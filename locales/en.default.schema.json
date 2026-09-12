@@ -156,6 +156,17 @@
         "logo_width": {
           "label": "Width"
         },
+        "logo_text": {
+          "label": "Wordmark",
+          "info": "Optional. Sits beside the logo instead of below it, which keeps the header short."
+        },
+        "logo_text_width": {
+          "label": "Wordmark width"
+        },
+        "logo_text_hide_mobile": {
+          "label": "Hide wordmark on mobile",
+          "info": "Shows the logo on its own where header space is tightest."
+        },
         "favicon": {
           "label": "Favicon",
           "info": "Displayed at 32 x 32px"
