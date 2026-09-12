@@ -9,10 +9,107 @@
   overflow-x: hidden;
 }
 
-.mega-menu__cards {
+/* Scroll affordances
+   The row scrolls natively; these only signal that it does. The fades are the ambient cue and
+   the arrows the explicit one, both driven by data attributes that mega-menu-cards.js sets from
+   scroll position. With JavaScript unavailable the arrows stay hidden and the row still scrolls. */
+.mega-menu__cards-scroller {
+  /* Declared here, not on .mega-menu__cards: the arrows are siblings of the row, so a variable
+     set on the row itself would never reach them. */
   --mega-menu-card-width: 20rem;
   --mega-menu-card-ratio: 125%; /* 4:5 portrait, matching the collection poster artwork. */
+  --mega-menu-card-media-height: 25rem; /* 125% of the 20rem card width. */
 
+  display: block;
+  position: relative;
+}
+
+.mega-menu__cards-scroller::before,
+.mega-menu__cards-scroller::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6rem;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--duration-default, 0.2s) ease;
+  pointer-events: none;
+}
+
+.mega-menu__cards-scroller::before {
+  left: 0;
+  background: linear-gradient(to right, rgb(var(--color-background)), rgba(var(--color-background), 0));
+}
+
+.mega-menu__cards-scroller::after {
+  right: 0;
+  background: linear-gradient(to left, rgb(var(--color-background)), rgba(var(--color-background), 0));
+}
+
+/* Each fade shows only while there is content hidden on that side. */
+.mega-menu__cards-scroller[data-overflows]:not([data-at-start])::before,
+.mega-menu__cards-scroller[data-overflows]:not([data-at-end])::after {
+  opacity: 1;
+}
+
+.mega-menu__cards-nav {
+  position: absolute;
+  top: 0;
+  /* Centred on the artwork rather than the whole card, so the titles do not pull it off centre. */
+  transform: translateY(calc(var(--mega-menu-card-media-height) / 2 - 50%));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+  border-radius: 50%;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  cursor: pointer;
+  transition: background var(--duration-short, 0.1s) ease, color var(--duration-short, 0.1s) ease;
+}
+
+.mega-menu__cards-nav:hover {
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+.mega-menu__cards-nav .svg-wrapper {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.mega-menu__cards-nav--prev {
+  left: -0.4rem;
+}
+
+.mega-menu__cards-nav--next {
+  right: -0.4rem;
+}
+
+/* The caret rotates, not the button. The standalone `rotate` property is composed before
+   `transform`, so rotating the button would make its centring translate run along the rotated
+   axis and throw it sideways. */
+.mega-menu__cards-nav--prev .svg-wrapper {
+  transform: rotate(90deg);
+}
+
+.mega-menu__cards-nav--next .svg-wrapper {
+  transform: rotate(-90deg);
+}
+
+/* Nothing left to scroll to on that side, so the arrow goes rather than sitting there inert. */
+.mega-menu__cards-scroller[data-at-start] .mega-menu__cards-nav--prev,
+.mega-menu__cards-scroller[data-at-end] .mega-menu__cards-nav--next {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mega-menu__cards {
   display: flex;
   gap: 2rem;
   margin: 0;
@@ -71,9 +168,12 @@
 }
 
 @media screen and (max-width: 989px) {
-  .mega-menu__cards {
+  .mega-menu__cards-scroller {
     --mega-menu-card-width: 16rem;
+    --mega-menu-card-media-height: 20rem;
+  }
 
+  .mega-menu__cards {
     gap: 1.6rem;
   }
 }

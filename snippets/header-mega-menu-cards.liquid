@@ -61,10 +61,21 @@
                   <div class="page-width">
                     {%- comment -%}
                       The row scrolls rather than wraps: a dozen portrait cards on several rows
-                      would make the panel taller than the viewport. Native overflow keeps it
-                      keyboard- and trackpad-scrollable without any JavaScript.
+                      would make the panel taller than the viewport. Scrolling stays native, so
+                      trackpads and keyboard focus work with no help; the custom element only adds
+                      the arrows and edge fades that tell a mouse user the row continues.
                     {%- endcomment -%}
-                    <ul class="mega-menu__cards" role="list">
+                    <mega-menu-cards class="mega-menu__cards-scroller">
+                      <button
+                        type="button"
+                        class="mega-menu__cards-nav mega-menu__cards-nav--prev"
+                        name="previous"
+                        aria-label="{{ 'general.slider.previous_slide' | t }}"
+                        hidden
+                      >
+                        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                      </button>
+                      <ul class="mega-menu__cards" role="list">
                       {%- for childlink in link.links -%}
                         {%- liquid
                           assign card_collection = childlink.object
@@ -102,7 +113,17 @@
                           </a>
                         </li>
                       {%- endfor -%}
-                    </ul>
+                      </ul>
+                      <button
+                        type="button"
+                        class="mega-menu__cards-nav mega-menu__cards-nav--next"
+                        name="next"
+                        aria-label="{{ 'general.slider.next_slide' | t }}"
+                        hidden
+                      >
+                        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+                      </button>
+                    </mega-menu-cards>
                   </div>
                 {%- else -%}
                   <ul class="mega-menu__list page-width mega-menu__list--condensed" role="list">
