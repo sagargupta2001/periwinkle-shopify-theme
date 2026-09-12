@@ -2342,6 +2342,32 @@ input[type='checkbox'] {
   top: 0;
 }
 
+/* Sticky announcement bar.
+   Opt-in via the announcement bar section's "Sticky announcement bar" setting, which adds
+   .utility-bar--sticky. The bar pins to the top of the viewport and the sticky header pins
+   directly beneath it, so the two stack instead of overlapping. --announcement-bar-height is
+   published by <sticky-header> (sections/header.liquid), the only consumer of the offset. */
+.announcement-bar-section:has(.utility-bar--sticky) {
+  position: sticky;
+  top: 0;
+}
+
+.announcement-bar-section:has(.utility-bar--sticky) ~ .section-header.shopify-section-header-sticky,
+.announcement-bar-section:has(.utility-bar--sticky) ~ .section-header.shopify-section-header-hidden.menu-open {
+  top: var(--announcement-bar-height, 0px);
+}
+
+/* Hidden header tucks up behind the bar rather than off the top of the viewport. */
+.announcement-bar-section:has(.utility-bar--sticky) ~ .section-header.shopify-section-header-hidden {
+  top: calc(var(--announcement-bar-height, 0px) - var(--header-height));
+}
+
+/* The header group is reorderable in the theme editor, so support the inverse order too:
+   bar below the header pins beneath it instead of overlapping it. */
+.section-header.shopify-section-header-sticky ~ .announcement-bar-section:has(.utility-bar--sticky) {
+  top: var(--header-height, 0px);
+}
+
 .section-header.animate {
   transition: top 0.15s ease-out;
 }
