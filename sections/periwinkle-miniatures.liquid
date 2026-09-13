@@ -1,0 +1,373 @@
+{{ 'section-periwinkle-miniatures.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face. The italic is loaded here so the
+    emphasised heading and the object captions use real Cormorant italic rather
+    than a browser-slanted regular. `font_modify` returns nil if the chosen
+    heading font has no italic, in which case nothing is output.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  {%- liquid
+    assign featured_text_brightness = section.settings.featured_text_color | color_brightness
+    if featured_text_brightness > 128
+      assign featured_contrast = section.settings.text_color
+    else
+      assign featured_contrast = section.settings.background_color
+    endif
+  -%}
+
+  #PeriwinkleMiniatures-{{ section.id }} {
+    --miniatures-background: {{ section.settings.background_color }};
+    --miniatures-text: {{ section.settings.text_color }};
+    --miniatures-accent: {{ section.settings.accent_color }};
+    --miniatures-featured-text: {{ section.settings.featured_text_color }};
+    --miniatures-featured-contrast: {{ featured_contrast }};
+    --miniatures-featured-overlay: {{ section.settings.featured_overlay_opacity | divided_by: 100.0 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign featured_index = 0
+  for block in section.blocks
+    if block.settings.featured
+      assign featured_index = forloop.index0
+      break
+    endif
+  endfor
+-%}
+
+<div
+  id="PeriwinkleMiniatures-{{ section.id }}"
+  class="periwinkle-miniatures section-{{ section.id }}-padding"
+>
+  <div class="page-width periwinkle-miniatures__inner">
+    <div class="periwinkle-miniatures__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="periwinkle-miniatures__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="periwinkle-miniatures__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="periwinkle-miniatures__description">{{ section.settings.description }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <a href="{{ section.settings.button_link }}" class="periwinkle-miniatures__cta">
+          {{- section.settings.button_label | escape -}}
+          <span class="periwinkle-miniatures__cta-icon" aria-hidden="true">
+            {{- 'icon-arrow.svg' | inline_asset_content -}}
+          </span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      {%- comment -%}
+        The featured object is always rendered first so it leads on mobile and
+        in reading/keyboard order. The remaining objects keep their editor
+        order and are placed into slots 1–4, which the stylesheet positions
+        around the featured card on desktop.
+      {%- endcomment -%}
+      <ul
+        class="periwinkle-miniatures__gallery periwinkle-miniatures__gallery--count-{{ section.blocks.size }}"
+        role="list"
+      >
+        {%- assign slot = 0 -%}
+        {%- for pass in (1..2) -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign is_featured = false
+              if forloop.index0 == featured_index
+                assign is_featured = true
+              endif
+
+              if pass == 1 and is_featured == false
+                continue
+              endif
+              if pass == 2 and is_featured
+                continue
+              endif
+
+              if is_featured
+                assign item_class = 'periwinkle-miniatures__item--featured'
+                assign image_sizes = '(min-width: 1300px) 440px, (min-width: 990px) 34vw, calc(100vw - 3rem)'
+              else
+                assign slot = slot | plus: 1
+                assign item_class = 'periwinkle-miniatures__item--slot-' | append: slot
+                assign image_sizes = '(min-width: 1300px) 320px, (min-width: 990px) 25vw, (min-width: 750px) 50vw, 90vw'
+              endif
+
+              assign image = block.settings.image
+              assign image_alt = image.alt | default: block.settings.title | escape
+              assign image_position = 'object-position: ' | append: image.presentation.focal_point
+            -%}
+
+            <li class="periwinkle-miniatures__item {{ item_class }}" {{ block.shopify_attributes }}>
+              <div class="periwinkle-miniatures__media">
+                {%- if image != blank -%}
+                  {{
+                    image
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 960, 1200, 1600',
+                      sizes: image_sizes,
+                      alt: image_alt,
+                      class: 'periwinkle-miniatures__image',
+                      style: image_position
+                  }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'periwinkle-miniatures__placeholder' }}
+                {%- endif -%}
+              </div>
+
+              <div class="periwinkle-miniatures__caption">
+                <div class="periwinkle-miniatures__caption-text">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="periwinkle-miniatures__title">
+                      {%- if block.settings.link != blank -%}
+                        <a href="{{ block.settings.link }}" class="periwinkle-miniatures__link">
+                          {{- block.settings.title | escape -}}
+                        </a>
+                      {%- else -%}
+                        {{- block.settings.title | escape -}}
+                      {%- endif -%}
+                    </h3>
+                  {%- endif -%}
+
+                  {%- if block.settings.subtitle != blank -%}
+                    <p class="periwinkle-miniatures__subtitle">{{ block.settings.subtitle | escape }}</p>
+                  {%- endif -%}
+                </div>
+
+                {%- if is_featured and block.settings.link != blank -%}
+                  <span class="periwinkle-miniatures__arrow" aria-hidden="true">
+                    {{- 'icon-arrow.svg' | inline_asset_content -}}
+                  </span>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Peri miniatures",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Collected with curiosity"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italicise part of the heading for an editorial accent.",
+      "default": "Small Objects, <em>Beautiful Stories.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>From porcelain and bone china to hand-blown glass, resin and carved wood — miniature objects chosen for their character, craft and quiet charm.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Link label",
+      "default": "Explore Miniatures"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link",
+      "info": "The link is hidden until both a label and a link are set."
+    },
+    {
+      "type": "header",
+      "content": "Featured object"
+    },
+    {
+      "type": "paragraph",
+      "content": "The first object marked “Feature this object” becomes the large card. If none is marked, the first object is used."
+    },
+    {
+      "type": "color",
+      "id": "featured_text_color",
+      "label": "Caption text",
+      "info": "Dark text suits light, airy photographs. For darker photographs, use a light colour and add an overlay.",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "range",
+      "id": "featured_overlay_opacity",
+      "label": "Image overlay opacity",
+      "info": "A flat dark tint over the image. Leave at 0 unless light caption text is hard to read.",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#EEE9DF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Used for the eyebrow and link hover.",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "object",
+      "name": "Object",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "4:5 portrait images work best. Set the alt text and focal point on the image itself."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Porcelain"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Quietly refined."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Feature this object",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Peri miniatures",
+      "blocks": [
+        {
+          "type": "object",
+          "settings": {
+            "title": "Porcelain",
+            "subtitle": "Quietly refined."
+          }
+        },
+        {
+          "type": "object",
+          "settings": {
+            "title": "Bone China",
+            "subtitle": "Delicate by design."
+          }
+        },
+        {
+          "type": "object",
+          "settings": {
+            "title": "Hand-Blown Glass",
+            "subtitle": "Light captured in glass",
+            "featured": true
+          }
+        },
+        {
+          "type": "object",
+          "settings": {
+            "title": "Wooden Miniatures",
+            "subtitle": "Carved with character."
+          }
+        },
+        {
+          "type": "object",
+          "settings": {
+            "title": "Resin",
+            "subtitle": "Playful forms, beautifully made."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
