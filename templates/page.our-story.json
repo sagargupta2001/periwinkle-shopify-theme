@@ -1,0 +1,140 @@
+{
+  "sections": {
+    "story": {
+      "type": "periwinkle-story-timeline",
+      "blocks": {
+        "first_thread": {
+          "type": "swatches",
+          "settings": {
+            "marker": "I",
+            "eyebrow": "The first thread",
+            "heading": "It began in a mother’s hands",
+            "text": "<p>Choosing a thread the colour of turmeric, of monsoon sky, of a bride’s laughter.</p>",
+            "color_1": "#D9A21B",
+            "label_1": "Turmeric",
+            "color_2": "#6F8193",
+            "label_2": "Monsoon sky",
+            "color_3": "#B8323F",
+            "label_3": "A bride’s laughter"
+          }
+        },
+        "cloth_memory": {
+          "type": "chapter",
+          "settings": {
+            "marker": "II",
+            "eyebrow": "Cloth carries memory",
+            "heading": "She believed that cloth <em>carried memory.</em>",
+            "heading_size": "regular",
+            "text": "<p>To her, a handloom saree was never just fabric.</p>",
+            "quote": "It was the weaver’s patience, a village’s legacy, a woman’s story.",
+            "image": "shopify://shop_images/watermark-removed-hero-01.jpg"
+          }
+        },
+        "beautiful_place": {
+          "type": "chapter",
+          "settings": {
+            "marker": "III",
+            "eyebrow": "A single beautiful place",
+            "heading": "A dream of gathering it all together",
+            "heading_size": "regular",
+            "text": "<p>She spoke of one day bringing it into a single beautiful place — where people could touch things that mattered, and take a little of that meaning home.</p>",
+            "quote": ""
+          }
+        },
+        "the_door": {
+          "type": "chapter",
+          "settings": {
+            "marker": "IV",
+            "eyebrow": "The door",
+            "heading": "She didn’t get to open that door herself. <em>But her daughter did.</em>",
+            "heading_size": "large",
+            "text": "<p>Periwinkle by Sherry is that door.</p>",
+            "quote": "",
+            "image": "shopify://shop_images/section-6_f03ba918-45b3-4db9-952d-75d03a5ed4ff.jpg"
+          }
+        },
+        "what_you_find": {
+          "type": "list",
+          "settings": {
+            "marker": "V",
+            "eyebrow": "What you’ll find",
+            "heading": "Already beautiful, <em>already yours</em>",
+            "text": "<p>Handloom sarees, salwar suits and dupattas gathered from weavers across the country. Kurta fabrics and readymades. Bedcovers from faraway towns, jewellery for the ceremonial and the everyday, and small gifts chosen to truly delight.</p>",
+            "items": "Pure handloom sarees\nPure handloom salwar suits\nPure handloom dupattas\nPure handloom kurta pieces\nHandloom bags\nWestern dresses in handloom\nBedcovers\nJewellery\nGift items",
+            "list_style": "chips"
+          }
+        },
+        "across_india": {
+          "type": "list",
+          "settings": {
+            "marker": "VI",
+            "eyebrow": "Gathered from across India",
+            "heading": "From the looms of twelve homelands",
+            "text": "<p>Every piece carries the hands and the place that made it.</p>",
+            "items": "Assam\nKanchipuram\nKerala\nMaharashtra\nKarnataka\nWest Bengal\nOdisha\nChhattisgarh\nBanaras\nJharkhand\nUdaipur\nKutch",
+            "list_style": "chips"
+          }
+        },
+        "ten_crafts": {
+          "type": "list",
+          "settings": {
+            "marker": "VII",
+            "eyebrow": "The crafts",
+            "heading": "Ten crafts, <em>one home</em>",
+            "text": "",
+            "items": "Hand block prints | An extraordinary twist on certain sarees\nZardozi | The royal embroidery\nPaithani | Opulent and unmistakable\nKota Doria | Simple and light\nChiffon | The old world, in a drape\nOdisha ikat | Handmade on handlooms\nJamdani | Hand-crafted, motif by motif\nBanarasi | An age-old craft\nCross-stitch embroidery | Back to the ages\nKutch work | The tribal splendour of intricate handwork",
+            "list_style": "numbered"
+          }
+        },
+        "given_with_love": {
+          "type": "chapter",
+          "settings": {
+            "marker": "VIII",
+            "eyebrow": "Given with love",
+            "heading": "Chosen by someone who grew up knowing",
+            "heading_size": "regular",
+            "text": "<p>Every piece here was chosen by someone who grew up knowing that beautiful things, given with love, are never frivolous.</p>",
+            "quote": "They are how we honour one another."
+          }
+        },
+        "welcome": {
+          "type": "finale",
+          "settings": {
+            "eyebrow": "Welcome to Periwinkle by Sherry",
+            "heading": "Come in. <em>Let something find you.</em>",
+            "text": "<p>Our doors opened on 6th June. Come be part of the story.</p>",
+            "button_label_1": "Explore Sarees",
+            "button_link_1": "shopify://collections/periwinkle-sarees",
+            "button_label_2": "Shop all",
+            "button_link_2": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "first_thread",
+        "cloth_memory",
+        "beautiful_place",
+        "the_door",
+        "what_you_find",
+        "across_india",
+        "ten_crafts",
+        "given_with_love",
+        "welcome"
+      ],
+      "settings": {
+        "botanical_illustration": "shopify://shop_images/periwinkle-coloured.svg",
+        "eyebrow": "Our Story",
+        "heading": "A Dream <em>Stitched in Time</em>",
+        "intro": "<p>Some dreams begin not in boardrooms or business plans, but in the quiet of a mother’s hands.</p>",
+        "scroll_label": "Scroll to begin",
+        "background_color": "#eee9df",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70",
+        "bloom_color": "#8b87d0",
+        "padding_top": 96,
+        "padding_bottom": 120
+      }
+    }
+  },
+  "order": ["story"]
+}

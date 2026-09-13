@@ -1,0 +1,595 @@
+{{ 'section-periwinkle-story.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'periwinkle-story.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face. The italic is loaded here so the
+    emphasised headings, markers and pull quotes use real Cormorant italic.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleStory-{{ section.id }} {
+    --story-background: {{ section.settings.background_color }};
+    --story-text: {{ section.settings.text_color }};
+    --story-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.72 }};
+    --story-line: {{ section.settings.text_color | color_modify: 'alpha', 0.18 }};
+    --story-accent: {{ section.settings.accent_color }};
+    --story-bloom: {{ section.settings.bloom_color }};
+    --story-bloom-deep: {{ section.settings.bloom_color | color_darken: 18 }};
+    --story-bloom-light: {{ section.settings.bloom_color | color_lighten: 16 }};
+    --story-stem: {{ section.settings.stem_color }};
+    --story-stem-deep: {{ section.settings.stem_color | color_darken: 14 }};
+    --story-stem-light: {{ section.settings.stem_color | color_lighten: 18 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- capture story_leaves -%}
+  <span class="periwinkle-story__leaf periwinkle-story__leaf--left"></span>
+  <span class="periwinkle-story__leaf periwinkle-story__leaf--right"></span>
+{%- endcapture -%}
+
+<div
+  id="PeriwinkleStory-{{ section.id }}"
+  class="periwinkle-story section-{{ section.id }}-padding"
+>
+  <header class="periwinkle-story__hero page-width">
+    {%- if section.settings.botanical_illustration != blank -%}
+      <div class="periwinkle-story__botanical" aria-hidden="true">
+        {{
+          section.settings.botanical_illustration
+          | image_url: width: 400
+          | image_tag: class: 'periwinkle-story__botanical-image', alt: ''
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="periwinkle-story__hero-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="periwinkle-story__hero-heading">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <div class="periwinkle-story__hero-intro">{{ section.settings.intro }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.scroll_label != blank and section.blocks.size > 0 -%}
+      <p class="periwinkle-story__scroll-cue">
+        <span>{{ section.settings.scroll_label | escape }}</span>
+        <span class="periwinkle-story__scroll-line" aria-hidden="true"></span>
+      </p>
+    {%- endif -%}
+  </header>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="page-width">
+      <periwinkle-story class="periwinkle-story__timeline">
+        {%- comment -%}
+          The spine is the timeline's vertical line. A single periwinkle grows
+          down it as the story scrolls: the stem lengthens with --story-growth
+          (0–1, set by periwinkle-story.js) and the bloom hangs from its tip.
+          Adapted from the "Animated Blooming Flower" CSS demo.
+        {%- endcomment -%}
+        <div class="periwinkle-story__spine" aria-hidden="true">
+          <span class="periwinkle-story__track"></span>
+          <span class="periwinkle-story__stem"></span>
+          <div class="periwinkle-story__flower">
+            <div class="periwinkle-story__flower-sway">
+              <div class="periwinkle-story__bloom">
+                <span class="periwinkle-story__petal periwinkle-story__petal--1"></span>
+                <span class="periwinkle-story__petal periwinkle-story__petal--2"></span>
+                <span class="periwinkle-story__petal periwinkle-story__petal--3"></span>
+                <span class="periwinkle-story__petal periwinkle-story__petal--4"></span>
+                <span class="periwinkle-story__centre"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ol class="periwinkle-story__chapters" role="list">
+          {%- assign side_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign side_class = ''
+              if block.type != 'finale'
+                assign side_index = side_index | plus: 1
+                assign side = side_index | modulo: 2
+                if side == 1
+                  assign side_class = 'periwinkle-story__chapter--left'
+                else
+                  assign side_class = 'periwinkle-story__chapter--right'
+                endif
+              endif
+
+              assign image = block.settings.image
+              assign image_position = 'object-position: ' | append: image.presentation.focal_point
+            -%}
+
+            <li
+              class="periwinkle-story__chapter periwinkle-story__chapter--{{ block.type }} {{ side_class }}{% if image != blank %} periwinkle-story__chapter--has-media{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              <span class="periwinkle-story__node" aria-hidden="true">
+                {%- unless block.type == 'finale' -%}{{ story_leaves }}{%- endunless -%}
+              </span>
+
+              <div class="periwinkle-story__card">
+                {%- if block.settings.eyebrow != blank or block.settings.marker != blank -%}
+                  <p class="periwinkle-story__eyebrow periwinkle-story__reveal">
+                    {%- if block.settings.marker != blank -%}
+                      <span class="periwinkle-story__marker">{{ block.settings.marker | escape }}</span>
+                    {%- endif -%}
+                    {{- block.settings.eyebrow | escape -}}
+                  </p>
+                {%- endif -%}
+
+                {%- if block.settings.heading != blank -%}
+                  <h2
+                    class="periwinkle-story__heading{% if block.settings.heading_size == 'large' %} periwinkle-story__heading--large{% endif %} periwinkle-story__reveal"
+                    style="--reveal-delay: 120ms;"
+                  >
+                    {{ block.settings.heading }}
+                  </h2>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="periwinkle-story__text periwinkle-story__reveal" style="--reveal-delay: 240ms;">
+                    {{ block.settings.text }}
+                  </div>
+                {%- endif -%}
+
+                {%- case block.type -%}
+                  {%- when 'chapter' -%}
+                    {%- if block.settings.quote != blank -%}
+                      <blockquote class="periwinkle-story__quote periwinkle-story__reveal" style="--reveal-delay: 360ms;">
+                        <p>{{ block.settings.quote | escape }}</p>
+                      </blockquote>
+                    {%- endif -%}
+
+                  {%- when 'swatches' -%}
+                    <ul class="periwinkle-story__swatches" role="list">
+                      {%- for i in (1..3) -%}
+                        {%- liquid
+                          assign color_key = 'color_' | append: i
+                          assign label_key = 'label_' | append: i
+                          assign swatch_label = block.settings[label_key]
+                          assign delay = i | times: 140 | plus: 240
+                        -%}
+                        {%- if swatch_label != blank -%}
+                          <li class="periwinkle-story__swatch periwinkle-story__reveal" style="--reveal-delay: {{ delay }}ms;">
+                            <span
+                              class="periwinkle-story__swatch-colour"
+                              style="--swatch-colour: {{ block.settings[color_key] }};"
+                              aria-hidden="true"
+                            ></span>
+                            <span class="periwinkle-story__swatch-label">{{ swatch_label | escape }}</span>
+                          </li>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </ul>
+
+                  {%- when 'list' -%}
+                    {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+                    {%- if block.settings.list_style == 'numbered' -%}
+                      <ol class="periwinkle-story__numbered periwinkle-story__reveal" style="--reveal-delay: 360ms;" role="list">
+                        {%- for item in items -%}
+                          {%- assign parts = item | split: '|' -%}
+                          {%- assign item_name = parts[0] | strip -%}
+                          {%- if item_name != blank -%}
+                            <li class="periwinkle-story__numbered-item">
+                              <span class="periwinkle-story__numbered-name">{{ item_name | escape }}</span>
+                              {%- if parts[1] != blank -%}
+                                <span class="periwinkle-story__numbered-note">{{ parts[1] | strip | escape }}</span>
+                              {%- endif -%}
+                            </li>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </ol>
+                    {%- else -%}
+                      <ul class="periwinkle-story__chips periwinkle-story__reveal" style="--reveal-delay: 360ms;" role="list">
+                        {%- for item in items -%}
+                          {%- assign item_name = item | strip -%}
+                          {%- if item_name != blank -%}
+                            <li class="periwinkle-story__chip">{{ item_name | escape }}</li>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+
+                  {%- when 'finale' -%}
+                    {%- if block.settings.button_label_1 != blank or block.settings.button_label_2 != blank -%}
+                      <div class="periwinkle-story__actions periwinkle-story__reveal" style="--reveal-delay: 360ms;">
+                        {%- if block.settings.button_label_1 != blank and block.settings.button_link_1 != blank -%}
+                          <a href="{{ block.settings.button_link_1 }}" class="button button--primary">
+                            {{- block.settings.button_label_1 | escape -}}
+                          </a>
+                        {%- endif -%}
+                        {%- if block.settings.button_label_2 != blank and block.settings.button_link_2 != blank -%}
+                          <a href="{{ block.settings.button_link_2 }}" class="button button--secondary">
+                            {{- block.settings.button_label_2 | escape -}}
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                {%- endcase -%}
+              </div>
+
+              {%- if image != blank -%}
+                <div class="periwinkle-story__media periwinkle-story__reveal" style="--reveal-delay: 200ms;">
+                  {{
+                    image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 960, 1200',
+                      sizes: '(min-width: 990px) 440px, calc(100vw - 8rem)',
+                      alt: image.alt,
+                      class: 'periwinkle-story__image',
+                      style: image_position
+                  }}
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      </periwinkle-story>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Peri story timeline",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Opening"
+    },
+    {
+      "type": "image_picker",
+      "id": "botanical_illustration",
+      "label": "Botanical illustration",
+      "info": "A small flower shown above the heading."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Story"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italicise part of the heading for an editorial accent.",
+      "default": "A Dream <em>Stitched in Time</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Some dreams begin not in boardrooms or business plans, but in the quiet of a mother’s hands.</p>"
+    },
+    {
+      "type": "text",
+      "id": "scroll_label",
+      "label": "Scroll prompt",
+      "default": "Scroll to begin"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#EEE9DF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Used for chapter markers and the timeline line.",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "color",
+      "id": "bloom_color",
+      "label": "Flower",
+      "info": "The periwinkle that grows down the timeline.",
+      "default": "#8B87D0"
+    },
+    {
+      "type": "color",
+      "id": "stem_color",
+      "label": "Stem and leaves",
+      "default": "#6E9A73"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "marker",
+          "label": "Marker",
+          "info": "A short chapter number, e.g. I, II, III.",
+          "default": "I"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Chapter title"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "A moment in the story"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "Heading size",
+          "options": [
+            { "value": "regular", "label": "Regular" },
+            { "value": "large", "label": "Large" }
+          ],
+          "default": "regular"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Tell this part of the story.</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Pull quote"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Shown on the other side of the timeline on desktop. 4:5 portrait images work best."
+        }
+      ]
+    },
+    {
+      "type": "swatches",
+      "name": "Colour swatches",
+      "settings": [
+        {
+          "type": "text",
+          "id": "marker",
+          "label": "Marker",
+          "default": "I"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "The first thread"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "It began in a mother’s hands"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "color_1",
+          "label": "Colour 1",
+          "default": "#D9A21B"
+        },
+        {
+          "type": "text",
+          "id": "label_1",
+          "label": "Label 1",
+          "default": "Turmeric"
+        },
+        {
+          "type": "color",
+          "id": "color_2",
+          "label": "Colour 2",
+          "default": "#6F8193"
+        },
+        {
+          "type": "text",
+          "id": "label_2",
+          "label": "Label 2",
+          "default": "Monsoon sky"
+        },
+        {
+          "type": "color",
+          "id": "color_3",
+          "label": "Colour 3",
+          "default": "#B8323F"
+        },
+        {
+          "type": "text",
+          "id": "label_3",
+          "label": "Label 3",
+          "default": "A bride’s laughter"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "name": "List",
+      "settings": [
+        {
+          "type": "text",
+          "id": "marker",
+          "label": "Marker",
+          "default": "V"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Gathered from across India"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "From every corner of the country"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "Items",
+          "info": "One item per line. For numbered lists, add a short note after a | e.g. Zardozi | The royal embroidery",
+          "default": "Assam\nKanchipuram\nKerala"
+        },
+        {
+          "type": "select",
+          "id": "list_style",
+          "label": "Style",
+          "options": [
+            { "value": "chips", "label": "Tags" },
+            { "value": "numbered", "label": "Numbered" }
+          ],
+          "default": "chips"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "finale",
+      "name": "Closing",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Welcome to Periwinkle by Sherry"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Come in. <em>Let something find you.</em>"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "label": "First button label",
+          "default": "Explore Sarees"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "First button link"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "Second button label",
+          "default": "Shop all"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "Second button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Peri story timeline",
+      "blocks": [
+        { "type": "swatches" },
+        { "type": "chapter", "settings": { "marker": "II" } },
+        { "type": "list", "settings": { "marker": "III" } },
+        { "type": "finale" }
+      ]
+    }
+  ]
+}
+{% endschema %}
