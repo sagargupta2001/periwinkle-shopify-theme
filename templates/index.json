@@ -30,6 +30,24 @@
             "color_scheme": "scheme-1"
           }
         },
+        "slide_kWDeAw": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/watermark-removed-hero-01.jpg",
+            "image_overlay_opacity": 20,
+            "heading": "Small Objects, &#10; Big Stories",
+            "heading_size": "h1",
+            "subheading": "Handcrafted sarees that carry the stories of heritage, craft and the hands that made them.",
+            "button_label": "Explore Sarees",
+            "link": "shopify://collections/periwinkle-sarees",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-left",
+            "text_alignment": "left",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-1"
+          }
+        },
         "slide_X7DTj7": {
           "type": "slide",
           "settings": {
@@ -87,6 +105,7 @@
       },
       "block_order": [
         "slide_tddQrq",
+        "slide_kWDeAw",
         "slide_X7DTj7",
         "slide_Gzenrm",
         "slide_ihny3m"
@@ -250,6 +269,82 @@
         "padding_bottom": 64
       }
     },
+    "periwinkle_miniatures": {
+      "type": "periwinkle-miniatures",
+      "blocks": {
+        "object_porcelain": {
+          "type": "object",
+          "settings": {
+            "image": "shopify://shop_images/miniatures-section-porcelain.jpg",
+            "title": "Porcelain",
+            "subtitle": "Quietly refined.",
+            "link": "shopify://collections/miniatures-porcelain",
+            "featured": false
+          }
+        },
+        "object_bone_china": {
+          "type": "object",
+          "settings": {
+            "image": "shopify://shop_images/miniatures-section-bone-china.jpg",
+            "title": "Bone China",
+            "subtitle": "Delicate by design.",
+            "link": "shopify://collections/miniatures-bone-china",
+            "featured": false
+          }
+        },
+        "object_glass": {
+          "type": "object",
+          "settings": {
+            "image": "shopify://shop_images/miniatures-section-hand-blown-glass.jpg",
+            "title": "Hand-Blown Glass",
+            "subtitle": "Light captured in glass",
+            "link": "shopify://collections/miniatures-hand-blown-glass-decor-items",
+            "featured": true
+          }
+        },
+        "object_wood": {
+          "type": "object",
+          "settings": {
+            "image": "shopify://shop_images/miniatures-section-wooden.jpg",
+            "title": "Wooden Miniatures",
+            "subtitle": "Carved with character.",
+            "link": "shopify://collections/miniatures-wooden",
+            "featured": false
+          }
+        },
+        "object_resin": {
+          "type": "object",
+          "settings": {
+            "image": "shopify://shop_images/miniatures-section-resin.jpg",
+            "title": "Resin",
+            "subtitle": "Playful forms, beautifully made.",
+            "link": "shopify://collections/miniatures-resin",
+            "featured": false
+          }
+        }
+      },
+      "block_order": [
+        "object_porcelain",
+        "object_bone_china",
+        "object_glass",
+        "object_wood",
+        "object_resin"
+      ],
+      "settings": {
+        "eyebrow": "Collected with curiosity",
+        "heading": "Small Objects, <em>Beautiful Stories.</em>",
+        "description": "<p>From porcelain and bone china to hand-blown glass, resin and carved wood — miniature objects chosen for their character, craft and quiet charm.</p>",
+        "button_label": "Explore Miniatures",
+        "button_link": "shopify://collections/miniatures",
+        "featured_text_color": "#2e2c35",
+        "featured_overlay_opacity": 0,
+        "background_color": "#eee9df",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70",
+        "padding_top": 88,
+        "padding_bottom": 88
+      }
+    },
     "image_with_text_hCyxcd": {
       "type": "image-with-text",
       "blocks": {
@@ -362,77 +457,6 @@
         "color_scheme": "",
         "padding_top": 64,
         "padding_bottom": 64
-      }
-    },
-    "periwinkle_miniatures": {
-      "type": "periwinkle-miniatures",
-      "blocks": {
-        "object_porcelain": {
-          "type": "object",
-          "settings": {
-            "title": "Porcelain",
-            "subtitle": "Quietly refined.",
-            "link": "shopify://collections/miniatures-porcelain",
-            "featured": false
-          }
-        },
-        "object_bone_china": {
-          "type": "object",
-          "settings": {
-            "title": "Bone China",
-            "subtitle": "Delicate by design.",
-            "link": "shopify://collections/miniatures-bone-china",
-            "featured": false
-          }
-        },
-        "object_glass": {
-          "type": "object",
-          "settings": {
-            "title": "Hand-Blown Glass",
-            "subtitle": "Light captured in glass",
-            "link": "shopify://collections/miniatures-hand-blown-glass-decor-items",
-            "featured": true
-          }
-        },
-        "object_wood": {
-          "type": "object",
-          "settings": {
-            "title": "Wooden Miniatures",
-            "subtitle": "Carved with character.",
-            "link": "shopify://collections/miniatures-wooden",
-            "featured": false
-          }
-        },
-        "object_resin": {
-          "type": "object",
-          "settings": {
-            "title": "Resin",
-            "subtitle": "Playful forms, beautifully made.",
-            "link": "shopify://collections/miniatures-resin",
-            "featured": false
-          }
-        }
-      },
-      "block_order": [
-        "object_porcelain",
-        "object_bone_china",
-        "object_glass",
-        "object_wood",
-        "object_resin"
-      ],
-      "settings": {
-        "eyebrow": "Collected with curiosity",
-        "heading": "Small Objects, <em>Beautiful Stories.</em>",
-        "description": "<p>From porcelain and bone china to hand-blown glass, resin and carved wood — miniature objects chosen for their character, craft and quiet charm.</p>",
-        "button_label": "Explore Miniatures",
-        "button_link": "shopify://collections/miniatures",
-        "featured_overlay_opacity": 0,
-        "featured_text_color": "#2e2c35",
-        "background_color": "#eee9df",
-        "text_color": "#2e2c35",
-        "accent_color": "#4f4a70",
-        "padding_top": 88,
-        "padding_bottom": 88
       }
     }
   },
