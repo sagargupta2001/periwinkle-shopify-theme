@@ -1,0 +1,799 @@
+/*
+  Periwinkle story timeline — "A Dream Stitched in Time"
+
+  An opening hero followed by a vertical timeline. A spine runs down the
+  middle (desktop) or left edge (mobile); each chapter hangs off a periwinkle
+  flower node and alternates sides on desktop, with its image opposite.
+
+  Motion is opt-in: periwinkle-story.js adds .periwinkle-story--animated only
+  when the viewer allows motion, so without JS, with reduced motion, or in the
+  theme editor every chapter is simply visible.
+
+  A single periwinkle grows down the spine as the story scrolls (adapted from
+  the "Animated Blooming Flower" CSS demo). periwinkle-story.js sets:
+  --story-track   length of the stem when fully grown, in px
+  --story-growth  0–1, how much of it has grown
+  Each chapter gets .is-reached when the stem passes it (its leaves unfurl),
+  and the timeline gets .is-bloomed when the flower comes to rest.
+*/
+
+.periwinkle-story {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--story-background);
+  color: var(--story-text);
+}
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.periwinkle-story__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 88rem;
+  margin: 0 auto;
+  padding-bottom: 8rem;
+  text-align: center;
+}
+
+.periwinkle-story__botanical {
+  width: 8rem;
+  margin-bottom: 2.4rem;
+}
+
+.periwinkle-story__botanical-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.periwinkle-story__hero-eyebrow,
+.periwinkle-story__eyebrow {
+  margin: 0;
+  color: var(--story-accent);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.periwinkle-story__hero-heading {
+  margin: 2rem 0 0;
+  text-wrap: balance;
+  color: inherit;
+  font-size: clamp(4.4rem, 5vw + 2rem, 9.6rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.periwinkle-story__hero-heading em,
+.periwinkle-story__heading em {
+  font-style: italic;
+}
+
+.periwinkle-story__hero-intro {
+  max-width: 44ch;
+  margin-top: 2.8rem;
+  color: var(--story-muted);
+  font-family: var(--font-heading-family);
+  font-size: clamp(2rem, 0.8vw + 1.7rem, 2.6rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.periwinkle-story__hero-intro > * {
+  margin: 0;
+}
+
+.periwinkle-story__scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 5.6rem 0 0;
+  color: var(--story-muted);
+  font-size: 1.1rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.periwinkle-story__scroll-line {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 5.6rem;
+  overflow: hidden;
+  background-color: var(--story-line);
+}
+
+.periwinkle-story__scroll-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--story-accent);
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .periwinkle-story__hero > * {
+    animation: periwinkleStoryRise 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .periwinkle-story__hero > :nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .periwinkle-story__hero > :nth-child(3) {
+    animation-delay: 240ms;
+  }
+
+  .periwinkle-story__hero > :nth-child(4) {
+    animation-delay: 360ms;
+  }
+
+  .periwinkle-story__hero > :nth-child(5) {
+    animation-delay: 600ms;
+  }
+
+  .periwinkle-story__scroll-line::after {
+    animation: periwinkleStoryDrip 2400ms cubic-bezier(0.6, 0, 0.4, 1) 1400ms infinite;
+  }
+}
+
+@keyframes periwinkleStoryRise {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes periwinkleStoryDrip {
+  0% {
+    transform: translateY(-100%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* =========================================================
+   Timeline and spine
+   ========================================================= */
+
+periwinkle-story {
+  --story-node-size: 3.2rem;
+  --story-spine-x: calc(var(--story-node-size) / 2);
+  --story-bloom-scale: 0.8;
+  --story-growth: 1;
+  position: relative;
+  display: block;
+}
+
+.periwinkle-story__spine {
+  position: absolute;
+  top: 0;
+  left: var(--story-spine-x);
+  z-index: 2;
+  width: 0;
+  height: var(--story-track, 100%);
+  pointer-events: none;
+}
+
+.periwinkle-story__track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background-image: linear-gradient(to bottom, var(--story-line) 55%, transparent 55%);
+  background-size: 1px 0.9rem;
+  transform: translateX(-50%);
+}
+
+.periwinkle-story__chapters {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Stem ---------- */
+
+.periwinkle-story__stem,
+.periwinkle-story__flower {
+  display: none;
+}
+
+.periwinkle-story--growing .periwinkle-story__stem,
+.periwinkle-story--growing .periwinkle-story__flower {
+  display: block;
+}
+
+.periwinkle-story__stem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.5rem;
+  height: 100%;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.18), transparent, rgba(255, 255, 255, 0.3)),
+    linear-gradient(to bottom, transparent, var(--story-stem-deep) 6rem, var(--story-stem) 60%, var(--story-stem-light));
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%) scaleY(var(--story-growth));
+  transform-origin: top center;
+}
+
+/* ---------- Flower ---------- */
+
+.periwinkle-story__flower {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform: translate3d(0, calc(var(--story-growth) * var(--story-track, 0px)), 0)
+    scale(calc(var(--story-bloom-scale) * (0.7 + var(--story-growth) * 0.3)));
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.periwinkle-story__flower-sway {
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+
+/* The demo flower opens upwards; flipped, it hangs from the stem's tip. */
+.periwinkle-story__bloom {
+  --open: min(1, calc(0.4 + var(--story-growth) * 1.2));
+  position: relative;
+  width: 0;
+  height: 0;
+  transform: scaleY(-1);
+  perspective: 60rem;
+}
+
+/*
+  Soft glow behind the petals. A radial gradient rather than filter: blur(),
+  which gets clipped to a visible square inside the bloom's 3D transforms.
+*/
+.periwinkle-story__bloom::before {
+  content: '';
+  position: absolute;
+  left: -6rem;
+  bottom: -3rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  background-image: radial-gradient(closest-side, var(--story-bloom), transparent);
+  opacity: calc(0.15 + var(--story-growth) * 0.3);
+  pointer-events: none;
+}
+
+.periwinkle-story__petal {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3.4rem;
+  height: 4.8rem;
+  border-radius: 51% 49% 47% 53% / 44% 45% 55% 69%;
+  background-color: var(--story-bloom-light);
+  background-image: linear-gradient(to top, var(--story-bloom-deep), var(--story-bloom-light));
+  box-shadow: inset 0 0 1rem rgba(255, 255, 255, 0.55);
+  opacity: 0.92;
+  transform-origin: bottom center;
+}
+
+.periwinkle-story__petal--1 {
+  transform: translate(-10%, 1%) rotateY(calc(var(--open) * 40deg)) rotateX(calc(var(--open) * -50deg));
+}
+
+.periwinkle-story__petal--2 {
+  transform: translate(-50%, -4%) rotateX(calc(var(--open) * 40deg));
+}
+
+.periwinkle-story__petal--3 {
+  transform: translate(-90%, 0%) rotateY(calc(var(--open) * 45deg)) rotateX(calc(var(--open) * 50deg));
+}
+
+.periwinkle-story__petal--4 {
+  z-index: 1;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 1.7rem 4.4rem 1.7rem 1.7rem;
+  background-image: linear-gradient(to top, var(--story-bloom), var(--story-bloom-light));
+  opacity: 0.82;
+  transform: translate(0%, 18%) rotateX(calc(var(--open) * 70deg)) rotate(-43deg);
+  transform-origin: bottom left;
+}
+
+.periwinkle-story__centre {
+  position: absolute;
+  top: -1.3rem;
+  left: -1.5rem;
+  z-index: 2;
+  width: 3.8rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 0 0.6rem rgba(255, 255, 255, 0.6);
+}
+
+.periwinkle-story__centre::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 55%;
+  height: 55%;
+  border-radius: inherit;
+  background-image: linear-gradient(90deg, #f7e27c, #e8bf3f);
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .periwinkle-story--growing .periwinkle-story__flower-sway {
+    animation: periwinkleStorySway 4s ease-in-out infinite;
+  }
+
+  .periwinkle-story--growing.is-bloomed .periwinkle-story__bloom::before {
+    animation: periwinkleStoryGlow 3.2s ease-in-out infinite;
+  }
+}
+
+@keyframes periwinkleStorySway {
+  0%,
+  100% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes periwinkleStoryGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.25);
+  }
+}
+
+/* =========================================================
+   Chapter — mobile: node column on the left, content beside it
+   ========================================================= */
+
+.periwinkle-story__chapter {
+  display: grid;
+  grid-template-columns: var(--story-node-size) minmax(0, 1fr);
+  column-gap: 2rem;
+  align-items: start;
+}
+
+/* The node marks where the chapter meets the stem; leaves grow from it. */
+.periwinkle-story__node {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  width: var(--story-node-size);
+  height: var(--story-node-size);
+}
+
+.periwinkle-story__leaf {
+  --leaf-w: 2.2rem;
+  --leaf-h: 3rem;
+  position: absolute;
+  left: 50%;
+  width: var(--leaf-w);
+  height: var(--leaf-h);
+  border-radius: 0 var(--leaf-h) 0 var(--leaf-h);
+  background-image: linear-gradient(135deg, transparent 48%, rgba(255, 255, 255, 0.35) 50%, transparent 52%),
+    linear-gradient(to bottom right, var(--story-stem-deep), var(--story-stem) 55%, var(--story-stem-light));
+  box-shadow: inset 0 0 0.6rem rgba(255, 255, 255, 0.3);
+  transform-origin: 0 0;
+}
+
+.periwinkle-story__leaf--right {
+  top: 45%;
+  transform: rotate(-12deg) scale(var(--leaf-scale, 1));
+}
+
+.periwinkle-story__leaf--left {
+  top: 20%;
+  transform: scaleX(-1) rotate(-12deg) scale(var(--leaf-scale, 1));
+}
+
+.periwinkle-story--growing .periwinkle-story__leaf {
+  --leaf-scale: 0;
+  transition: transform 900ms cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.periwinkle-story--growing .periwinkle-story__leaf--left {
+  transition-delay: 150ms;
+}
+
+.periwinkle-story--growing .is-reached .periwinkle-story__leaf {
+  --leaf-scale: 1;
+}
+
+.periwinkle-story__card {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.periwinkle-story__media {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 3.2rem;
+}
+
+/* =========================================================
+   Chapter content
+   ========================================================= */
+
+.periwinkle-story__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  /* Sit the eyebrow on the node's centre line. */
+  min-height: var(--story-node-size);
+}
+
+.periwinkle-story__marker {
+  color: var(--story-accent);
+  font-family: var(--font-heading-family);
+  font-size: 2rem;
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.periwinkle-story__heading {
+  margin: 1.6rem 0 0;
+  text-wrap: balance;
+  color: inherit;
+  font-size: clamp(3.2rem, 1.6vw + 2.6rem, 4.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.periwinkle-story__heading--large {
+  font-size: clamp(4rem, 3vw + 2.6rem, 7.2rem);
+  line-height: 1.02;
+}
+
+.periwinkle-story__text {
+  max-width: 48ch;
+  margin-top: 2rem;
+  color: var(--story-muted);
+  font-size: 1.6rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+.periwinkle-story__text > * {
+  margin: 0;
+}
+
+.periwinkle-story__text > * + * {
+  margin-top: 1.2rem;
+}
+
+.periwinkle-story__quote {
+  margin: 3.2rem 0 0;
+  padding: 0.4rem 0 0.4rem 2.4rem;
+  border-left: 1px solid var(--story-accent);
+}
+
+.periwinkle-story__quote p {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.2rem, 1vw + 1.8rem, 3rem);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* Swatches */
+
+.periwinkle-story__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.4rem 3.2rem;
+  margin: 3.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.periwinkle-story__swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.periwinkle-story__swatch-colour {
+  display: block;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 50%;
+  background-color: var(--swatch-colour);
+  box-shadow: 0 0 0 0.5rem var(--story-background), 0 0 0 0.6rem var(--story-line);
+}
+
+.periwinkle-story__swatch-label {
+  font-family: var(--font-heading-family);
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+/* Tags */
+
+.periwinkle-story__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.periwinkle-story__chip {
+  padding: 0.7rem 1.6rem;
+  border: 1px solid var(--story-line);
+  border-radius: 10rem;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.periwinkle-story__chip:hover {
+  border-color: var(--story-accent);
+  color: var(--story-accent);
+}
+
+/* Numbered */
+
+.periwinkle-story__numbered {
+  display: grid;
+  gap: 0;
+  margin: 2.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: periwinkle-story;
+}
+
+.periwinkle-story__numbered-item {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  column-gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--story-line);
+  counter-increment: periwinkle-story;
+}
+
+.periwinkle-story__numbered-item:last-child {
+  border-bottom: 1px solid var(--story-line);
+}
+
+.periwinkle-story__numbered-item::before {
+  content: counter(periwinkle-story, decimal-leading-zero);
+  grid-row: span 2;
+  color: var(--story-accent);
+  font-family: var(--font-heading-family);
+  font-size: 1.8rem;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.periwinkle-story__numbered-name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.periwinkle-story__numbered-note {
+  color: var(--story-muted);
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+/* Media */
+
+.periwinkle-story__media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 44rem;
+  aspect-ratio: 4 / 5;
+  /* An arch, echoing a doorway. */
+  border-radius: 22rem 22rem 0.4rem 0.4rem;
+  background-color: var(--story-line);
+}
+
+.periwinkle-story__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Closing chapter */
+
+.periwinkle-story__chapter--finale .periwinkle-story__card {
+  /* On mobile the resting flower hangs beside the card; start the text below it. */
+  padding-top: 4.8rem;
+  padding-bottom: 1rem;
+}
+
+.periwinkle-story__chapter--finale .periwinkle-story__heading {
+  font-size: clamp(4rem, 4vw + 2.4rem, 8.8rem);
+  line-height: 1;
+}
+
+.periwinkle-story__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 3.6rem;
+}
+
+.periwinkle-story__actions .button {
+  margin: 0;
+}
+
+/* =========================================================
+   Desktop — centred spine, chapters alternate sides
+   ========================================================= */
+
+@media screen and (min-width: 990px) {
+  periwinkle-story {
+    --story-node-size: 4rem;
+    --story-spine-x: 50%;
+    --story-bloom-scale: 1.9;
+  }
+
+  .periwinkle-story__leaf {
+    --leaf-w: 3rem;
+    --leaf-h: 4rem;
+  }
+
+  .periwinkle-story__hero {
+    padding-bottom: 10rem;
+  }
+
+  .periwinkle-story__chapters {
+    gap: 14rem;
+  }
+
+  .periwinkle-story__chapter {
+    grid-template-columns: minmax(0, 1fr) var(--story-node-size) minmax(0, 1fr);
+    column-gap: 6.4rem;
+    align-items: center;
+  }
+
+  .periwinkle-story__node {
+    grid-column: 2;
+    align-self: center;
+  }
+
+  .periwinkle-story__media {
+    grid-row: 1;
+    margin-top: 0;
+  }
+
+  .periwinkle-story__card {
+    width: 100%;
+    max-width: 52rem;
+  }
+
+  .periwinkle-story__chapter--left .periwinkle-story__card {
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  .periwinkle-story__chapter--left .periwinkle-story__media {
+    grid-column: 3;
+    justify-self: start;
+  }
+
+  .periwinkle-story__chapter--right .periwinkle-story__card {
+    grid-column: 3;
+    justify-self: start;
+  }
+
+  .periwinkle-story__chapter--right .periwinkle-story__media {
+    grid-column: 1;
+    justify-self: end;
+  }
+
+  /* Without an image, align the node with the top of the chapter. */
+  .periwinkle-story__chapter:not(.periwinkle-story__chapter--has-media) {
+    align-items: start;
+  }
+
+  .periwinkle-story__chapter:not(.periwinkle-story__chapter--has-media) .periwinkle-story__node {
+    align-self: start;
+  }
+
+  /* The closing chapter sits centred on the spine, below its node. */
+  .periwinkle-story__chapter--finale {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding-top: 2rem;
+    text-align: center;
+  }
+
+  .periwinkle-story__chapter--finale .periwinkle-story__node {
+    grid-column: 1;
+    grid-row: 1;
+    /* Room for the flower to come to rest. */
+    height: 9rem;
+  }
+
+  .periwinkle-story__chapter--finale .periwinkle-story__card {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: 84rem;
+    margin-top: 2.4rem;
+    padding: 2.4rem 4rem 1rem;
+    /* Hide the spine behind the centred text. */
+    background-color: var(--story-background);
+  }
+
+  .periwinkle-story__chapter--finale .periwinkle-story__eyebrow,
+  .periwinkle-story__chapter--finale .periwinkle-story__actions {
+    justify-content: center;
+  }
+
+  .periwinkle-story__chapter--finale .periwinkle-story__text {
+    margin-inline: auto;
+  }
+}
+
+/* =========================================================
+   Reveal on scroll (only when periwinkle-story.js enables it)
+   ========================================================= */
+
+.periwinkle-story--animated .periwinkle-story__reveal {
+  opacity: 0;
+  transform: translateY(2.4rem);
+  transition: opacity 900ms ease, transform 1000ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.periwinkle-story--animated .periwinkle-story__media.periwinkle-story__reveal {
+  transform: translateY(3.2rem) scale(0.97);
+}
+
+.periwinkle-story--animated .is-revealed .periwinkle-story__reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .periwinkle-story--growing .periwinkle-story__leaf {
+    transition: none;
+  }
+}
