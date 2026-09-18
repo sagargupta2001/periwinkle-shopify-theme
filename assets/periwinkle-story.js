@@ -8,6 +8,11 @@
       --story-growth  0–1, how much of the stem has grown
     Chapters get .is-reached as the tip passes them (their leaves unfurl), and
     the element gets .is-bloomed when the flower comes to rest.
+
+    Growth only ever goes forward: the plant does not shrink back when the
+    reader scrolls up, because a flower that un-blooms reads as a scrubbing
+    widget rather than as something that grew. `peak` holds the furthest the
+    tip has reached, and the target never falls below it.
   - Reveals each chapter's content once it scrolls into the lower part of the
     viewport. Checked on scroll so chapters jumped past still reveal.
   - Dispatches `periwinkle-story:progress` with { growth }.
@@ -26,6 +31,7 @@ if (!customElements.get('periwinkle-story')) {
         super();
         this.current = 0;
         this.target = 0;
+        this.peak = 0;
         this.track = 0;
         this.growth = -1;
         this.frame = null;
@@ -80,6 +86,7 @@ if (!customElements.get('periwinkle-story')) {
 
       measure() {
         const top = this.getBoundingClientRect().top;
+        const previousTrack = this.track;
 
         this.nodeOffsets = this.nodes.map((node) =>
           node ? node.getBoundingClientRect().top - top + node.offsetHeight / 2 : 0
@@ -95,6 +102,17 @@ if (!customElements.get('periwinkle-story')) {
           this.track = this.nodeOffsets[this.nodeOffsets.length - 1] || this.offsetHeight;
         }
 
+        // The track changes as images and fonts load, and on resize. Carry the
+        // growth already reached across as a proportion, so the plant keeps its
+        // place in the story instead of jumping or quietly resetting.
+        if (previousTrack > 0 && this.track > 0) {
+          const scale = this.track / previousTrack;
+          this.peak *= scale;
+          this.current *= scale;
+        }
+        this.peak = Math.min(Math.max(this.peak, 0), this.track);
+        this.current = Math.min(Math.max(this.current, 0), this.track);
+
         this.style.setProperty('--story-track', `${Math.round(this.track)}px`);
         this.growth = -1;
         this.onScroll();
@@ -107,7 +125,9 @@ if (!customElements.get('periwinkle-story')) {
           this.target = this.track;
         } else {
           const tip = window.innerHeight * 0.55 - this.getBoundingClientRect().top;
-          this.target = Math.min(Math.max(tip, 0), this.track);
+          // Never below the furthest the tip has already reached: growth is one-way.
+          this.peak = Math.max(this.peak, Math.min(Math.max(tip, 0), this.track));
+          this.target = this.peak;
         }
 
         if (!this.frame) this.frame = requestAnimationFrame(this.tick);
