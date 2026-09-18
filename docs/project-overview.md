@@ -94,8 +94,11 @@ Notes:
 4. **Featured collection**: "Timeless Fashion" (centred via `custom_css`).
 5. **Peri miniatures** (`periwinkle-miniatures`): "Small Objects, *Beautiful
    Stories.*"
-6. **Image with text**: image first.
-7. **Image with text**: text first. Its "Our Story" button links to
+6. **Peri coming soon** (`periwinkle-coming-soon`): "Still *on the loom.*",
+   previewing Bridal Trousseaus and The Cloth That Remembers, with an email
+   sign-up.
+7. **Image with text**: image first.
+8. **Image with text**: text first. Its "Our Story" button links to
    `/pages/our-story`.
 
 ### Our Story (`templates/page.our-story.json`)

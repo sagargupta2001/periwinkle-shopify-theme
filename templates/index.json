@@ -345,6 +345,59 @@
         "padding_bottom": 88
       }
     },
+    "periwinkle_coming_soon": {
+      "type": "periwinkle-coming-soon",
+      "blocks": {
+        "concept_trousseau": {
+          "type": "concept",
+          "settings": {
+            "label": "Concept One",
+            "status": "Coming soon",
+            "heading": "Bridal <em>Trousseaus</em>",
+            "description": "<p>Curated trousseau packages, thoughtfully designed across three budget tiers — because every family’s celebration deserves a collection that fits both their dreams and their means.</p>",
+            "highlights": "Curated trousseau packages\nThree budget tiers, one standard of care\nShaped around your family’s celebration",
+            "inset_caption": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "concept_cloth_remembers": {
+          "type": "concept",
+          "settings": {
+            "label": "Concept Two",
+            "status": "Coming soon",
+            "heading": "The Cloth That <em>Remembers</em>",
+            "description": "<p>A saree holds more than weave and colour — it holds memory. Bring us your grandmother’s or mother’s old saree, and we will give it a second life as a striking Indo-Western silhouette. A Berhampuri silk patta, for instance, reborn as a chic contemporary piece — heritage, reimagined for how you live today.</p>",
+            "highlights": "Your family saree, carefully reworked\nIndo-Western silhouettes, cut to your measure\nEvery border and motif kept in the story",
+            "inset_caption": "Before — a Berhampuri silk patta",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "concept_trousseau",
+        "concept_cloth_remembers"
+      ],
+      "settings": {
+        "eyebrow": "Coming soon",
+        "heading": "Still <em>on the loom.</em>",
+        "intro": "<p>Two new ideas we are weaving slowly, with the same care as everything we make. Here is a first look.</p>",
+        "media_first": "left",
+        "show_signup": true,
+        "signup_heading": "Be the <em>first to know.</em>",
+        "signup_text": "<p>Leave your email and we will write to you when these open. No noise, just the news.</p>",
+        "signup_placeholder": "Your email address",
+        "signup_button": "Notify me",
+        "signup_success": "Thank you. We will be in touch when they arrive.",
+        "signup_tags": "newsletter,coming-soon",
+        "background_color": "#e8e6f2",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
     "image_with_text_hCyxcd": {
       "type": "image-with-text",
       "blocks": {
@@ -466,6 +519,7 @@
     "periwinkle_editorial_slider_GhtTFK",
     "featured_collection",
     "periwinkle_miniatures",
+    "periwinkle_coming_soon",
     "image_with_text_hCyxcd",
     "image_with_text_CQVAmm"
   ]
