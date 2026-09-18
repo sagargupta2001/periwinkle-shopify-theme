@@ -329,6 +329,7 @@ crop falls.
 | **Miniatures objects** | 4:5 | 1600 × 2000 | Deliberately varied per slot and breakpoint via `--miniatures-ratio`: quiet cards 4:5, the featured card 2:3 on desktop and 3:2 on tablet, and 1:1 for the quiet cards when only three objects are set. Expect side or top crop, so leave margin around the object. |
 | **Our Story timeline images** | 4:5 | 1600 × 2000 | Hard 4:5 crop. |
 | **Coming soon concepts** (main + inset) | 4:5 | 1600 × 2000 | Hard 4:5 crop for both. The inset is shown at about 40% of the main frame and covers its lower corner, so keep the main subject out of the bottom-left (or bottom-right on alternate rows) third. |
+| **Coming soon before / after slider** | 4:5, both images | 1600 × 2000 | Both images are stacked at the same 4:5 crop and wiped between, so they must share framing, camera height and background. Generate the After first and make the Before by editing (inpainting) that same image. |
 | **Image with text** | 4:5 or 3:2 | 1600 × 2000 | Height is **Adapt**, so the image keeps its own ratio at medium column width. |
 | **Blog / editorial imagery** | 3:2 | 1800 × 1200 | Blog image height is **Medium**: a fixed band (about 307px desktop, 220px mobile) `cover`-fitted, so it crops to a wider band than 3:2. |
 | **Product images / model images** | 4:5 | 2048 × 2560 | The PDP gallery is **stacked** with lightbox zoom, and it shows the file's own ratio. Keep every image on a product the same ratio, or the gallery steps. |

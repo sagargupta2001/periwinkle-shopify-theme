@@ -215,6 +215,27 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   section background. The frame gets `margin-bottom` equal to the inset's
   overhang, and a caption hangs *below* the inset (absolutely positioned, with
   padding reserved on the media) — otherwise it collides with the main photo.
+- **Before / after slider.** Each concept's *Image display* can switch to
+  *Before / after slider*, which reuses the block's images: **Main image =
+  After**, **Inset image = Before**. It needs both images and falls back to the
+  inset layout otherwise. `<periwinkle-compare>` sets a unitless
+  `--compare-position` (0–100). Before is clipped from the right with
+  `clip-path`, and the tag opacities are derived from the same number in CSS.
+  - A visually hidden native `range` input carries keyboard and screen
+    reader support (arrows, Home/End, PageUp/Down, `aria-valuetext`). It has
+    `pointer-events: none`; the frame handles the pointer.
+  - Touch only takes over after a sideways move. The frame has
+    `touch-action: pan-y`, so vertical swipes still scroll the page.
+  - ⚠️ A mouse release outside the window can go unreported, which left the
+    handle following the cursor. A buttonless `pointermove` and
+    `lostpointercapture` both end the drag.
+  - The knob is clamped 2.4rem inside the frame so it isn't cut off at 0 or
+    100%, while the line tracks the true split.
+  - Without JS it rests at a static 50/50 split, with no knob and no focusable
+    input. A one-time sway hint plays when it comes into view, only with motion
+    allowed, outside the editor, and before any interaction.
+  - It works best with a matched pair (same camera and background, only the
+    garment changed).
 - Optional **email sign-up** uses `{% form 'customer' %}` with
   `contact[tags]` from the *Customer tags* setting (default
   `newsletter,coming-soon`), so launch emails can target that tag in Shopify
