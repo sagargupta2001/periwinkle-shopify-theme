@@ -14,6 +14,7 @@ before touching one of these areas.
 | 6 | Peri editorial slider section | `sections/periwinkle-editorial-slider.liquid` | first commit |
 | 7 | Peri miniatures section | `sections/periwinkle-miniatures.liquid`, `section-periwinkle-miniatures.css` | #5 · `621111c` |
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
+| 11 | Peri journal article template | `sections/periwinkle-journal-article.liquid`, `section-periwinkle-journal.css`, `periwinkle-journal.js`, `templates/article.journal.json` | — |
 | 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
 Theme settings (colours, fonts, radii) are also customized, but those live in
@@ -245,6 +246,29 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
 - `periwinkle-coming-soon.js` adds `.is-animated` (fade and rise on scroll)
   only when motion is allowed, outside the editor, and where
   IntersectionObserver exists.
+
+## 11. Peri journal article (`article.journal`)
+
+- An alternate article template. A post uses it when **Theme template** is set
+  to `journal` on the post in admin. The stock `article.json` is untouched.
+- Title, excerpt (shown as the italic standfirst), featured image, body,
+  author, date and tags all come from the post. The first tag is the eyebrow
+  unless the section sets one. Reading time is words ÷ 200.
+- **Per-post extras are metafields** on Blog posts (Settings → Custom data):
+  `custom.gallery` (list of files), `custom.shop_link` (URL) and
+  `custom.shop_label` (single line text). Gallery captions are each image's
+  **alt text**, so the caption is `aria-hidden` to avoid reading it twice. A
+  theme can't create metafield definitions, so they're set up once in admin.
+- Body content from the rich text editor is styled in place: drop cap on the
+  first paragraph, `<blockquote>` as a Dusk pull quote, and body images at
+  full column width.
+- Share: a plain WhatsApp link (works without JS), plus a button that JS
+  reveals. It uses the native share sheet on phones and copies the link
+  elsewhere.
+- The `·` meta separator is written as `'\00B7'` in CSS so it can't be
+  mis-decoded if the stylesheet is served without a charset.
+- Comments aren't rendered. If a blog turns comments on, use the stock
+  template for those posts or add them here.
 
 ---
 
