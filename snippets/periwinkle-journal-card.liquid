@@ -1,0 +1,86 @@
+{%- comment -%}
+  One story on the journal index (sections/periwinkle-journal-blog.liquid).
+
+  Accepts:
+  - article: {Object} the blog post
+  - featured: {Boolean} the large split card for the latest story
+  - show_date: {Boolean}
+{%- endcomment -%}
+
+{%- liquid
+  assign reading_minutes = article.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1
+  if article.excerpt != blank
+    assign summary = article.excerpt | strip_html
+  else
+    assign summary = article.content | strip_html | truncatewords: 32
+  endif
+  assign image_position = 'object-position: ' | append: article.image.presentation.focal_point
+
+  if featured
+    assign image_width = 1600
+    assign image_widths = '375, 550, 750, 1000, 1300, 1600'
+    assign image_sizes = '(min-width: 1300px) 700px, (min-width: 990px) 55vw, calc(100vw - 3rem)'
+    assign image_loading = 'eager'
+  else
+    assign image_width = 1200
+    assign image_widths = '375, 550, 750, 1000, 1200'
+    assign image_sizes = '(min-width: 1300px) 400px, (min-width: 990px) 30vw, (min-width: 750px) 45vw, calc(100vw - 3rem)'
+    assign image_loading = 'lazy'
+  endif
+-%}
+
+{%- capture meta -%}
+  <p class="periwinkle-journal-index__meta">
+    {%- if show_date -%}
+      <span>{{ article.published_at | time_tag: format: 'date' }}</span>
+    {%- endif -%}
+    <span>{{ reading_minutes }} min read</span>
+  </p>
+{%- endcapture -%}
+
+<article class="{% if featured %}periwinkle-journal-index__featured{% else %}periwinkle-journal-index__story{% endif %}">
+  <div class="periwinkle-journal-index__media">
+    {%- if article.image -%}
+      {{
+        article.image
+        | image_url: width: image_width
+        | image_tag:
+          loading: image_loading,
+          widths: image_widths,
+          sizes: image_sizes,
+          alt: article.image.alt,
+          class: 'periwinkle-journal-index__image',
+          style: image_position
+      }}
+    {%- endif -%}
+  </div>
+
+  {%- if featured -%}
+    <div class="periwinkle-journal-index__featured-copy">
+      <p class="periwinkle-journal-index__label">
+        Latest story
+        {%- if article.tags.size > 0 -%}
+          <span class="periwinkle-journal-index__label-topic">{{ article.tags.first | escape }}</span>
+        {%- endif -%}
+      </p>
+      <h2 class="periwinkle-journal-index__featured-title">
+        <a href="{{ article.url }}" class="periwinkle-journal-index__link">{{ article.title | escape }}</a>
+      </h2>
+      {{ meta }}
+      <p class="periwinkle-journal-index__summary">{{ summary }}</p>
+      <span class="periwinkle-journal-index__cta" aria-hidden="true">
+        Read the story
+        <span class="periwinkle-journal-index__cta-icon">{{- 'icon-arrow.svg' | inline_asset_content -}}</span>
+      </span>
+    </div>
+  {%- else -%}
+    {%- if article.tags.size > 0 -%}
+      <p class="periwinkle-journal-index__topic">{{ article.tags.first | escape }}</p>
+    {%- endif -%}
+    <h3 class="periwinkle-journal-index__title">
+      <a href="{{ article.url }}" class="periwinkle-journal-index__link">{{ article.title | escape }}</a>
+    </h3>
+    {{ meta }}
+    <p class="periwinkle-journal-index__summary periwinkle-journal-index__summary--clamp">{{ summary }}</p>
+  {%- endif -%}
+</article>

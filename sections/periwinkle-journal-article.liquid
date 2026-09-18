@@ -78,17 +78,25 @@
       </div>
     {%- endif -%}
 
-    <p class="periwinkle-journal__meta periwinkle-journal__rise">
+    {%- comment -%}
+      The byline gets its own line so the date · read-time row stays short
+      and never wraps with a separator leading the second line on phones.
+    {%- endcomment -%}
+    <div class="periwinkle-journal__meta periwinkle-journal__rise">
       {%- if section.settings.show_author and article.author != blank -%}
-        <span itemprop="author">{{ article.author | escape }}</span>
+        <p class="periwinkle-journal__byline">By <span itemprop="author">{{ article.author | escape }}</span></p>
       {%- endif -%}
-      {%- if section.settings.show_date -%}
-        <span>{{ article.published_at | time_tag: format: 'date' }}</span>
+      {%- if section.settings.show_date or section.settings.show_reading_time -%}
+        <p class="periwinkle-journal__dateline">
+          {%- if section.settings.show_date -%}
+            <span>{{ article.published_at | time_tag: format: 'date' }}</span>
+          {%- endif -%}
+          {%- if section.settings.show_reading_time -%}
+            <span>{{ reading_minutes }} min read</span>
+          {%- endif -%}
+        </p>
       {%- endif -%}
-      {%- if section.settings.show_reading_time -%}
-        <span>{{ reading_minutes }} min read</span>
-      {%- endif -%}
-    </p>
+    </div>
   </header>
 
   {%- if article.image -%}
@@ -226,16 +234,38 @@
           data-title="{{ article.title | escape }}"
         >
           <a
-            class="periwinkle-journal__share-link"
+            class="periwinkle-journal__share-icon"
             href="https://wa.me/?text={{ article.title | append: ' ' | append: share_url | url_encode }}"
             target="_blank"
             rel="noopener"
+            aria-label="Share on WhatsApp (opens in a new tab)"
+            title="WhatsApp"
           >
-            WhatsApp<span class="visually-hidden"> (opens in a new tab)</span>
+            {{- 'icon-whatsapp.svg' | inline_asset_content -}}
           </a>
-          <button type="button" class="periwinkle-journal__share-link" data-share-copy hidden>
-            <span data-share-label>Copy link</span>
+          {%- comment -%}
+            JS reveals this and sets data-mode: "share" opens the phone's share
+            sheet, "copy" copies the link. The matching icon shows via CSS.
+          {%- endcomment -%}
+          <button
+            type="button"
+            class="periwinkle-journal__share-icon"
+            data-share-copy
+            aria-label="Copy link"
+            title="Copy link"
+            hidden
+          >
+            <span class="periwinkle-journal__share-glyph periwinkle-journal__share-glyph--share" aria-hidden="true">
+              {{- 'icon-share.svg' | inline_asset_content -}}
+            </span>
+            <span class="periwinkle-journal__share-glyph periwinkle-journal__share-glyph--copy" aria-hidden="true">
+              {{- 'icon-copy.svg' | inline_asset_content -}}
+            </span>
+            <span class="periwinkle-journal__share-glyph periwinkle-journal__share-glyph--done" aria-hidden="true">
+              {{- 'icon-checkmark.svg' | inline_asset_content -}}
+            </span>
           </button>
+          <span class="periwinkle-journal__share-toast" aria-hidden="true" data-share-toast>Link copied</span>
           <span class="visually-hidden" role="status" data-share-status></span>
         </periwinkle-journal-share>
       {%- endif -%}

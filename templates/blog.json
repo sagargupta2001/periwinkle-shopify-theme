@@ -10,15 +10,21 @@
 {
   "sections": {
     "main": {
-      "type": "main-blog",
+      "type": "periwinkle-journal-blog",
       "settings": {
-        "layout": "collage",
-        "show_image": true,
-        "image_height": "medium",
+        "eyebrow": "The Periwinkle Journal",
+        "heading": "Stories of <em>craft and travel.</em>",
+        "intro": "<p>Notes from the looms, workshops and far-off markets behind the things we make and find.</p>",
+        "show_tags": true,
+        "feature_latest": true,
+        "more_heading": "More stories",
         "show_date": true,
-        "show_author": false,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "per_page": 10,
+        "background_color": "#faf8f3",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70",
+        "padding_top": 56,
+        "padding_bottom": 88
       }
     }
   },

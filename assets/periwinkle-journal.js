@@ -1,9 +1,9 @@
 /*
-  Periwinkle journal — share links.
+  Periwinkle journal — share icons.
 
-  The WhatsApp link works without JS. JS reveals a second button that uses the
-  native share sheet where there is one (most phones) and copies the link
-  everywhere else.
+  The WhatsApp link works without JS. JS reveals a second icon button whose
+  mode depends on the device: "share" opens the native share sheet (most
+  phones), "copy" copies the link and briefly shows a tick and a toast.
 */
 if (!customElements.get('periwinkle-journal-share')) {
   customElements.define(
@@ -11,16 +11,18 @@ if (!customElements.get('periwinkle-journal-share')) {
     class PeriwinkleJournalShare extends HTMLElement {
       connectedCallback() {
         this.button = this.querySelector('[data-share-copy]');
-        this.label = this.querySelector('[data-share-label]');
         this.status = this.querySelector('[data-share-status]');
         if (!this.button) return;
 
-        this.canShare = typeof navigator.share === 'function';
-        this.canCopy = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
-        if (!this.canShare && !this.canCopy) return;
+        const canShare = typeof navigator.share === 'function';
+        const canCopy = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
+        if (!canShare && !canCopy) return;
 
-        this.defaultLabel = this.canShare ? 'More options' : 'Copy link';
-        this.label.textContent = this.defaultLabel;
+        this.mode = canShare ? 'share' : 'copy';
+        this.button.dataset.mode = this.mode;
+        const label = this.mode === 'share' ? 'More sharing options' : 'Copy link';
+        this.button.setAttribute('aria-label', label);
+        this.button.title = label;
         this.button.hidden = false;
         this.button.addEventListener('click', () => this.share());
       }
@@ -28,7 +30,7 @@ if (!customElements.get('periwinkle-journal-share')) {
       async share() {
         const url = this.dataset.url;
 
-        if (this.canShare) {
+        if (this.mode === 'share') {
           try {
             await navigator.share({ title: this.dataset.title, url });
           } catch (error) {
@@ -39,16 +41,20 @@ if (!customElements.get('periwinkle-journal-share')) {
 
         try {
           await navigator.clipboard.writeText(url);
-          this.label.textContent = 'Link copied';
+          this.button.dataset.state = 'copied';
           this.status.textContent = 'Link copied to clipboard';
           clearTimeout(this.resetTimer);
           this.resetTimer = setTimeout(() => {
-            this.label.textContent = this.defaultLabel;
+            delete this.button.dataset.state;
             this.status.textContent = '';
-          }, 2400);
+          }, 2000);
         } catch (error) {
           this.status.textContent = 'Could not copy the link';
         }
+      }
+
+      disconnectedCallback() {
+        clearTimeout(this.resetTimer);
       }
     }
   );

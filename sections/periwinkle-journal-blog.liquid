@@ -1,0 +1,259 @@
+{{ 'section-periwinkle-journal-blog.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleJournalIndex-{{ section.id }} {
+    --journal-index-background: {{ section.settings.background_color }};
+    --journal-index-text: {{ section.settings.text_color }};
+    --journal-index-accent: {{ section.settings.accent_color }};
+    --journal-index-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+    --journal-index-line: {{ section.settings.text_color | color_modify: 'alpha', 0.16 }};
+    --journal-index-fill: {{ section.settings.text_color | color_modify: 'alpha', 0.06 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="PeriwinkleJournalIndex-{{ section.id }}"
+  class="periwinkle-journal-index section-{{ section.id }}-padding"
+>
+  <div class="page-width">
+    <header class="periwinkle-journal-index__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="periwinkle-journal-index__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="periwinkle-journal-index__heading">
+        {%- if section.settings.heading != blank -%}
+          {{ section.settings.heading }}
+        {%- else -%}
+          {{ blog.title | escape }}
+        {%- endif -%}
+      </h1>
+      {%- if section.settings.intro != blank -%}
+        <div class="periwinkle-journal-index__intro">{{ section.settings.intro }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_tags and blog.all_tags.size > 1 -%}
+        <nav class="periwinkle-journal-index__tags" aria-label="Filter stories by topic">
+          <ul role="list">
+            <li>
+              <a
+                href="{{ blog.url }}"
+                class="periwinkle-journal-index__tag"
+                {% if current_tags == blank %}
+                  aria-current="page"
+                {% endif %}
+              >
+                All stories
+              </a>
+            </li>
+            {%- for tag in blog.all_tags -%}
+              <li>
+                <a
+                  href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                  class="periwinkle-journal-index__tag"
+                  {% if current_tags contains tag %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- tag | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+    </header>
+
+    {%- paginate blog.articles by section.settings.per_page -%}
+      {%- liquid
+        comment
+          The newest story on the first page leads as a split card. It is kept
+          moderate (image about 58% of the row) so the page reads as an index,
+          not as the first article.
+        endcomment
+        assign show_featured = false
+        if section.settings.feature_latest and paginate.current_page == 1 and blog.articles.size > 0
+          assign show_featured = true
+        endif
+
+        assign rest_count = blog.articles.size
+        if show_featured
+          assign rest_count = rest_count | minus: 1
+        endif
+        assign grid_columns = 3
+        if rest_count < 3
+          assign grid_columns = 2
+        endif
+      -%}
+
+      {%- if blog.articles.size == 0 -%}
+        <p class="periwinkle-journal-index__empty">
+          {%- if current_tags != blank -%}
+            No stories under this topic yet. <a href="{{ blog.url }}">See all stories</a>
+          {%- else -%}
+            New stories are on the way.
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+
+      {%- if show_featured -%}
+        {%- for article in blog.articles limit: 1 -%}
+          {% render 'periwinkle-journal-card', article: article, featured: true, show_date: section.settings.show_date %}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if rest_count > 0 -%}
+        {%- liquid
+          assign grid_offset = 0
+          if show_featured
+            assign grid_offset = 1
+          endif
+        -%}
+        {%- if show_featured -%}
+          <h2 class="periwinkle-journal-index__more">{{ section.settings.more_heading | default: 'More stories' }}</h2>
+        {%- endif -%}
+        <ul class="periwinkle-journal-index__grid periwinkle-journal-index__grid--{{ grid_columns }}" role="list">
+          {%- for article in blog.articles offset: grid_offset -%}
+            <li class="periwinkle-journal-index__card">
+              {% render 'periwinkle-journal-card', article: article, featured: false, show_date: section.settings.show_date %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <div class="periwinkle-journal-index__pagination">
+          {% render 'pagination', paginate: paginate %}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Peri journal index",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Periwinkle Journal"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use the blog’s title.",
+      "default": "Stories of <em>craft and travel.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Notes from the looms, workshops and far-off markets behind the things we make and find.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show topic filters",
+      "info": "Shown when stories use at least two different tags.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_latest",
+      "label": "Feature the latest story",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "more_heading",
+      "label": "Heading above other stories",
+      "default": "More stories"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Stories per page",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAF8F3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    }
+  ]
+}
+{% endschema %}

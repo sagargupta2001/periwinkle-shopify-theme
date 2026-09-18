@@ -107,6 +107,10 @@ Notes:
 - The merchant must create a page in admin with handle `our-story` and assign
   it the `page.our-story` template.
 
+### Journal index (`templates/blog.json`)
+- A single **Peri journal index** section: header, topic filters, the latest
+  story as a split card, then a grid of story cards.
+
 ### Journal article (`templates/article.journal.json`)
 - A single **Peri journal article** section. Assign it per post in admin
   (*Theme template → journal*). Per-post gallery and shop link come from the
