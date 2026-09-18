@@ -506,3 +506,36 @@
     }
   }
 }
+
+/* Periwinkle: copyright on the left, social icons on the right. Phones keep
+   Dawn's centred stack, icons below the copyright. */
+.footer__content-bottom-wrapper--social {
+  align-items: center;
+}
+
+@media screen and (max-width: 749px) {
+  .footer__list-social--bottom.list-social {
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  /* Match the paper's width (max-width in the base.css footer block) so the
+     row's ends line up with the paper's edges. */
+  .footer__content-bottom-wrapper--social {
+    justify-content: space-between;
+    column-gap: 2rem;
+    max-width: 1072px;
+    margin-top: 1.5rem;
+  }
+
+  .footer__content-bottom-wrapper--social .footer__copyright {
+    text-align: left;
+    margin-top: 0;
+  }
+
+  .footer__list-social--bottom.list-social {
+    flex-shrink: 0;
+    justify-content: flex-end;
+  }
+}

@@ -32,7 +32,7 @@
           "type": "text",
           "settings": {
             "heading": "Connect with us",
-            "subtext": "<h6>We'd love to hear from you. </h6><h6>Contact us<br/>+91 XXXXX XXXXX<br/><a href=\"mailto:support@periwinklebysherry.com\" title=\"mailto:support@periwinklebysherry.com\">support@periwinklebysherry.com</a></h6>"
+            "subtext": "<p>We'd love to hear from you.</p><p>Contact us<br/><a href=\"tel:+919972695620\" title=\"Call +91 99726 95620\">+91 99726 95620</a><br/><a href=\"mailto:support@periwinklebysherry.com\" title=\"mailto:support@periwinklebysherry.com\">support@periwinklebysherry.com</a></p>"
           }
         },
         "link_list_LEayfz": {
@@ -59,7 +59,7 @@
         "enable_country_selector": false,
         "enable_language_selector": false,
         "payment_enable": true,
-        "show_policy": true,
+        "show_policy": false,
         "margin_top": 0,
         "padding_top": 36,
         "padding_bottom": 36
