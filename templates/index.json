@@ -356,9 +356,12 @@
             "heading": "Bridal <em>Trousseaus</em>",
             "description": "<p>Curated trousseau packages, thoughtfully designed across three budget tiers — because every family’s celebration deserves a collection that fits both their dreams and their means.</p>",
             "highlights": "Curated trousseau packages\nThree budget tiers, one standard of care\nShaped around your family’s celebration",
+            "media_style": "inset",
             "image": "shopify://shop_images/upcoming-01.jpg",
             "image_inset": "shopify://shop_images/upcoming-02.jpg",
             "inset_caption": "",
+            "before_label": "Before",
+            "after_label": "After",
             "link_label": "",
             "link": ""
           }
@@ -371,9 +374,12 @@
             "heading": "The Cloth That <em>Remembers</em>",
             "description": "<p>A saree holds more than weave and colour — it holds memory. Bring us your grandmother’s or mother’s old saree, and we will give it a second life as a striking Indo-Western silhouette. A Berhampuri silk patta, for instance, reborn as a chic contemporary piece — heritage, reimagined for how you live today.</p>",
             "highlights": "Your family saree, carefully reworked\nIndo-Western silhouettes, cut to your measure\nEvery border and motif kept in the story",
+            "media_style": "compare",
             "image": "shopify://shop_images/upcoming-03.jpg",
             "image_inset": "shopify://shop_images/upcoming-04.jpg",
             "inset_caption": "Before — a Berhampuri silk patta",
+            "before_label": "Before",
+            "after_label": "After",
             "link_label": "",
             "link": ""
           }
@@ -387,7 +393,7 @@
         "eyebrow": "Coming soon",
         "heading": "Still <em>on the loom.</em>",
         "intro": "<p>Two new ideas we are weaving slowly, with the same care as everything we make. Here is a first look.</p>",
-        "media_first": "left",
+        "media_first": "right",
         "show_signup": true,
         "signup_heading": "Be the <em>first to know.</em>",
         "signup_text": "<p>Leave your email and we will write to you when these open. No noise, just the news.</p>",
