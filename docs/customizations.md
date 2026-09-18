@@ -1,0 +1,181 @@
+# Customizations on top of Dawn
+
+Everything that differs from stock Dawn 16.0.0, with the reasoning and the
+non-obvious gotchas recorded in the commit history. Read the relevant entry
+before touching one of these areas.
+
+| # | Feature | Main files | PR / commit |
+|---|---|---|---|
+| 1 | Sticky announcement bar + slideshow overlay controls | `announcement-bar.liquid`, `header.liquid`, `slideshow.liquid`, `component-slideshow.css`, `base.css`, `global.js` | #1 · `0227073` |
+| 2 | Header logo lockup (icon + wordmark) | `snippets/header-logo.liquid`, `settings_schema.json`, `base.css` | #2 · `805b557` |
+| 3 | Mega menu with collection cards | `snippets/header-mega-menu-cards.liquid`, `component-mega-menu-cards.css`, `mega-menu-cards.js` | #3 · `760e7b9`, `376f8b2` |
+| 4 | Full-height mobile nav drawer | `snippets/header-drawer.liquid`, `component-menu-drawer.css`, `base.css`, `global.js` | #3 · `4e5d906` |
+| 5 | Slideshow dots at every width | `component-slideshow.css` | #4 · `ae36925` |
+| 6 | Peri editorial slider section | `sections/periwinkle-editorial-slider.liquid` | first commit |
+| 7 | Peri miniatures section | `sections/periwinkle-miniatures.liquid`, `section-periwinkle-miniatures.css` | #5 · `621111c` |
+| 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
+
+Theme settings (colours, fonts, radii) are also customized, but those live in
+`settings_data.json`. See [design-guide.md](design-guide.md).
+
+---
+
+## 1. Sticky announcement bar
+
+- Opt-in section setting: **Sticky announcement bar** (`sticky`), currently on.
+- The section wrapper is targeted with `:has(.utility-bar--sticky)`, because a
+  section can't add a class to its own wrapper.
+- `StickyHeader` (in `header.liquid`) publishes `--announcement-bar-height` and
+  keeps `--header-height` current with a **ResizeObserver**. A breakpoint
+  listener isn't enough: the bar wraps to two lines on mobile, text rewraps
+  between breakpoints, and "reduce logo size" shrinks the header without a
+  resize event.
+- The on-scroll-up header tucks behind the bar. There is also a rule for the
+  reverse section order, since the header group can be reordered in the editor.
+
+### Slideshow overlay controls
+- The controls used to be `custom_css` in `index.json`, where `z-index: 5` beat
+  the header's 3 and media queries aren't available. They now live in
+  `component-slideshow.css` behind `.slideshow__controls--overlay`, with a
+  **Show controls over image** setting.
+- `slideshow-component` has `isolation: isolate`, so no z-index inside it can
+  compete with the header group. **Don't remove it.**
+- The overlay rules are qualified with the `slideshow-component` element
+  selector on purpose. They override `.slider-buttons` from
+  `component-slider.css`, which later sections re-emit, so they have to win on
+  specificity rather than load order.
+- Bug fix in `global.js`: `SliderComponent.update()` now clamps `currentPage`
+  and checks for divide-by-zero. It used to throw a TypeError on resize, because
+  `scrollLeft` had not yet been re-clamped.
+
+## 2. Header logo lockup
+
+- `settings.logo` is still the full brand mark and is used on the password
+  page, gift cards and JSON-LD. The new settings affect **only the header**:
+  - `logo_text`: wordmark image (optional)
+  - `logo_text_width`: its width
+  - `logo_text_hide_mobile`: show only the icon on phones
+- The logo markup moved from two copies in `header.liquid` into
+  `snippets/header-logo.liquid`, which takes `logo_position` for the `sizes`
+  hint and a `preload` flag, so the drawer's second copy doesn't preload twice.
+- The wordmark has `alt=""` because the icon already announces the shop name.
+- ⚠️ **Don't set a CSS `width` on the lockup images.** They are sized by their
+  `width` attribute, and a CSS width overrides it and falls back to the file's
+  intrinsic size.
+- Gaps are controlled by `--logo-lockup-gap` (1.2rem) and
+  `--logo-lockup-gap-mobile` (0.8rem).
+
+## 3. Mega menu with collection cards
+
+- A fourth option for **Menu type** (`menu_type_desktop: mega_cards`). The
+  header uses it now.
+- Second-level links resolve through `link.object` to their collection and
+  render as a horizontal row of 4:5 poster cards.
+- **Content decides card mode, not a setting.** A menu shows cards only if
+  *every* child link is a collection with an image. Otherwise it falls back to
+  the plain mega-menu text list. Today only **Sarees** qualifies. Menus upgrade
+  themselves as artwork is uploaded.
+- The row **scrolls natively** rather than wrapping. `mega-menu-cards.js` only
+  adds affordances: edge fades and arrows driven by `data-overflows`,
+  `data-at-start` and `data-at-end`. If the JS fails, the row still scrolls.
+- The card CSS is only requested for this menu type.
+- Desktop only. The mobile drawer still uses text links.
+- ⚠️ A ResizeObserver doesn't work here: a closed `<details>` skips layout, so
+  the observer never fires. Measure on connect and on the `toggle` event.
+- ⚠️ Rotate the **caret**, not the arrow button. The standalone `rotate`
+  property is composed before `transform`, so the centring translate would move
+  along the rotated axis.
+
+## 4. Mobile nav drawer
+
+- The drawer is fixed, full height, `min(80%, 40rem)` wide, and sits over the
+  header and announcement bar. The visible strip of page is the tap-to-close
+  target.
+- The backdrop is a small blur, with a flat scrim where `backdrop-filter` is
+  unsupported. The radius is kept small for older Android.
+- `.section-header` must outrank the announcement bar while `.menu-open` is
+  set, which HeaderDrawer already toggles.
+- ⚠️ **Naming trap:** the nav is `<header-drawer>`. The `<menu-drawer>` rules in
+  `component-menu-drawer.css` are for the **facets filter drawer**. The nav
+  backdrop belongs to `.header__icon--menu[aria-expanded='true']::before` in
+  `base.css`.
+- **Highlight on the last item tapped (fixed).** Dawn tinted
+  `.menu-drawer__menu-item:focus`. A tap leaves DOM focus on the summary, and
+  `closeSubmenu()` calls `removeTrapFocus(summary)`, which focuses it again — so
+  the item the reader last opened stayed tinted as though it were the current
+  page. The rule now uses `:focus-visible` (plus `.focused`, Dawn's fallback for
+  browsers without it), so keyboard users keep the highlight and pointer users
+  don't. `:hover` moved into `@media (hover: hover)` for the same reason, since a
+  tap can leave a sticky hover state. `--active` still marks the real current
+  section from `link.child_active`.
+- Submenus position against the navigation container, not
+  `.menu-drawer__inner-container`. Otherwise they cover the drawer's close bar.
+- The drawer has its own bar: the logo lockup plus a close button.
+
+## 5. Slideshow dots only
+
+- Arrows are hidden at every width, and the dots overlay the image.
+- ⚠️ The arrow and autoplay buttons **stay in the DOM** (hidden with
+  `.slider-button`). `SlideshowComponent` moves between slides by clicking them,
+  so removing them breaks dragging.
+
+## 6. Peri editorial slider (`periwinkle-editorial-slider`)
+
+- Homepage "The Art of Craft" band. The left side has an optional botanical
+  watermark, an eyebrow, a heading, a description and a CTA. The right side is
+  a carousel of **Craft card** blocks, each with a collection, image, title,
+  description and link. Cards fall back to the collection's image and title.
+- It shows 2 cards on desktop and 1 at 989px and below. Arrows appear only when
+  there are more than 2 cards. Swipe or drag is supported.
+- CSS and JS are **inline** in the section, scoped with
+  `#periwinkle-editorial-{{ section.id }}`. This predates the other custom
+  sections, which use separate asset files.
+- Known cleanup candidates: the arrow colours are hard-coded hex values, not
+  scheme or section variables. The CTA and card "Explore" strings are
+  hard-coded English. There is a duplicated `if (!section) return;` line.
+
+## 7. Peri miniatures (`periwinkle-miniatures`)
+
+- "Small Objects, *Beautiful Stories.*" Editorial copy sits beside an
+  asymmetric gallery of up to **5 Object blocks** (image, title, subtitle, link,
+  and a "Feature this object" option).
+- On desktop, a 12-row grid staggers the columns, and spacing sits on the cards
+  rather than `row-gap`. On tablet the featured card spans full width above a
+  2×2 grid. On mobile the featured card comes first, followed by a left/right
+  stagger. Fewer than five objects re-flow without empty slots.
+- Colours come in as `--miniatures-*` custom properties (background, text,
+  accent, featured text, and featured overlay opacity).
+- The featured caption defaults to **dark text with no overlay**. See the
+  imagery notes in the design guide.
+
+## 8. Our Story timeline (`periwinkle-story-timeline`)
+
+- Blocks: **Chapter**, **Colour swatches** (3 colours + labels), **List**, and
+  **Closing**.
+- One periwinkle grows down the spine as the page scrolls. Leaves unfurl at each
+  chapter (`.is-reached`), and the flower comes to rest open at the closing
+  chapter (`.is-bloomed`). Adapted from the "Animated Blooming Flower" CSS demo.
+- `periwinkle-story.js` sets `--story-track` (stem length in px) and
+  `--story-growth` (0–1), and adds `.periwinkle-story--animated` **only when
+  motion is allowed**. Without JS, with reduced motion, or in the theme editor,
+  all content is plainly visible.
+- **Growth is one-way.** The plant does not shrink back on scroll up: `peak`
+  holds the furthest the tip has reached and the target never falls below it. On
+  resize, `measure()` rescales `peak` and `current` proportionally to the new
+  track. Full spec in [our-story-page.md](our-story-page.md).
+- The Cormorant italic face is loaded in the section, because Dawn loads only
+  the upright face.
+- Colours come in as `--story-*` properties. Deep and light variants are derived
+  in Liquid with `color_darken` and `color_lighten`.
+
+---
+
+## Other non-Dawn touches worth knowing
+
+- `templates/index.json` has merchant-authored `custom_css` that centres the
+  collection-list and featured-collection titles. `custom_css` can't contain
+  media queries, so put anything responsive in an asset file instead.
+- `layout/theme.liquid` loads Shopify's `standard-events.js` module and fires a
+  `PageViewEvent`. `standard-actions-override.js` is loaded globally.
+- The product **Disclosures** section, cart disclosure modal and tooltip, and
+  `component-discounts.css` come with this Dawn version, not from this project.
