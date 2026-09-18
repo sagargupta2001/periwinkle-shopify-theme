@@ -32,7 +32,7 @@
           "type": "text",
           "settings": {
             "heading": "Connect with us",
-            "subtext": "<p>We'd love to hear from you.</p><p>Contact us<br/><a href=\"tel:+919972695620\" title=\"Call +91 99726 95620\">+91 99726 95620</a><br/><a href=\"mailto:support@periwinklebysherry.com\" title=\"mailto:support@periwinklebysherry.com\">support@periwinklebysherry.com</a></p>"
+            "subtext": "<p><a href=\"tel:+919972695620\" title=\"Call +91 99726 95620\">+91 99726 95620</a><br/><a href=\"mailto:support@periwinklebysherry.com\" title=\"mailto:support@periwinklebysherry.com\">support@periwinklebysherry.com</a></p>"
           }
         },
         "link_list_LEayfz": {
