@@ -1163,6 +1163,22 @@
         "header__utilities": {
           "content": "Utilities"
         },
+        "header__drawer_contact": {
+          "content": "Mobile menu contact"
+        },
+        "drawer_contact_heading": {
+          "label": "Heading"
+        },
+        "drawer_contact_phone": {
+          "label": "Phone number"
+        },
+        "drawer_contact_email": {
+          "label": "Email address",
+          "info": "Leave phone and email empty to hide this block."
+        },
+        "drawer_contact_email_label": {
+          "label": "Email link text"
+        },
         "enable_country_selector": {
           "label": "Country/region selector",
           "info": "[Manage countries/regions](/admin/settings/markets)"

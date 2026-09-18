@@ -244,10 +244,6 @@
               {{ shop | login_button: action: 'follow' }}
             </div>
           {%- endif -%}
-
-          {%- if section.settings.show_social and has_social_icons -%}
-            {%- render 'social-icons', class: 'footer__list-social' -%}
-          {%- endif -%}
         </div>
       </div>
     {%- endunless -%}
@@ -300,7 +296,7 @@
         {%- endif -%}
       </div>
     </div>
-    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
+    <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}{% if section.settings.show_social and has_social_icons %} footer__content-bottom-wrapper--social{% endif %}">
       <div class="footer__copyright caption">
         <small class="copyright__content"
           >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
@@ -320,6 +316,13 @@
           </ul>
         {%- endif -%}
       </div>
+      {%- comment -%}
+        Periwinkle: social icons share the copyright row (right-aligned from
+        750px) rather than sitting beside the newsletter form as in Dawn.
+      {%- endcomment -%}
+      {%- if section.settings.show_social and has_social_icons -%}
+        {%- render 'social-icons', class: 'footer__list-social footer__list-social--bottom' -%}
+      {%- endif -%}
     </div>
   </div>
 </footer>

@@ -111,6 +111,15 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
 - Submenus position against the navigation container, not
   `.menu-drawer__inner-container`. Otherwise they cover the drawer's close bar.
 - The drawer has its own bar: the logo lockup plus a close button.
+- **Get in touch** sits under the last menu item: a Dusk eyebrow, a phone
+  (`tel:`) link and a mail (`mailto:`) link, with `icon-phone.svg` and
+  `icon-mail.svg`. The text comes from the header section's *Mobile menu
+  contact* settings (`drawer_contact_*`), which default to the store's number
+  and email. Clear both to hide the block. When the block is present, the
+  navigation container switches to `grid-template-rows: auto 1fr auto`, so the
+  block follows the menu directly and the social bar stays at the bottom.
+- Social links in the drawer (and in `social-icons.liquid`) open in a new tab
+  with `rel="noopener"`, and tell screen readers so.
 
 ## 5. Slideshow dots only
 
@@ -167,6 +176,27 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   the upright face.
 - Colours come in as `--story-*` properties. Deep and light variants are derived
   in Liquid with `color_darken` and `color_lighten`.
+
+## 9. Footer
+
+- The styling lives in the **"Periwinkle footer"** block at the end of
+  `assets/base.css`, not in `section-footer.css`. It was written in the admin
+  era, so it uses hard-coded colours and `!important`. The block sets the torn
+  paper background on `.footer__content-top`, the dashed column separators, and
+  the botanical `::before`/`::after` illustrations.
+- **"Connect with us"** is a stock *Text* block. Its rich text is set to match
+  the menu links next to it (DM Sans 14px, regular weight). Older content used
+  `<h6>`, which Dawn renders as tiny bold caps, so `h6` gets the same styling as
+  `p`. Write plain paragraphs in the editor.
+- **Columns:** at 750–989px the four blocks sit 2 × 2, and only the second
+  column gets a separator. At 990px and up the columns size to their content,
+  so the email address fits on one line.
+- **Social icons** share the copyright row instead of Dawn's newsletter row
+  (`sections/footer.liquid`). From 750px the copyright sits on the left and the
+  icons on the right, and the row is capped at the paper's 1072px so its ends
+  line up with the paper's edges. On phones the icons go below the copyright,
+  centred. The URLs live in theme settings (*Social media*).
+- `show_policy` is off, because the policies are already in the Help menu.
 
 ---
 

@@ -5,6 +5,9 @@
   @param {boolean} [show_language_selector] - Whether to render the language selector in the drawer.
   @param {boolean} [show_social_links] - Whether to render social links list in the drawer.
 
+  Periwinkle: also renders a "Get in touch" block (phone + email) below the
+  menu, from the header section's drawer_contact_* settings.
+
   @example
   {% render 'header-drawer', show_language_selector: true %}
 {% enddoc %}
@@ -41,7 +44,15 @@
             </span>
           </button>
         </div>
-        <div class="menu-drawer__navigation-container">
+        {%- liquid
+          assign contact_phone = section.settings.drawer_contact_phone
+          assign contact_email = section.settings.drawer_contact_email
+          assign has_drawer_contact = false
+          if contact_phone != blank or contact_email != blank
+            assign has_drawer_contact = true
+          endif
+        -%}
+        <div class="menu-drawer__navigation-container{% if has_drawer_contact %} menu-drawer__navigation-container--contact{% endif %}">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
               {%- for link in section.settings.menu.links -%}
@@ -158,6 +169,46 @@
               {%- endfor -%}
             </ul>
           </nav>
+          {%- if has_drawer_contact -%}
+            <div class="menu-drawer__contact">
+              {%- if section.settings.drawer_contact_heading != blank -%}
+                <h2 class="menu-drawer__contact-heading" id="HeaderDrawer-contact-heading">
+                  {{- section.settings.drawer_contact_heading | escape -}}
+                </h2>
+              {%- endif -%}
+              <ul
+                class="menu-drawer__contact-list list-unstyled"
+                role="list"
+                {% if section.settings.drawer_contact_heading != blank %}
+                  aria-labelledby="HeaderDrawer-contact-heading"
+                {% endif %}
+              >
+                {%- if contact_phone != blank -%}
+                  <li>
+                    <a
+                      href="tel:{{ contact_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}"
+                      class="menu-drawer__contact-link link focus-inset"
+                    >
+                      <span class="svg-wrapper" aria-hidden="true">
+                        {{- 'icon-phone.svg' | inline_asset_content -}}
+                      </span>
+                      <span>{{ contact_phone | escape }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if contact_email != blank -%}
+                  <li>
+                    <a href="mailto:{{ contact_email | strip }}" class="menu-drawer__contact-link link focus-inset">
+                      <span class="svg-wrapper" aria-hidden="true">
+                        {{- 'icon-mail.svg' | inline_asset_content -}}
+                      </span>
+                      <span>{{ section.settings.drawer_contact_email_label | default: contact_email | escape }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+              </ul>
+            </div>
+          {%- endif -%}
           <div class="menu-drawer__utility-links">
             {%- if show_country_selector or show_language_selector -%}
               <div class="menu-drawer__localization header-localization">
@@ -192,91 +243,91 @@
               <ul class="list list-social list-unstyled" role="list">
                 {%- if settings.social_twitter_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_twitter_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-twitter.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.twitter' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_facebook_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_facebook_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-facebook.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.facebook' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_pinterest_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_pinterest_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-pinterest.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_instagram_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_instagram_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-instagram.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.instagram' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_tiktok_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_tiktok_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-tiktok.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_tumblr_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_tumblr_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-tumblr.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_snapchat_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_snapchat_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-snapchat.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_youtube_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_youtube_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-youtube.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.youtube' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
                 {%- if settings.social_vimeo_link != blank -%}
                   <li class="list-social__item">
-                    <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
+                    <a href="{{ settings.social_vimeo_link }}" class="list-social__link link" target="_blank" rel="noopener">
                       <span class="svg-wrapper">
                         {{- 'icon-vimeo.svg' | inline_asset_content -}}
                       </span>
-                      <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+                      <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }} {{ 'accessibility.link_messages.new_window' | t }}</span>
                     </a>
                   </li>
                 {%- endif -%}
