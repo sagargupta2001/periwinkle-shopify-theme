@@ -14,6 +14,7 @@ before touching one of these areas.
 | 6 | Peri editorial slider section | `sections/periwinkle-editorial-slider.liquid` | first commit |
 | 7 | Peri miniatures section | `sections/periwinkle-miniatures.liquid`, `section-periwinkle-miniatures.css` | #5 · `621111c` |
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
+| 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
 Theme settings (colours, fonts, radii) are also customized, but those live in
 `settings_data.json`. See [design-guide.md](design-guide.md).
@@ -197,6 +198,32 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   line up with the paper's edges. On phones the icons go below the copyright,
   centred. The URLs live in theme settings (*Social media*).
 - `show_policy` is off, because the policies are already in the Help menu.
+
+## 10. Peri coming soon (`periwinkle-coming-soon`)
+
+- Homepage "Still *on the loom.*" band on Lavender Mist, previewing upcoming
+  services. Today: **Bridal Trousseaus** and **The Cloth That Remembers**.
+- Header (eyebrow with a pulsing dot, heading, italic intro), then up to 4
+  **Concept** blocks: label, status tag, heading, description, highlights (one
+  per line in a textarea), a 4:5 main image, an optional 4:5 **inset** image
+  with caption, and an optional link. The big `01`/`02` numerals come from the
+  block order.
+- Rows alternate sides from 750px (`media_first` picks where the first image
+  goes). Below 750px the image always comes first, with the frame pushed to
+  alternate edges for rhythm.
+- The inset is mounted over the frame's lower corner with a border in the
+  section background. The frame gets `margin-bottom` equal to the inset's
+  overhang, and a caption hangs *below* the inset (absolutely positioned, with
+  padding reserved on the media) — otherwise it collides with the main photo.
+- Optional **email sign-up** uses `{% form 'customer' %}` with
+  `contact[tags]` from the *Customer tags* setting (default
+  `newsletter,coming-soon`), so launch emails can target that tag in Shopify
+  admin.
+- Muted, hairline and fill colours are derived in Liquid with `color_modify`
+  because the colour settings are hex.
+- `periwinkle-coming-soon.js` adds `.is-animated` (fade and rise on scroll)
+  only when motion is allowed, outside the editor, and where
+  IntersectionObserver exists.
 
 ---
 

@@ -1,0 +1,489 @@
+{{ 'section-periwinkle-coming-soon.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'periwinkle-coming-soon.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face. The italic is loaded here so the
+    emphasised headings use real Cormorant italic rather than a browser-slanted
+    regular. `font_modify` returns nil if the heading font has no italic.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleComingSoon-{{ section.id }} {
+    --coming-soon-background: {{ section.settings.background_color }};
+    --coming-soon-text: {{ section.settings.text_color }};
+    --coming-soon-accent: {{ section.settings.accent_color }};
+    --coming-soon-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+    --coming-soon-line: {{ section.settings.text_color | color_modify: 'alpha', 0.16 }};
+    --coming-soon-fill: {{ section.settings.text_color | color_modify: 'alpha', 0.06 }};
+    --coming-soon-accent-soft: {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }};
+    --coming-soon-numeral: {{ section.settings.accent_color | color_modify: 'alpha', 0.22 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  id="PeriwinkleComingSoon-{{ section.id }}"
+  class="periwinkle-coming-soon section-{{ section.id }}-padding"
+>
+  <periwinkle-coming-soon class="page-width periwinkle-coming-soon__inner">
+    {%- if section.settings.eyebrow != blank
+      or section.settings.heading != blank
+      or section.settings.intro != blank
+    -%}
+      <div class="periwinkle-coming-soon__header" data-reveal>
+        <div class="periwinkle-coming-soon__header-title">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="periwinkle-coming-soon__eyebrow">
+              <span class="periwinkle-coming-soon__pulse" aria-hidden="true"></span>
+              {{- section.settings.eyebrow | escape -}}
+            </p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="periwinkle-coming-soon__heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.intro != blank -%}
+          <div class="periwinkle-coming-soon__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ol class="periwinkle-coming-soon__concepts" role="list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign image = block.settings.image
+            assign inset = block.settings.image_inset
+            assign flipped = false
+            assign remainder = forloop.index0 | modulo: 2
+            if section.settings.media_first == 'right'
+              if remainder == 0
+                assign flipped = true
+              endif
+            elsif remainder == 1
+              assign flipped = true
+            endif
+
+            assign title_text = block.settings.heading | strip_html
+            assign image_alt = image.alt | default: title_text | escape
+            assign inset_alt = inset.alt | default: block.settings.inset_caption | escape
+            assign highlights = block.settings.highlights | newline_to_br | split: '<br />'
+            assign numeral = forloop.index | prepend: '0' | slice: -2, 2
+            assign image_position = 'object-position: ' | append: image.presentation.focal_point
+            assign inset_position = 'object-position: ' | append: inset.presentation.focal_point
+          -%}
+
+          <li
+            class="periwinkle-coming-soon__concept{% if flipped %} periwinkle-coming-soon__concept--flipped{% endif %}{% if inset != blank %} periwinkle-coming-soon__concept--has-inset{% if block.settings.inset_caption != blank %} periwinkle-coming-soon__concept--has-caption{% endif %}{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="periwinkle-coming-soon__media" data-reveal>
+              <div class="periwinkle-coming-soon__frame">
+                {%- if image != blank -%}
+                  {{
+                    image
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '375, 550, 750, 1000, 1300, 1600',
+                      sizes: '(min-width: 1300px) 480px, (min-width: 990px) 38vw, (min-width: 750px) 38vw, 82vw',
+                      alt: image_alt,
+                      class: 'periwinkle-coming-soon__image',
+                      style: image_position
+                  }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'periwinkle-coming-soon__placeholder' }}
+                {%- endif -%}
+              </div>
+
+              {%- if inset != blank -%}
+                <figure class="periwinkle-coming-soon__inset">
+                  <div class="periwinkle-coming-soon__inset-frame">
+                    {{
+                      inset
+                      | image_url: width: 900
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '240, 360, 540, 720, 900',
+                        sizes: '(min-width: 1300px) 240px, (min-width: 990px) 19vw, (min-width: 750px) 19vw, 40vw',
+                        alt: inset_alt,
+                        class: 'periwinkle-coming-soon__image',
+                        style: inset_position
+                    }}
+                  </div>
+                  {%- if block.settings.inset_caption != blank -%}
+                    <figcaption class="periwinkle-coming-soon__inset-caption">
+                      {{- block.settings.inset_caption | escape -}}
+                    </figcaption>
+                  {%- endif -%}
+                </figure>
+              {%- endif -%}
+            </div>
+
+            <div class="periwinkle-coming-soon__content" data-reveal>
+              <span class="periwinkle-coming-soon__numeral" aria-hidden="true">{{ numeral }}</span>
+
+              {%- if block.settings.label != blank or block.settings.status != blank -%}
+                <p class="periwinkle-coming-soon__meta">
+                  {%- if block.settings.label != blank -%}
+                    <span class="periwinkle-coming-soon__label">{{ block.settings.label | escape }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.status != blank -%}
+                    <span class="periwinkle-coming-soon__status">{{ block.settings.status | escape }}</span>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+
+              {%- if block.settings.heading != blank -%}
+                <h3 class="periwinkle-coming-soon__title">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+
+              {%- if block.settings.description != blank -%}
+                <div class="periwinkle-coming-soon__description">{{ block.settings.description }}</div>
+              {%- endif -%}
+
+              {%- if block.settings.highlights != blank -%}
+                <ul class="periwinkle-coming-soon__highlights" role="list">
+                  {%- for highlight in highlights -%}
+                    {%- assign highlight_text = highlight | strip -%}
+                    {%- if highlight_text != blank -%}
+                      <li class="periwinkle-coming-soon__highlight">{{ highlight_text | escape }}</li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+
+              {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="periwinkle-coming-soon__cta">
+                  {{- block.settings.link_label | escape -}}
+                  <span class="periwinkle-coming-soon__cta-icon" aria-hidden="true">
+                    {{- 'icon-arrow.svg' | inline_asset_content -}}
+                  </span>
+                </a>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.show_signup -%}
+      {%- liquid
+        assign form_id = 'PeriwinkleComingSoonForm-' | append: section.id
+        assign signup_placeholder = section.settings.signup_placeholder
+        if signup_placeholder == blank
+          assign signup_placeholder = 'newsletter.label' | t
+        endif
+        assign signup_button = section.settings.signup_button
+        if signup_button == blank
+          assign signup_button = 'newsletter.button_label' | t
+        endif
+        assign signup_success = section.settings.signup_success
+        if signup_success == blank
+          assign signup_success = 'newsletter.success' | t
+        endif
+      -%}
+      <div class="periwinkle-coming-soon__signup" data-reveal>
+        <div class="periwinkle-coming-soon__signup-copy">
+          {%- if section.settings.signup_heading != blank -%}
+            <h3 class="periwinkle-coming-soon__signup-heading">{{ section.settings.signup_heading }}</h3>
+          {%- endif -%}
+          {%- if section.settings.signup_text != blank -%}
+            <div class="periwinkle-coming-soon__signup-text">{{ section.settings.signup_text }}</div>
+          {%- endif -%}
+        </div>
+
+        {%- form 'customer', id: form_id, class: 'periwinkle-coming-soon__form' -%}
+          <input type="hidden" name="contact[tags]" value="{{ section.settings.signup_tags | default: 'newsletter' | escape }}">
+          {%- if form.posted_successfully? -%}
+            <p
+              class="periwinkle-coming-soon__form-message periwinkle-coming-soon__form-message--success"
+              id="{{ form_id }}-success"
+              tabindex="-1"
+              autofocus
+            >
+              {{- signup_success | escape -}}
+            </p>
+          {%- else -%}
+            <div class="periwinkle-coming-soon__form-row">
+              <label class="visually-hidden" for="{{ form_id }}-email">{{ 'newsletter.label' | t }}</label>
+              <input
+                id="{{ form_id }}-email"
+                class="periwinkle-coming-soon__input"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email }}"
+                placeholder="{{ signup_placeholder | escape }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+                aria-required="true"
+                {% if form.errors %}
+                  aria-invalid="true"
+                  aria-describedby="{{ form_id }}-error"
+                  autofocus
+                {% endif %}
+              >
+              <button type="submit" class="periwinkle-coming-soon__submit" name="commit">
+                {{- signup_button | escape -}}
+              </button>
+            </div>
+            {%- if form.errors -%}
+              <p class="periwinkle-coming-soon__form-message" id="{{ form_id }}-error" role="alert">
+                {{- form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email -}}
+              </p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </periwinkle-coming-soon>
+</div>
+
+{% schema %}
+{
+  "name": "Peri coming soon",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Coming soon"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italicise part of the heading for an editorial accent.",
+      "default": "Still <em>on the loom.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Two new ideas we are weaving slowly, with the same care as everything we make. Here is a first look.</p>"
+    },
+    {
+      "type": "select",
+      "id": "media_first",
+      "label": "First concept image position",
+      "info": "Concepts alternate sides from here on desktop.",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Sign-up"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_signup",
+      "label": "Show email sign-up",
+      "info": "Adds the address to your customer list with the tags below, so you can email them at launch.",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "signup_heading",
+      "label": "Sign-up heading",
+      "default": "Be the <em>first to know.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "signup_text",
+      "label": "Sign-up text",
+      "default": "<p>Leave your email and we will write to you when these open. No noise, just the news.</p>"
+    },
+    {
+      "type": "text",
+      "id": "signup_placeholder",
+      "label": "Email placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "signup_button",
+      "label": "Button label",
+      "default": "Notify me"
+    },
+    {
+      "type": "text",
+      "id": "signup_success",
+      "label": "Success message",
+      "default": "Thank you. We will be in touch when they arrive."
+    },
+    {
+      "type": "text",
+      "id": "signup_tags",
+      "label": "Customer tags",
+      "info": "Comma separated. Keep “newsletter” so the address is subscribed to marketing.",
+      "default": "newsletter,coming-soon"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#E8E6F2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Used for the eyebrow, status tags, numerals, links and the button.",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concept",
+      "name": "Concept",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Concept One"
+        },
+        {
+          "type": "text",
+          "id": "status",
+          "label": "Status tag",
+          "info": "For example “Coming soon” or “Launching this winter”. Leave blank to hide.",
+          "default": "Coming soon"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Bridal <em>Trousseaus</em>"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Curated trousseau packages, thoughtfully designed across three budget tiers — because every family’s celebration deserves a collection that fits both their dreams and their means.</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "highlights",
+          "label": "Highlights",
+          "info": "One per line. Leave blank to hide."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Main image",
+          "info": "4:5 portrait. Set the alt text and focal point on the image itself."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_inset",
+          "label": "Inset image",
+          "info": "Optional smaller 4:5 image mounted over the corner of the main one."
+        },
+        {
+          "type": "text",
+          "id": "inset_caption",
+          "label": "Inset caption"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "The link is hidden until both a label and a link are set."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Peri coming soon",
+      "blocks": [
+        {
+          "type": "concept",
+          "settings": {
+            "label": "Concept One",
+            "heading": "Bridal <em>Trousseaus</em>",
+            "highlights": "Curated trousseau packages\nThree budget tiers, one standard of care\nShaped around your family’s celebration"
+          }
+        },
+        {
+          "type": "concept",
+          "settings": {
+            "label": "Concept Two",
+            "heading": "The Cloth That <em>Remembers</em>",
+            "description": "<p>A saree holds more than weave and colour — it holds memory. Bring us your grandmother’s or mother’s old saree, and we will give it a second life as a striking Indo-Western silhouette. A Berhampuri silk patta, for instance, reborn as a chic contemporary piece — heritage, reimagined for how you live today.</p>",
+            "highlights": "Your family saree, carefully reworked\nIndo-Western silhouettes, cut to your measure\nEvery border and motif kept in the story",
+            "inset_caption": "Before — a Berhampuri silk patta"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
