@@ -415,6 +415,203 @@
 }
 
 /* =========================================================
+   Before / after slider
+
+   periwinkle-compare sets --compare-position (0–100, unitless). Before sits
+   over After and is clipped from the right, so Before reads on the left.
+   The native range input carries keyboard and screen reader support; it is
+   visually hidden and ignores the pointer, which the frame handles instead.
+   ========================================================= */
+
+.periwinkle-coming-soon__compare-figure {
+  width: 100%;
+  margin: 0;
+}
+
+.periwinkle-coming-soon__compare {
+  --compare-percent: calc(var(--compare-position) * 1%);
+  display: block;
+}
+
+.periwinkle-coming-soon__compare-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background-color: var(--coming-soon-fill);
+  isolation: isolate;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.periwinkle-coming-soon__compare.is-ready .periwinkle-coming-soon__compare-frame {
+  /* Horizontal drags move the handle; vertical swipes still scroll the page. */
+  touch-action: pan-y;
+  cursor: ew-resize;
+}
+
+.periwinkle-coming-soon__compare-frame img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.periwinkle-coming-soon__compare-before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  clip-path: inset(0 calc(100% - var(--compare-percent)) 0 0);
+}
+
+.periwinkle-coming-soon__compare-tag {
+  position: absolute;
+  top: 1.2rem;
+  z-index: 2;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.4rem;
+  background-color: var(--coming-soon-background);
+  color: var(--coming-soon-accent);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: opacity 200ms ease;
+}
+
+/* Each tag fades out as the handle covers its side. */
+.periwinkle-coming-soon__compare-tag--before {
+  left: 1.2rem;
+  opacity: clamp(0, (var(--compare-position) - 14) / 8, 1);
+}
+
+.periwinkle-coming-soon__compare-tag--after {
+  right: 1.2rem;
+  opacity: clamp(0, (86 - var(--compare-position)) / 8, 1);
+}
+
+.periwinkle-coming-soon__compare-handle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.periwinkle-coming-soon__compare-handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--compare-percent) - 1px);
+  width: 2px;
+  background-color: var(--coming-soon-background);
+}
+
+/* The line tracks the true split; the knob stops short of the edges so it is never cut off. */
+.periwinkle-coming-soon__compare-knob {
+  position: absolute;
+  top: 50%;
+  left: clamp(2.4rem, var(--compare-percent), calc(100% - 2.4rem));
+  display: grid;
+  place-items: center;
+  width: 4.6rem;
+  height: 4.6rem;
+  border: 1px solid var(--coming-soon-accent);
+  border-radius: 50%;
+  background-color: var(--coming-soon-background);
+  color: var(--coming-soon-accent);
+  transform: translate(-50%, -50%);
+  transition: background-color 200ms ease, color 200ms ease, transform 250ms ease;
+}
+
+.periwinkle-coming-soon__compare-knob svg {
+  width: 2rem;
+  height: 1rem;
+}
+
+.periwinkle-coming-soon__compare:not(.is-ready) .periwinkle-coming-soon__compare-knob {
+  display: none;
+}
+
+@media (hover: hover) {
+  .periwinkle-coming-soon__compare-frame:hover .periwinkle-coming-soon__compare-knob {
+    background-color: var(--coming-soon-accent);
+    color: var(--coming-soon-background);
+  }
+}
+
+.periwinkle-coming-soon__compare.is-dragging .periwinkle-coming-soon__compare-knob {
+  background-color: var(--coming-soon-accent);
+  color: var(--coming-soon-background);
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.periwinkle-coming-soon__compare-range {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.periwinkle-coming-soon__compare:not(.is-ready) .periwinkle-coming-soon__compare-range {
+  display: none;
+}
+
+.periwinkle-coming-soon__compare-range:focus-visible ~ .periwinkle-coming-soon__compare-handle .periwinkle-coming-soon__compare-knob {
+  outline: 2px solid var(--coming-soon-accent);
+  outline-offset: 3px;
+}
+
+.periwinkle-coming-soon__compare-caption {
+  margin-top: 1.2rem;
+  color: var(--coming-soon-muted);
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.35;
+}
+
+@media screen and (max-width: 749px) {
+  .periwinkle-coming-soon__compare-knob {
+    width: 4.2rem;
+    height: 4.2rem;
+  }
+
+  .periwinkle-coming-soon__compare-tag {
+    top: 1rem;
+  }
+
+  .periwinkle-coming-soon__compare-tag--before {
+    left: 1rem;
+  }
+
+  .periwinkle-coming-soon__compare-tag--after {
+    right: 1rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-coming-soon__compare-figure {
+    width: 88%;
+  }
+
+  .periwinkle-coming-soon__concept--flipped .periwinkle-coming-soon__compare-figure {
+    margin-left: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .periwinkle-coming-soon__compare-tag,
+  .periwinkle-coming-soon__compare-knob {
+    transition: none;
+  }
+}
+
+/* =========================================================
    Sign-up
    ========================================================= */
 

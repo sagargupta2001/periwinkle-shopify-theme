@@ -86,52 +86,149 @@
             assign numeral = forloop.index | prepend: '0' | slice: -2, 2
             assign image_position = 'object-position: ' | append: image.presentation.focal_point
             assign inset_position = 'object-position: ' | append: inset.presentation.focal_point
+
+            comment
+              The slider needs both images. With only one, the concept falls back
+              to the inset layout so the section never renders half a comparison.
+            endcomment
+            assign compare = false
+            if block.settings.media_style == 'compare' and image != blank and inset != blank
+              assign compare = true
+            endif
+
+            assign concept_modifiers = ''
+            if flipped
+              assign concept_modifiers = concept_modifiers | append: ' periwinkle-coming-soon__concept--flipped'
+            endif
+            if compare
+              assign concept_modifiers = concept_modifiers | append: ' periwinkle-coming-soon__concept--compare'
+            elsif inset != blank
+              assign concept_modifiers = concept_modifiers | append: ' periwinkle-coming-soon__concept--has-inset'
+              if block.settings.inset_caption != blank
+                assign concept_modifiers = concept_modifiers | append: ' periwinkle-coming-soon__concept--has-caption'
+              endif
+            endif
+
+            assign before_label = block.settings.before_label | default: 'Before'
+            assign after_label = block.settings.after_label | default: 'After'
           -%}
 
           <li
-            class="periwinkle-coming-soon__concept{% if flipped %} periwinkle-coming-soon__concept--flipped{% endif %}{% if inset != blank %} periwinkle-coming-soon__concept--has-inset{% if block.settings.inset_caption != blank %} periwinkle-coming-soon__concept--has-caption{% endif %}{% endif %}"
+            class="periwinkle-coming-soon__concept{{ concept_modifiers }}"
             {{ block.shopify_attributes }}
           >
             <div class="periwinkle-coming-soon__media" data-reveal>
-              <div class="periwinkle-coming-soon__frame">
-                {%- if image != blank -%}
-                  {{
-                    image
-                    | image_url: width: 1600
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '375, 550, 750, 1000, 1300, 1600',
-                      sizes: '(min-width: 1300px) 480px, (min-width: 990px) 38vw, (min-width: 750px) 38vw, 82vw',
-                      alt: image_alt,
-                      class: 'periwinkle-coming-soon__image',
-                      style: image_position
-                  }}
-                {%- else -%}
-                  {{ 'image' | placeholder_svg_tag: 'periwinkle-coming-soon__placeholder' }}
-                {%- endif -%}
-              </div>
+              {%- if compare -%}
+                {%- comment -%}
+                  Before is layered over After and clipped from the right by
+                  --compare-position (0–100, unitless so CSS can also derive the
+                  tag opacities from it). Without JS it rests at 50%.
+                {%- endcomment -%}
+                <figure class="periwinkle-coming-soon__compare-figure">
+                  <periwinkle-compare class="periwinkle-coming-soon__compare" style="--compare-position: 50;">
+                    <div class="periwinkle-coming-soon__compare-frame" data-compare-frame>
+                      {{
+                        image
+                        | image_url: width: 1600
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '375, 550, 750, 1000, 1300, 1600',
+                          sizes: '(min-width: 1300px) 520px, (min-width: 990px) 40vw, (min-width: 750px) 44vw, 100vw',
+                          alt: image_alt,
+                          class: 'periwinkle-coming-soon__image',
+                          style: image_position
+                      }}
+                      <div class="periwinkle-coming-soon__compare-before">
+                        {{
+                          inset
+                          | image_url: width: 1600
+                          | image_tag:
+                            loading: 'lazy',
+                            widths: '375, 550, 750, 1000, 1300, 1600',
+                            sizes: '(min-width: 1300px) 520px, (min-width: 990px) 40vw, (min-width: 750px) 44vw, 100vw',
+                            alt: inset_alt,
+                            class: 'periwinkle-coming-soon__image',
+                            style: inset_position
+                        }}
+                      </div>
 
-              {%- if inset != blank -%}
-                <figure class="periwinkle-coming-soon__inset">
-                  <div class="periwinkle-coming-soon__inset-frame">
-                    {{
-                      inset
-                      | image_url: width: 900
-                      | image_tag:
-                        loading: 'lazy',
-                        widths: '240, 360, 540, 720, 900',
-                        sizes: '(min-width: 1300px) 240px, (min-width: 990px) 19vw, (min-width: 750px) 19vw, 40vw',
-                        alt: inset_alt,
-                        class: 'periwinkle-coming-soon__image',
-                        style: inset_position
-                    }}
-                  </div>
+                      <span class="periwinkle-coming-soon__compare-tag periwinkle-coming-soon__compare-tag--before" aria-hidden="true">
+                        {{- before_label | escape -}}
+                      </span>
+                      <span class="periwinkle-coming-soon__compare-tag periwinkle-coming-soon__compare-tag--after" aria-hidden="true">
+                        {{- after_label | escape -}}
+                      </span>
+
+                      <input
+                        class="periwinkle-coming-soon__compare-range"
+                        type="range"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value="50"
+                        aria-label="{{ before_label | escape }} and {{ after_label | escape }} comparison"
+                        aria-valuetext="{{ before_label | escape }} 50%, {{ after_label | escape }} 50%"
+                        data-before-label="{{ before_label | escape }}"
+                        data-after-label="{{ after_label | escape }}"
+                        tabindex="-1"
+                      >
+
+                      <div class="periwinkle-coming-soon__compare-handle" aria-hidden="true">
+                        <span class="periwinkle-coming-soon__compare-knob">
+                          <svg viewBox="0 0 24 12" focusable="false">
+                            <path d="M7 1 2 6l5 5M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </periwinkle-compare>
                   {%- if block.settings.inset_caption != blank -%}
-                    <figcaption class="periwinkle-coming-soon__inset-caption">
+                    <figcaption class="periwinkle-coming-soon__compare-caption">
                       {{- block.settings.inset_caption | escape -}}
                     </figcaption>
                   {%- endif -%}
                 </figure>
+              {%- else -%}
+                <div class="periwinkle-coming-soon__frame">
+                  {%- if image != blank -%}
+                    {{
+                      image
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '375, 550, 750, 1000, 1300, 1600',
+                        sizes: '(min-width: 1300px) 480px, (min-width: 990px) 38vw, (min-width: 750px) 38vw, 82vw',
+                        alt: image_alt,
+                        class: 'periwinkle-coming-soon__image',
+                        style: image_position
+                    }}
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'periwinkle-coming-soon__placeholder' }}
+                  {%- endif -%}
+                </div>
+
+                {%- if inset != blank -%}
+                  <figure class="periwinkle-coming-soon__inset">
+                    <div class="periwinkle-coming-soon__inset-frame">
+                      {{
+                        inset
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '240, 360, 540, 720, 900',
+                          sizes: '(min-width: 1300px) 240px, (min-width: 990px) 19vw, (min-width: 750px) 19vw, 40vw',
+                          alt: inset_alt,
+                          class: 'periwinkle-coming-soon__image',
+                          style: inset_position
+                      }}
+                    </div>
+                    {%- if block.settings.inset_caption != blank -%}
+                      <figcaption class="periwinkle-coming-soon__inset-caption">
+                        {{- block.settings.inset_caption | escape -}}
+                      </figcaption>
+                    {%- endif -%}
+                  </figure>
+                {%- endif -%}
               {%- endif -%}
             </div>
 
@@ -430,21 +527,45 @@
           "info": "One per line. Leave blank to hide."
         },
         {
+          "type": "select",
+          "id": "media_style",
+          "label": "Image display",
+          "options": [
+            { "value": "inset", "label": "Main image with inset" },
+            { "value": "compare", "label": "Before / after slider" }
+          ],
+          "default": "inset",
+          "info": "The slider needs both images and works best when they share the same framing, with only the subject changed. With one image missing it falls back to the inset layout."
+        },
+        {
           "type": "image_picker",
           "id": "image",
           "label": "Main image",
-          "info": "4:5 portrait. Set the alt text and focal point on the image itself."
+          "info": "4:5 portrait. In the slider this is the After image. Set the alt text and focal point on the image itself."
         },
         {
           "type": "image_picker",
           "id": "image_inset",
           "label": "Inset image",
-          "info": "Optional smaller 4:5 image mounted over the corner of the main one."
+          "info": "Optional smaller 4:5 image mounted over the corner of the main one. In the slider this is the Before image."
         },
         {
           "type": "text",
           "id": "inset_caption",
-          "label": "Inset caption"
+          "label": "Image caption",
+          "info": "Shown under the inset, or under the slider."
+        },
+        {
+          "type": "text",
+          "id": "before_label",
+          "label": "Slider before label",
+          "default": "Before"
+        },
+        {
+          "type": "text",
+          "id": "after_label",
+          "label": "Slider after label",
+          "default": "After"
         },
         {
           "type": "text",
