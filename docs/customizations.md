@@ -14,7 +14,7 @@ before touching one of these areas.
 | 6 | Peri editorial slider section | `sections/periwinkle-editorial-slider.liquid` | first commit |
 | 7 | Peri miniatures section | `sections/periwinkle-miniatures.liquid`, `section-periwinkle-miniatures.css` | #5 · `621111c` |
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
-| 12 | Peri journal index (blog listing) | `sections/periwinkle-journal-blog.liquid`, `section-periwinkle-journal-blog.css`, `templates/blog.json`, `assets/icon-whatsapp.svg` | — |
+| 12 | Peri journal index (blog listing) | `sections/periwinkle-journal-blog.liquid`, `section-periwinkle-journal-blog.css`, `snippets/periwinkle-journal-card.liquid`, `templates/blog.json`, `assets/icon-whatsapp.svg` | — |
 | 11 | Peri journal article template | `sections/periwinkle-journal-article.liquid`, `section-periwinkle-journal.css`, `periwinkle-journal.js`, `templates/article.journal.json` | — |
 | 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
@@ -292,6 +292,7 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   so a small journal doesn't leave a lonely third column. The title link is
   stretched over the card.
 - Summary is the post's excerpt, or its first 32 words.
+- Each story is rendered by `snippets/periwinkle-journal-card.liquid` (`featured: true` for the split card). The featured story and the grid are two separate passes (`limit: 1`, then `offset`), not one loop that opens and closes the `<ul>` conditionally, which theme check flags.
 - Paginated with Dawn's `pagination` snippet (*Stories per page*, default 10).
 
 ---

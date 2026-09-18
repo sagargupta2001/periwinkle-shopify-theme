@@ -112,108 +112,30 @@
         </p>
       {%- endif -%}
 
-      {%- for article in blog.articles -%}
+      {%- if show_featured -%}
+        {%- for article in blog.articles limit: 1 -%}
+          {% render 'periwinkle-journal-card', article: article, featured: true, show_date: section.settings.show_date %}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if rest_count > 0 -%}
         {%- liquid
-          assign is_featured = false
-          if show_featured and forloop.first
-            assign is_featured = true
+          assign grid_offset = 0
+          if show_featured
+            assign grid_offset = 1
           endif
-
-          assign reading_minutes = article.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1
-          if article.excerpt != blank
-            assign summary = article.excerpt | strip_html
-          else
-            assign summary = article.content | strip_html | truncatewords: 32
-          endif
-          assign image_position = 'object-position: ' | append: article.image.presentation.focal_point
         -%}
-
-        {%- capture card_meta -%}
-          <p class="periwinkle-journal-index__meta">
-            {%- if section.settings.show_date -%}
-              <span>{{ article.published_at | time_tag: format: 'date' }}</span>
-            {%- endif -%}
-            <span>{{ reading_minutes }} min read</span>
-          </p>
-        {%- endcapture -%}
-
-        {%- if is_featured -%}
-          <article class="periwinkle-journal-index__featured">
-            <div class="periwinkle-journal-index__media">
-              {%- if article.image -%}
-                {{
-                  article.image
-                  | image_url: width: 1600
-                  | image_tag:
-                    loading: 'eager',
-                    widths: '375, 550, 750, 1000, 1300, 1600',
-                    sizes: '(min-width: 1300px) 700px, (min-width: 990px) 55vw, calc(100vw - 3rem)',
-                    alt: article.image.alt,
-                    class: 'periwinkle-journal-index__image',
-                    style: image_position
-                }}
-              {%- endif -%}
-            </div>
-            <div class="periwinkle-journal-index__featured-copy">
-              <p class="periwinkle-journal-index__label">
-                Latest story
-                {%- if article.tags.size > 0 -%}
-                  <span class="periwinkle-journal-index__label-topic">{{ article.tags.first | escape }}</span>
-                {%- endif -%}
-              </p>
-              <h2 class="periwinkle-journal-index__featured-title">
-                <a href="{{ article.url }}" class="periwinkle-journal-index__link">{{ article.title | escape }}</a>
-              </h2>
-              {{ card_meta }}
-              <p class="periwinkle-journal-index__summary">{{ summary }}</p>
-              <span class="periwinkle-journal-index__cta" aria-hidden="true">
-                Read the story
-                <span class="periwinkle-journal-index__cta-icon">{{- 'icon-arrow.svg' | inline_asset_content -}}</span>
-              </span>
-            </div>
-          </article>
-
-          {%- if rest_count > 0 -%}
-            <h2 class="periwinkle-journal-index__more">{{ section.settings.more_heading | default: 'More stories' }}</h2>
-          {%- endif -%}
-        {%- else -%}
-          {%- if forloop.first or show_featured and forloop.index == 2 -%}
-            <ul class="periwinkle-journal-index__grid periwinkle-journal-index__grid--{{ grid_columns }}" role="list">
-          {%- endif -%}
-
-          <li class="periwinkle-journal-index__card">
-            <article>
-              <div class="periwinkle-journal-index__media">
-                {%- if article.image -%}
-                  {{
-                    article.image
-                    | image_url: width: 1200
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '375, 550, 750, 1000, 1200',
-                      sizes: '(min-width: 1300px) 400px, (min-width: 990px) 30vw, (min-width: 750px) 45vw, calc(100vw - 3rem)',
-                      alt: article.image.alt,
-                      class: 'periwinkle-journal-index__image',
-                      style: image_position
-                  }}
-                {%- endif -%}
-              </div>
-              {%- if article.tags.size > 0 -%}
-                <p class="periwinkle-journal-index__topic">{{ article.tags.first | escape }}</p>
-              {%- endif -%}
-              <h3 class="periwinkle-journal-index__title">
-                <a href="{{ article.url }}" class="periwinkle-journal-index__link">{{ article.title | escape }}</a>
-              </h3>
-              {{ card_meta }}
-              <p class="periwinkle-journal-index__summary periwinkle-journal-index__summary--clamp">{{ summary }}</p>
-            </article>
-          </li>
-
-          {%- if forloop.last -%}
-            </ul>
-          {%- endif -%}
+        {%- if show_featured -%}
+          <h2 class="periwinkle-journal-index__more">{{ section.settings.more_heading | default: 'More stories' }}</h2>
         {%- endif -%}
-      {%- endfor -%}
+        <ul class="periwinkle-journal-index__grid periwinkle-journal-index__grid--{{ grid_columns }}" role="list">
+          {%- for article in blog.articles offset: grid_offset -%}
+            <li class="periwinkle-journal-index__card">
+              {% render 'periwinkle-journal-card', article: article, featured: false, show_date: section.settings.show_date %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
 
       {%- if paginate.pages > 1 -%}
         <div class="periwinkle-journal-index__pagination">
