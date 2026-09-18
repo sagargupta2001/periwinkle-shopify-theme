@@ -14,6 +14,7 @@ before touching one of these areas.
 | 6 | Peri editorial slider section | `sections/periwinkle-editorial-slider.liquid` | first commit |
 | 7 | Peri miniatures section | `sections/periwinkle-miniatures.liquid`, `section-periwinkle-miniatures.css` | #5 · `621111c` |
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
+| 12 | Peri journal index (blog listing) | `sections/periwinkle-journal-blog.liquid`, `section-periwinkle-journal-blog.css`, `templates/blog.json`, `assets/icon-whatsapp.svg` | — |
 | 11 | Peri journal article template | `sections/periwinkle-journal-article.liquid`, `section-periwinkle-journal.css`, `periwinkle-journal.js`, `templates/article.journal.json` | — |
 | 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
@@ -262,13 +263,36 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
 - Body content from the rich text editor is styled in place: drop cap on the
   first paragraph, `<blockquote>` as a Dusk pull quote, and body images at
   full column width.
-- Share: a plain WhatsApp link (works without JS), plus a button that JS
-  reveals. It uses the native share sheet on phones and copies the link
-  elsewhere.
+- Share: round 42px icon buttons. The WhatsApp icon (`icon-whatsapp.svg`,
+  monochrome in the ink colour, not WhatsApp green) is a plain link that works
+  without JS. A second button that JS reveals sets `data-mode`: `share` shows
+  Dawn's share icon and opens the native share sheet (phones), and `copy` shows
+  the copy icon, swaps to a tick and shows a "Link copied" toast for 2s. The
+  icon for each state is picked in CSS from `data-mode` and `data-state`.
+- The byline ("By …") sits on its own line above date · read time. On one
+  line it wrapped on phones with a `·` leading the second row.
 - The `·` meta separator is written as `'\00B7'` in CSS so it can't be
   mis-decoded if the stylesheet is served without a charset.
 - Comments aren't rendered. If a blog turns comments on, use the stock
   template for those posts or add them here.
+
+## 12. Peri journal index (`templates/blog.json`)
+
+- Replaces Dawn's `main-blog`, whose "collage" layout blew the newest post up
+  to near full width, so the page read like an article instead of an index.
+- Editorial header (eyebrow, italic-accent heading, intro), then topic filters
+  built from `blog.all_tags` (shown only with at least two tags; the current
+  one is marked `aria-current` and filled Dusk).
+- On page 1 the newest story leads as a **split card**: the 3:2 image takes
+  about 7/12 of the row, with the copy beside it ("Latest story · topic", title,
+  date · read time, summary, "Read the story"). *Feature the latest story*
+  turns it off.
+- The rest are 3:2 cards (topic, title, date · read time, 3-line summary).
+  The grid uses 3 columns only when there are at least 3 cards, otherwise 2,
+  so a small journal doesn't leave a lonely third column. The title link is
+  stretched over the card.
+- Summary is the post's excerpt, or its first 32 words.
+- Paginated with Dawn's `pagination` snippet (*Stories per page*, default 10).
 
 ---
 

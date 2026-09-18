@@ -1,0 +1,371 @@
+/*
+  Periwinkle journal index — the blog listing page.
+
+  An editorial header with optional topic filters, the latest story as a split
+  card, then the rest as a grid of 3:2 story cards. The featured image is held
+  to about 58% of the row so the page reads as an index rather than as the
+  first article (Dawn's "collage" blew it up to full width).
+
+  Colours come from section settings as custom properties set inline on
+  #PeriwinkleJournalIndex-{section.id}.
+*/
+
+.periwinkle-journal-index {
+  background-color: var(--journal-index-background);
+  color: var(--journal-index-text);
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.periwinkle-journal-index__header {
+  max-width: 72rem;
+  margin: 0 auto 5.6rem;
+  text-align: center;
+}
+
+.periwinkle-journal-index__eyebrow,
+.periwinkle-journal-index__label {
+  margin: 0 0 2rem;
+  color: var(--journal-index-accent);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.periwinkle-journal-index__heading {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(4rem, 3.2vw + 1.6rem, 6.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.periwinkle-journal-index__heading em {
+  font-style: italic;
+}
+
+.periwinkle-journal-index__intro {
+  max-width: 44ch;
+  margin: 2.4rem auto 0;
+  color: var(--journal-index-muted);
+  font-family: var(--font-heading-family);
+  font-size: clamp(2rem, 0.8vw + 1.7rem, 2.4rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.periwinkle-journal-index__intro > * {
+  margin: 0;
+}
+
+.periwinkle-journal-index__tags ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 3.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.periwinkle-journal-index__tag {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--journal-index-line);
+  border-radius: 0.4rem;
+  color: var(--journal-index-muted);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+}
+
+.periwinkle-journal-index__tag:hover {
+  border-color: var(--journal-index-accent);
+  color: var(--journal-index-accent);
+}
+
+.periwinkle-journal-index__tag[aria-current='page'] {
+  border-color: var(--journal-index-accent);
+  background-color: var(--journal-index-accent);
+  color: var(--journal-index-background);
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-journal-index__header {
+    margin-bottom: 8rem;
+  }
+}
+
+/* =========================================================
+   Shared card parts
+   ========================================================= */
+
+.periwinkle-journal-index__featured,
+.periwinkle-journal-index__card article {
+  position: relative;
+}
+
+.periwinkle-journal-index__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background-color: var(--journal-index-fill);
+}
+
+.periwinkle-journal-index__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms ease;
+}
+
+.periwinkle-journal-index__featured:hover .periwinkle-journal-index__image,
+.periwinkle-journal-index__card:hover .periwinkle-journal-index__image {
+  transform: scale(1.03);
+}
+
+.periwinkle-journal-index__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0;
+  margin: 0 0 1.4rem;
+  color: var(--journal-index-muted);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.periwinkle-journal-index__meta span + span::before {
+  content: '\00B7';
+  margin: 0 1rem;
+  color: var(--journal-index-accent);
+}
+
+.periwinkle-journal-index__topic {
+  margin: 0 0 1rem;
+  color: var(--journal-index-accent);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.periwinkle-journal-index__label-topic::before {
+  content: '\00B7';
+  margin: 0 1rem;
+}
+
+.periwinkle-journal-index__label-topic {
+  color: var(--journal-index-muted);
+}
+
+/* The title link is stretched over the whole card: one tab stop, named by the title. */
+.periwinkle-journal-index__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.periwinkle-journal-index__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.periwinkle-journal-index__featured:hover .periwinkle-journal-index__link,
+.periwinkle-journal-index__card:hover .periwinkle-journal-index__link {
+  color: var(--journal-index-accent);
+}
+
+.periwinkle-journal-index__link:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.periwinkle-journal-index__link:focus-visible::after {
+  outline: 2px solid var(--journal-index-accent);
+  outline-offset: 0.4rem;
+}
+
+.periwinkle-journal-index__summary {
+  margin: 0;
+  color: var(--journal-index-muted);
+  font-size: 1.5rem;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+.periwinkle-journal-index__summary--clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* =========================================================
+   Featured (latest) story
+   ========================================================= */
+
+.periwinkle-journal-index__featured {
+  display: grid;
+  gap: 2.4rem;
+}
+
+.periwinkle-journal-index__featured-copy {
+  max-width: 48rem;
+}
+
+.periwinkle-journal-index__featured-title {
+  margin: 0 0 1.4rem;
+  color: inherit;
+  font-size: clamp(3.2rem, 2.2vw + 1.8rem, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.periwinkle-journal-index__featured .periwinkle-journal-index__summary {
+  font-size: 1.6rem;
+}
+
+.periwinkle-journal-index__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid currentColor;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  transition: color 200ms ease;
+}
+
+.periwinkle-journal-index__cta-icon {
+  display: inline-flex;
+  transition: transform 250ms ease;
+}
+
+.periwinkle-journal-index__cta-icon .icon {
+  width: 1.4rem;
+  height: 1rem;
+}
+
+.periwinkle-journal-index__featured:hover .periwinkle-journal-index__cta {
+  color: var(--journal-index-accent);
+}
+
+.periwinkle-journal-index__featured:hover .periwinkle-journal-index__cta-icon {
+  transform: translateX(0.3rem);
+}
+
+@media screen and (min-width: 750px) {
+  .periwinkle-journal-index__featured {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: 4.8rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-journal-index__featured {
+    gap: 7.2rem;
+  }
+}
+
+/* =========================================================
+   More stories grid
+   ========================================================= */
+
+.periwinkle-journal-index__more {
+  margin: 7.2rem 0 3.2rem;
+  padding-top: 3.2rem;
+  border-top: 1px solid var(--journal-index-line);
+  color: inherit;
+  font-size: clamp(2.6rem, 1vw + 2rem, 3.2rem);
+  line-height: 1.1;
+}
+
+.periwinkle-journal-index__grid {
+  display: grid;
+  gap: 4.8rem 3.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.periwinkle-journal-index__card .periwinkle-journal-index__media {
+  margin-bottom: 1.8rem;
+}
+
+.periwinkle-journal-index__title {
+  margin: 0 0 0.8rem;
+  color: inherit;
+  font-size: clamp(2.4rem, 0.8vw + 2rem, 2.8rem);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+@media screen and (min-width: 750px) {
+  .periwinkle-journal-index__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-journal-index__more {
+    margin-top: 9.6rem;
+  }
+
+  .periwinkle-journal-index__grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   Empty state and pagination
+   ========================================================= */
+
+.periwinkle-journal-index__empty {
+  margin: 0;
+  color: var(--journal-index-muted);
+  font-family: var(--font-heading-family);
+  font-size: 2.2rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.periwinkle-journal-index__empty a {
+  color: var(--journal-index-accent);
+}
+
+.periwinkle-journal-index__pagination {
+  margin-top: 6.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .periwinkle-journal-index__image,
+  .periwinkle-journal-index__tag,
+  .periwinkle-journal-index__link,
+  .periwinkle-journal-index__cta,
+  .periwinkle-journal-index__cta-icon {
+    transition: none;
+  }
+
+  .periwinkle-journal-index__featured:hover .periwinkle-journal-index__image,
+  .periwinkle-journal-index__card:hover .periwinkle-journal-index__image {
+    transform: none;
+  }
+}
