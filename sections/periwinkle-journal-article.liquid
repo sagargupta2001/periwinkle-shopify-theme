@@ -1,0 +1,374 @@
+{{ 'section-periwinkle-journal.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'periwinkle-journal.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face; the standfirst, pull quotes and
+    captions use real Cormorant italic.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleJournal-{{ section.id }} {
+    --journal-background: {{ section.settings.background_color }};
+    --journal-band: {{ section.settings.band_color }};
+    --journal-text: {{ section.settings.text_color }};
+    --journal-accent: {{ section.settings.accent_color }};
+    --journal-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+    --journal-line: {{ section.settings.text_color | color_modify: 'alpha', 0.16 }};
+    --journal-fill: {{ section.settings.text_color | color_modify: 'alpha', 0.06 }};
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign word_count = article.content | strip_html | split: ' ' | size
+  assign reading_minutes = word_count | divided_by: 200 | at_least: 1
+
+  assign eyebrow = section.settings.eyebrow
+  if eyebrow == blank and article.tags.size > 0
+    assign eyebrow = article.tags.first
+  endif
+
+  comment
+    Per-article extras come from metafields (Settings > Custom data > Blog
+    posts), so each post can carry its own gallery and shop link while sharing
+    this template:
+    - custom.gallery     list of files (images). Each image's alt text is its caption.
+    - custom.shop_link   URL, overrides the section's shop link
+    - custom.shop_label  single line text, overrides the section's link label
+  endcomment
+  assign gallery = article.metafields.custom.gallery.value
+
+  assign shop_link = section.settings.shop_link
+  if article.metafields.custom.shop_link.value != blank
+    assign shop_link = article.metafields.custom.shop_link.value
+  endif
+  assign shop_label = section.settings.shop_label
+  if article.metafields.custom.shop_label.value != blank
+    assign shop_label = article.metafields.custom.shop_label.value
+  endif
+
+  assign share_url = request.origin | append: article.url
+  assign feature_position = 'object-position: ' | append: article.image.presentation.focal_point
+-%}
+
+<article
+  id="PeriwinkleJournal-{{ section.id }}"
+  class="periwinkle-journal"
+  itemscope
+  itemtype="http://schema.org/BlogPosting"
+>
+  <header class="periwinkle-journal__hero page-width">
+    <a href="{{ blog.url }}" class="periwinkle-journal__back">
+      <span class="periwinkle-journal__back-icon" aria-hidden="true">{{- 'icon-arrow.svg' | inline_asset_content -}}</span>
+      {{- blog.title | escape -}}
+    </a>
+
+    {%- if eyebrow != blank -%}
+      <p class="periwinkle-journal__eyebrow periwinkle-journal__rise">{{ eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h1 class="periwinkle-journal__title periwinkle-journal__rise" itemprop="headline">{{ article.title | escape }}</h1>
+
+    {%- if article.excerpt != blank -%}
+      <div class="periwinkle-journal__standfirst periwinkle-journal__rise" itemprop="description">
+        {{ article.excerpt }}
+      </div>
+    {%- endif -%}
+
+    <p class="periwinkle-journal__meta periwinkle-journal__rise">
+      {%- if section.settings.show_author and article.author != blank -%}
+        <span itemprop="author">{{ article.author | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.show_date -%}
+        <span>{{ article.published_at | time_tag: format: 'date' }}</span>
+      {%- endif -%}
+      {%- if section.settings.show_reading_time -%}
+        <span>{{ reading_minutes }} min read</span>
+      {%- endif -%}
+    </p>
+  </header>
+
+  {%- if article.image -%}
+    <figure class="periwinkle-journal__feature page-width periwinkle-journal__rise">
+      <div class="periwinkle-journal__feature-frame">
+        {{
+          article.image
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '375, 550, 750, 1100, 1500, 1800, 2400',
+            sizes: '(min-width: 1300px) 1220px, calc(100vw - 3rem)',
+            alt: article.image.alt,
+            class: 'periwinkle-journal__image',
+            style: feature_position,
+            itemprop: 'image'
+        }}
+      </div>
+    </figure>
+  {%- endif -%}
+
+  <div
+    class="periwinkle-journal__body rte{% if section.settings.drop_cap %} periwinkle-journal__body--drop-cap{% endif %}"
+    itemprop="articleBody"
+  >
+    {{ article.content }}
+  </div>
+
+  {%- if section.settings.show_author and article.author != blank -%}
+    <div class="periwinkle-journal__signoff">
+      <svg class="periwinkle-journal__flower" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <g fill="currentColor">
+          <ellipse cx="20" cy="10" rx="5.2" ry="8.4"/>
+          <ellipse cx="20" cy="10" rx="5.2" ry="8.4" transform="rotate(72 20 20)"/>
+          <ellipse cx="20" cy="10" rx="5.2" ry="8.4" transform="rotate(144 20 20)"/>
+          <ellipse cx="20" cy="10" rx="5.2" ry="8.4" transform="rotate(216 20 20)"/>
+          <ellipse cx="20" cy="10" rx="5.2" ry="8.4" transform="rotate(288 20 20)"/>
+        </g>
+        <circle cx="20" cy="20" r="3" fill="var(--journal-background)"/>
+      </svg>
+      <p class="periwinkle-journal__signature">— {{ article.author | escape }}</p>
+    </div>
+  {%- endif -%}
+
+  {%- if gallery.size > 0 -%}
+    <section class="periwinkle-journal__gallery" aria-labelledby="JournalGallery-{{ section.id }}">
+      <div class="page-width">
+        <div class="periwinkle-journal__gallery-header">
+          {%- if section.settings.gallery_eyebrow != blank -%}
+            <p class="periwinkle-journal__eyebrow">{{ section.settings.gallery_eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 id="JournalGallery-{{ section.id }}" class="periwinkle-journal__gallery-heading">
+            {{- section.settings.gallery_heading | default: 'The pieces' -}}
+          </h2>
+        </div>
+
+        <ul class="periwinkle-journal__grid" role="list">
+          {%- for item in gallery -%}
+            {%- liquid
+              assign gallery_image = item
+              if item.preview_image
+                assign gallery_image = item.preview_image
+              endif
+              if gallery_image == blank
+                continue
+              endif
+              assign gallery_position = 'object-position: ' | append: gallery_image.presentation.focal_point
+              assign gallery_alt = item.alt | default: gallery_image.alt
+            -%}
+            <li class="periwinkle-journal__piece">
+              <figure class="periwinkle-journal__piece-figure">
+                <div class="periwinkle-journal__piece-frame">
+                  {{
+                    gallery_image
+                    | image_url: width: 1400
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '240, 360, 480, 640, 900, 1200, 1400',
+                      sizes: '(min-width: 1300px) 380px, (min-width: 990px) 29vw, 45vw',
+                      alt: gallery_alt,
+                      class: 'periwinkle-journal__image',
+                      style: gallery_position
+                  }}
+                </div>
+                {%- if gallery_alt != blank -%}
+                  <figcaption class="periwinkle-journal__caption" aria-hidden="true">
+                    {{- gallery_alt | escape -}}
+                  </figcaption>
+                {%- endif -%}
+              </figure>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if shop_label != blank and shop_link != blank -%}
+          <div class="periwinkle-journal__shop">
+            <a href="{{ shop_link }}" class="periwinkle-journal__cta">
+              {{- shop_label | escape -}}
+              <span class="periwinkle-journal__cta-icon" aria-hidden="true">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              </span>
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+    </section>
+  {%- elsif shop_label != blank and shop_link != blank -%}
+    <div class="periwinkle-journal__shop periwinkle-journal__shop--plain page-width">
+      <a href="{{ shop_link }}" class="periwinkle-journal__cta">
+        {{- shop_label | escape -}}
+        <span class="periwinkle-journal__cta-icon" aria-hidden="true">
+          {{- 'icon-arrow.svg' | inline_asset_content -}}
+        </span>
+      </a>
+    </div>
+  {%- endif -%}
+
+  <footer class="periwinkle-journal__footer page-width">
+    <div class="periwinkle-journal__footer-row">
+      {%- if article.tags.size > 0 -%}
+        <ul class="periwinkle-journal__tags" role="list" aria-label="Tags">
+          {%- for tag in article.tags -%}
+            <li>
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="periwinkle-journal__tag">{{ tag | escape }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.show_share -%}
+        <periwinkle-journal-share
+          class="periwinkle-journal__share"
+          data-url="{{ share_url }}"
+          data-title="{{ article.title | escape }}"
+        >
+          <a
+            class="periwinkle-journal__share-link"
+            href="https://wa.me/?text={{ article.title | append: ' ' | append: share_url | url_encode }}"
+            target="_blank"
+            rel="noopener"
+          >
+            WhatsApp<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+          <button type="button" class="periwinkle-journal__share-link" data-share-copy hidden>
+            <span data-share-label>Copy link</span>
+          </button>
+          <span class="visually-hidden" role="status" data-share-status></span>
+        </periwinkle-journal-share>
+      {%- endif -%}
+    </div>
+
+    {%- if blog.previous_article or blog.next_article -%}
+      <nav class="periwinkle-journal__pager" aria-label="More from {{ blog.title | escape }}">
+        {%- if blog.next_article -%}
+          <a href="{{ blog.next_article.url }}" class="periwinkle-journal__pager-link">
+            <span class="periwinkle-journal__pager-label">Newer</span>
+            <span class="periwinkle-journal__pager-title">{{ blog.next_article.title | escape }}</span>
+          </a>
+        {%- endif -%}
+        {%- if blog.previous_article -%}
+          <a href="{{ blog.previous_article.url }}" class="periwinkle-journal__pager-link periwinkle-journal__pager-link--older">
+            <span class="periwinkle-journal__pager-label">Older</span>
+            <span class="periwinkle-journal__pager-title">{{ blog.previous_article.title | escape }}</span>
+          </a>
+        {%- endif -%}
+      </nav>
+    {%- endif -%}
+  </footer>
+</article>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Peri journal article",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The title, excerpt, featured image and body come from the blog post. Gallery images and a per-post shop link come from the post’s metafields (custom.gallery, custom.shop_link, custom.shop_label)."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Leave blank to use the post’s first tag."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author and sign-off",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reading_time",
+      "label": "Show reading time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "drop_cap",
+      "label": "Drop cap on the first paragraph",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show share links",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "text",
+      "id": "gallery_eyebrow",
+      "label": "Gallery eyebrow",
+      "default": "Found on our travels"
+    },
+    {
+      "type": "text",
+      "id": "gallery_heading",
+      "label": "Gallery heading",
+      "default": "The pieces"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop link label",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop link",
+      "info": "A post’s custom.shop_link metafield overrides this."
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAF8F3"
+    },
+    {
+      "type": "color",
+      "id": "band_color",
+      "label": "Gallery background",
+      "default": "#EEE9DF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#4F4A70"
+    }
+  ]
+}
+{% endschema %}

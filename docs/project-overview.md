@@ -107,6 +107,11 @@ Notes:
 - The merchant must create a page in admin with handle `our-story` and assign
   it the `page.our-story` template.
 
+### Journal article (`templates/article.journal.json`)
+- A single **Peri journal article** section. Assign it per post in admin
+  (*Theme template → journal*). Per-post gallery and shop link come from the
+  `custom.gallery`, `custom.shop_link` and `custom.shop_label` metafields.
+
 ### Product (`templates/product.json`)
 Main product (sticky info, stacked gallery) → Disclosures → Related products
 ("You may also like").

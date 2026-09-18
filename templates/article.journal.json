@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "periwinkle-journal-article",
+      "settings": {
+        "eyebrow": "",
+        "show_author": true,
+        "show_date": true,
+        "show_reading_time": true,
+        "drop_cap": true,
+        "show_share": true,
+        "gallery_eyebrow": "Found on our travels",
+        "gallery_heading": "The pieces",
+        "shop_label": "Shop the collection",
+        "shop_link": "",
+        "background_color": "#faf8f3",
+        "band_color": "#eee9df",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70"
+      }
+    }
+  },
+  "order": ["main"]
+}
