@@ -1,0 +1,405 @@
+{{ 'section-periwinkle-contact.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face. The italic is loaded here so an
+    emphasised word in the heading uses real Cormorant italic.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleContact-{{ section.id }} {
+    --contact-background: {{ section.settings.background_color }};
+    --contact-panel: {{ section.settings.panel_color }};
+    --contact-text: {{ section.settings.text_color }};
+    --contact-accent: {{ section.settings.accent_color }};
+    --contact-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+    --contact-line: {{ section.settings.text_color | color_modify: 'alpha', 0.16 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign form_id = 'PeriwinkleContactForm-' | append: section.id
+
+  assign phone = section.settings.phone
+  assign phone_href = phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')'
+  assign email = section.settings.email | default: shop.email
+
+  comment
+    The map button opens Google Maps searching for the address, unless the
+    merchant pastes a specific map link (for example a shared pin, which is
+    more exact for a residential address).
+  endcomment
+  assign map_url = section.settings.map_link
+  if map_url == blank and section.settings.address != blank
+    assign map_query = section.settings.address | newline_to_br | replace: '<br />', ', ' | strip_newlines | url_encode
+    assign map_url = 'https://www.google.com/maps/search/?api=1&query=' | append: map_query
+  endif
+-%}
+
+<div
+  id="PeriwinkleContact-{{ section.id }}"
+  class="periwinkle-contact section-{{ section.id }}-padding"
+>
+  <div class="page-width periwinkle-contact__inner">
+    <div class="periwinkle-contact__main">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="periwinkle-contact__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="periwinkle-contact__heading">{{ section.settings.heading | default: page.title }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <div class="periwinkle-contact__intro">{{ section.settings.intro }}</div>
+      {%- endif -%}
+
+      {%- comment -%}
+        A Shopify contact form: messages arrive at the store's sender email,
+        with every contact[...] field listed in the email.
+      {%- endcomment -%}
+      {%- form 'contact', id: form_id, class: 'periwinkle-contact__form' -%}
+        <input type="hidden" name="contact[Form]" value="{{ section.settings.form_subject | escape }}">
+
+        {%- if form.posted_successfully? -%}
+          <p class="periwinkle-contact__success" id="{{ form_id }}-success" tabindex="-1" autofocus>
+            {{- section.settings.success_message | escape -}}
+          </p>
+        {%- else -%}
+          {%- if form.errors -%}
+            <div class="periwinkle-contact__error" id="{{ form_id }}-error" role="alert">
+              {%- for field in form.errors -%}
+                <p>
+                  {%- if field == 'form' -%}
+                    {{- form.errors.messages[field] -}}
+                  {%- else -%}
+                    {{- form.errors.translated_fields[field] | capitalize }}
+                    {{ form.errors.messages[field] -}}
+                  {%- endif -%}
+                </p>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="periwinkle-contact__fields">
+            <div class="periwinkle-contact__field">
+              <label class="periwinkle-contact__label" for="{{ form_id }}-name">Name</label>
+              <input
+                id="{{ form_id }}-name"
+                class="periwinkle-contact__input"
+                type="text"
+                name="contact[name]"
+                value="{{ form.name }}"
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="periwinkle-contact__field">
+              <label class="periwinkle-contact__label" for="{{ form_id }}-email">
+                Email <span class="periwinkle-contact__required" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="{{ form_id }}-email"
+                class="periwinkle-contact__input"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                required
+                aria-required="true"
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                  aria-describedby="{{ form_id }}-error"
+                {% endif %}
+              >
+            </div>
+
+            <div class="periwinkle-contact__field periwinkle-contact__field--full">
+              <label class="periwinkle-contact__label" for="{{ form_id }}-phone">Phone number</label>
+              <input
+                id="{{ form_id }}-phone"
+                class="periwinkle-contact__input"
+                type="tel"
+                name="contact[phone]"
+                value="{{ form.phone }}"
+                autocomplete="tel"
+                pattern="[0-9\-\+\s\(\)]*"
+              >
+            </div>
+
+            <div class="periwinkle-contact__field periwinkle-contact__field--full">
+              <label class="periwinkle-contact__label" for="{{ form_id }}-comment">
+                Comment <span class="periwinkle-contact__required" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="{{ form_id }}-comment"
+                class="periwinkle-contact__input periwinkle-contact__textarea"
+                name="contact[body]"
+                rows="7"
+                required
+                aria-required="true"
+              >
+                {{- form.body -}}
+              </textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="periwinkle-contact__submit">
+            {{- section.settings.submit_label | escape -}}
+          </button>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <aside class="periwinkle-contact__details" aria-labelledby="PeriwinkleContactDetails-{{ section.id }}">
+      <h2 class="periwinkle-contact__details-heading" id="PeriwinkleContactDetails-{{ section.id }}">
+        {{- section.settings.details_heading -}}
+      </h2>
+
+      <dl class="periwinkle-contact__list">
+        {%- if section.settings.address != blank -%}
+          <div class="periwinkle-contact__item">
+            <dt class="periwinkle-contact__term">
+              <span class="periwinkle-contact__icon" aria-hidden="true">{{- 'icon-location.svg' | inline_asset_content -}}</span>
+              {{- section.settings.address_label | escape -}}
+            </dt>
+            <dd class="periwinkle-contact__value">
+              <address class="periwinkle-contact__address">
+                {%- if section.settings.contact_name != blank -%}
+                  <span class="periwinkle-contact__name">{{ section.settings.contact_name | escape }}</span><br>
+                {%- endif -%}
+                {{- section.settings.address | escape | newline_to_br -}}
+              </address>
+            </dd>
+          </div>
+        {%- endif -%}
+
+        {%- if phone != blank -%}
+          <div class="periwinkle-contact__item">
+            <dt class="periwinkle-contact__term">
+              <span class="periwinkle-contact__icon" aria-hidden="true">{{- 'icon-phone.svg' | inline_asset_content -}}</span>
+              {{- section.settings.phone_label | escape -}}
+            </dt>
+            <dd class="periwinkle-contact__value">
+              <a href="tel:{{ phone_href | escape }}">{{ phone | escape }}</a>
+            </dd>
+          </div>
+        {%- endif -%}
+
+        {%- if email != blank -%}
+          <div class="periwinkle-contact__item">
+            <dt class="periwinkle-contact__term">
+              <span class="periwinkle-contact__icon" aria-hidden="true">{{- 'icon-mail.svg' | inline_asset_content -}}</span>
+              {{- section.settings.email_label | escape -}}
+            </dt>
+            <dd class="periwinkle-contact__value">
+              <a href="mailto:{{ email | escape }}">{{ email | escape }}</a>
+            </dd>
+          </div>
+        {%- endif -%}
+      </dl>
+
+      {%- if map_url != blank and section.settings.map_label != blank -%}
+        <a href="{{ map_url }}" class="periwinkle-contact__map" target="_blank" rel="noopener">
+          {{- section.settings.map_label | escape -}}
+          <span class="visually-hidden">(opens Google Maps in a new tab)</span>
+          <span class="periwinkle-contact__map-icon" aria-hidden="true">
+            {{- 'icon-arrow.svg' | inline_asset_content -}}
+          </span>
+        </a>
+      {%- endif -%}
+    </aside>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Peri contact",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Contact us"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italicise part of the heading for an editorial accent. Leave blank to use the page title.",
+      "default": "Get in <em>touch</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Text",
+      "default": "<p>Please fill in the form below if you have any feedback or queries, or if you are an organisation interested in buying our products in bulk.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Button label",
+      "default": "Send"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for writing to us. We will get back to you soon."
+    },
+    {
+      "type": "text",
+      "id": "form_subject",
+      "label": "Email label",
+      "info": "Added to each message so contact page emails are easy to tell apart.",
+      "default": "Contact page"
+    },
+    {
+      "type": "header",
+      "content": "Contact details"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "details_heading",
+      "label": "Heading",
+      "default": "Visit or <em>reach us</em>"
+    },
+    {
+      "type": "text",
+      "id": "address_label",
+      "label": "Address label",
+      "default": "Address"
+    },
+    {
+      "type": "text",
+      "id": "contact_name",
+      "label": "Contact name",
+      "info": "Shown above the address. Not used for the map search."
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "info": "One line per row."
+    },
+    {
+      "type": "text",
+      "id": "phone_label",
+      "label": "Phone label",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "+91 99726 95620"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "info": "Leave blank to use the store's contact email.",
+      "default": "support@periwinklebysherry.com"
+    },
+    {
+      "type": "text",
+      "id": "map_label",
+      "label": "Map button label",
+      "default": "View store location"
+    },
+    {
+      "type": "url",
+      "id": "map_link",
+      "label": "Map link",
+      "info": "Optional. Paste a Google Maps share link for an exact pin. When blank, the button searches Google Maps for the address."
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAF8F3"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Details panel background",
+      "default": "#EEE9DF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Used for the eyebrow, icons, links and buttons.",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Peri contact"
+    }
+  ]
+}
+{% endschema %}
