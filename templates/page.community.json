@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "community": {
@@ -25,7 +34,11 @@
           }
         }
       },
-      "block_order": ["what", "who", "how"],
+      "block_order": [
+        "what",
+        "who",
+        "how"
+      ],
       "settings": {
         "botanical_illustration": "shopify://shop_images/periwinkle-coloured.svg",
         "eyebrow": "A Periwinkle community",
@@ -33,7 +46,25 @@
         "intro": "<p>For everyone who has lost someone they love, and carries them still.</p>",
         "share_link_label": "Share your story",
         "origin": "<p>Periwinkle began with a mother who believed that cloth carried memory, and with a daughter who opened the door she never got to open herself.</p><p>Losing a parent changes the shape of everything. The love doesn’t end; it just has nowhere to go. The Unbroken Thread is a place to put it: somewhere to tell the story of the person you miss, and to read the stories of others who understand.</p>",
-        "substack_url": "",
+        "excerpts_heading": "From the <em>stories</em>",
+        "show_form": true,
+        "share_eyebrow": "Share your story",
+        "share_heading": "Tell us <em>about them.</em>",
+        "share_text": "<p>Who they were, what you miss, the small things you still keep. How you have coped, or how you haven’t yet. Write as much or as little as you like. There is no right way to do this.</p>",
+        "share_promise": "<p>We read every story ourselves. Nothing is published without your permission, and we will write to you before it goes up.</p>",
+        "remembering_placeholder": "For example, my mother, Kamala",
+        "consent_label": "You may publish my story on The Unbroken Thread, signed as I chose above.",
+        "submit_label": "Send my story",
+        "success_message": "Thank you for trusting us with their story. We will read it with care and write to you before anything is shared.",
+        "form_subject": "The Unbroken Thread story",
+        "email_prefix": "Would you rather write a letter? Email us at",
+        "contact_email": "",
+        "substack_url": "https://substack.com/@saverim",
+        "read_heading": "Read the <em>stories</em>",
+        "read_text": "<p>Every story we publish lives on our Substack. Subscribe to receive new ones by email, and leave a kind word for the writer if you wish.</p>",
+        "read_label": "Read the stories",
+        "subscribe_label": "Subscribe",
+        "care_text": "<p>The Unbroken Thread is a place to share and to listen. It is not a substitute for professional support. If grief feels too heavy to carry, please talk to someone you trust, or call Tele-MANAS on 14416, India’s free 24-hour mental health helpline.</p>",
         "background_color": "#faf8f3",
         "band_color": "#eee9df",
         "text_color": "#2e2c35",
@@ -43,5 +74,7 @@
       }
     }
   },
-  "order": ["community"]
+  "order": [
+    "community"
+  ]
 }
