@@ -16,6 +16,7 @@ before touching one of these areas.
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
 | 12 | Peri journal index (blog listing) | `sections/periwinkle-journal-blog.liquid`, `section-periwinkle-journal-blog.css`, `snippets/periwinkle-journal-card.liquid`, `templates/blog.json`, `assets/icon-whatsapp.svg` | — |
 | 11 | Peri journal article template | `sections/periwinkle-journal-article.liquid`, `section-periwinkle-journal.css`, `periwinkle-journal.js`, `templates/article.journal.json` | — |
+| 14 | Contact Us page | `sections/periwinkle-contact.liquid`, `section-periwinkle-contact.css`, `templates/page.contact.json`, `assets/icon-location.svg` | — |
 | 13 | The Unbroken Thread community page | `sections/periwinkle-community.liquid`, `section-periwinkle-community.css`, `templates/page.community.json` | — |
 | 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
@@ -330,6 +331,26 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   journal community note link to `/pages/the-unbroken-thread`. Add the page to
   the footer's *Explore* menu too. It is deliberately **not** in the header
   menu, which is already full.
+
+## 14. Contact Us (`periwinkle-contact`)
+
+- Replaces Dawn's `main-page` + `contact-form` on `page.contact.json`, the
+  page linked as *Contact Us* in the footer *Explore* menu.
+- Two columns from 990px: the "Get in touch" form (name, email, phone,
+  comment) on the left, and a Linen panel with the address, phone, email and a
+  **View store location** button on the right. The panel is sticky on desktop.
+  Below 990px they stack, form first. On tablets the address sits beside the
+  phone and email so the panel doesn't run long.
+- It's a Shopify contact form, so messages reach the store's sender email. A
+  hidden `contact[Form]` field ("Contact page") tells them apart from The
+  Unbroken Thread stories.
+- **Map button:** it opens a Google Maps search for the address lines in a new
+  tab. The contact name isn't included in the search. For an exact pin (this is
+  a residential address, so the search can land nearby rather than on the
+  villa), paste a Google Maps share link into *Map link*, which overrides the
+  search.
+- Phone and email are section settings (defaulting to the footer's), not read
+  from the footer, so keep them in sync if either changes.
 
 ---
 
