@@ -1,0 +1,614 @@
+/*
+  Periwinkle community — "The Unbroken Thread"
+
+  A single-page front door for the grief-stories community. A centred hero,
+  a passage on why it exists, three numbered pillars (what, who, how),
+  optional story excerpts, then a Linen band holding the story form. The
+  Substack links and a care note close the page.
+
+  The subject is grief, so the page stays still: no scroll reveals, and only
+  the hero rises in once, when motion is allowed.
+
+  Colours come from section settings as custom properties set inline on
+  #PeriwinkleCommunity-{section.id}. Muted and hairline tones are derived
+  there in Liquid, because the settings are hex and can't take an alpha in CSS.
+*/
+
+.periwinkle-community {
+  background-color: var(--community-background);
+  color: var(--community-text);
+}
+
+.periwinkle-community em {
+  font-style: italic;
+}
+
+.periwinkle-community__intro > *,
+.periwinkle-community__origin > *,
+.periwinkle-community__pillar-text > *,
+.periwinkle-community__quote > *,
+.periwinkle-community__share-text > *,
+.periwinkle-community__promise > *,
+.periwinkle-community__read-text > *,
+.periwinkle-community__care > * {
+  margin: 0;
+}
+
+.periwinkle-community__origin > * + *,
+.periwinkle-community__pillar-text > * + *,
+.periwinkle-community__share-text > * + *,
+.periwinkle-community__read-text > * + *,
+.periwinkle-community__care > * + * {
+  margin-top: 1.2rem;
+}
+
+.periwinkle-community a:not([class]) {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3rem;
+  transition: color 200ms ease;
+}
+
+.periwinkle-community a:not([class]):hover {
+  color: var(--community-accent);
+}
+
+.periwinkle-community a:focus-visible,
+.periwinkle-community button:focus-visible,
+.periwinkle-community input:focus-visible,
+.periwinkle-community textarea:focus-visible {
+  outline: 2px solid var(--community-accent);
+  outline-offset: 0.3rem;
+  box-shadow: none;
+}
+
+/* =========================================================
+   Shared type
+   ========================================================= */
+
+.periwinkle-community__eyebrow {
+  margin: 0 0 2rem;
+  color: var(--community-accent);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.periwinkle-community__subheading {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(3.2rem, 2vw + 2rem, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.periwinkle-community__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.periwinkle-community__cta-icon {
+  display: inline-flex;
+  transition: transform 250ms ease;
+}
+
+.periwinkle-community__cta-icon .icon {
+  width: 1.4rem;
+  height: 1rem;
+}
+
+.periwinkle-community__cta:hover {
+  color: var(--community-accent);
+}
+
+.periwinkle-community__cta:hover .periwinkle-community__cta-icon {
+  transform: translateX(0.3rem);
+}
+
+/* The in-page jump points down, and nudges down rather than across. */
+.periwinkle-community__cta-icon--down {
+  rotate: 90deg;
+}
+
+.periwinkle-community__cta:hover .periwinkle-community__cta-icon--down {
+  transform: translateX(0.2rem);
+}
+
+.periwinkle-community__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.6rem 3.2rem;
+  margin-top: 4rem;
+}
+
+.periwinkle-community__actions:empty {
+  display: none;
+}
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.periwinkle-community__hero {
+  max-width: 76rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.periwinkle-community__mark {
+  width: 6.4rem;
+  margin: 0 auto 2.8rem;
+}
+
+.periwinkle-community__mark img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.periwinkle-community__heading {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(4.4rem, 5vw + 2rem, 8.8rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.periwinkle-community__intro {
+  max-width: 36ch;
+  margin: 2.4rem auto 0;
+  color: var(--community-muted);
+  font-family: var(--font-heading-family);
+  font-size: clamp(2rem, 0.8vw + 1.7rem, 2.6rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   Why it exists — a single thread drops from the hero into it
+   ========================================================= */
+
+.periwinkle-community__origin {
+  max-width: 60rem;
+  margin: 6.4rem auto 0;
+  color: var(--community-muted);
+  font-size: 1.6rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.periwinkle-community__origin::before {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 6.4rem;
+  margin: 0 auto 4rem;
+  background-color: var(--community-line);
+}
+
+.periwinkle-community__origin > p:first-child {
+  margin-bottom: 2.4rem;
+  color: var(--community-text);
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.2rem, 1vw + 1.8rem, 2.8rem);
+  font-style: italic;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+/* =========================================================
+   Pillars
+   ========================================================= */
+
+.periwinkle-community__pillars {
+  display: grid;
+  gap: 4rem;
+  margin: 8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.periwinkle-community__pillar {
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--community-line);
+}
+
+.periwinkle-community__numeral {
+  display: block;
+  margin-bottom: 1.6rem;
+  color: var(--community-accent);
+  font-family: var(--font-heading-family);
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.periwinkle-community__pillar-heading {
+  margin: 0 0 1.2rem;
+  color: inherit;
+  font-size: clamp(2.4rem, 1vw + 2rem, 3rem);
+  line-height: 1.1;
+}
+
+.periwinkle-community__pillar-text {
+  max-width: 42ch;
+  color: var(--community-muted);
+  font-size: 1.5rem;
+  line-height: 1.65;
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-community__pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4.8rem;
+    margin-top: 12rem;
+  }
+}
+
+/* =========================================================
+   Story excerpts
+   ========================================================= */
+
+.periwinkle-community__excerpts {
+  margin-top: 8rem;
+  text-align: center;
+}
+
+.periwinkle-community__excerpt-list {
+  display: grid;
+  gap: 4rem;
+  margin: 4.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.periwinkle-community__excerpt-figure {
+  margin: 0;
+  padding-left: 2.4rem;
+  border-left: 1px solid var(--community-accent);
+}
+
+.periwinkle-community__quote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-heading-family);
+  font-size: clamp(2rem, 0.8vw + 1.7rem, 2.6rem);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.periwinkle-community__attribution {
+  margin-top: 1.6rem;
+  color: var(--community-muted);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+}
+
+@media screen and (min-width: 750px) {
+  .periwinkle-community__excerpt-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5.6rem 4.8rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-community__excerpts {
+    margin-top: 12rem;
+  }
+}
+
+/* =========================================================
+   Story form band
+   ========================================================= */
+
+.periwinkle-community__share {
+  margin-top: 8rem;
+  padding: 5.6rem 0;
+  background-color: var(--community-band);
+  scroll-margin-top: calc(var(--header-height, 0px) + var(--announcement-bar-height, 0px) + 2rem);
+}
+
+.periwinkle-community__share-inner {
+  display: grid;
+  gap: 4.8rem;
+}
+
+.periwinkle-community__subheading + .periwinkle-community__share-text {
+  margin-top: 2.4rem;
+}
+
+.periwinkle-community__share-text {
+  max-width: 42ch;
+  color: var(--community-muted);
+  font-size: 1.6rem;
+  line-height: 1.7;
+}
+
+.periwinkle-community__promise {
+  max-width: 42ch;
+  margin-top: 3.2rem;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--community-line);
+  font-family: var(--font-heading-family);
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.periwinkle-community__email-note {
+  max-width: 42ch;
+  margin: 2.4rem 0 0;
+  color: var(--community-muted);
+  font-size: 1.4rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-community__share {
+    margin-top: 12rem;
+    padding: 9.6rem 0;
+  }
+
+  .periwinkle-community__share-inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+    gap: 9.6rem;
+  }
+
+  .periwinkle-community__share-copy {
+    position: sticky;
+    top: calc(var(--header-height, 0px) + var(--announcement-bar-height, 0px) + 3.2rem);
+  }
+}
+
+/* Form */
+
+.periwinkle-community__form {
+  width: 100%;
+}
+
+.periwinkle-community__fields {
+  display: grid;
+  gap: 2.4rem;
+}
+
+.periwinkle-community__field {
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .periwinkle-community__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.8rem 2rem;
+  }
+
+  .periwinkle-community__field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.periwinkle-community__label {
+  padding: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+.periwinkle-community__required {
+  color: var(--community-accent);
+}
+
+.periwinkle-community__input {
+  width: 100%;
+  min-height: 4.8rem;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--community-text);
+  border-radius: 0.4rem;
+  background-color: var(--community-background);
+  color: inherit;
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.periwinkle-community__input::placeholder {
+  color: var(--community-muted);
+  opacity: 1;
+}
+
+.periwinkle-community__textarea {
+  min-height: 24rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.periwinkle-community__hint {
+  margin: 0;
+  color: var(--community-muted);
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.periwinkle-community__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem 2.8rem;
+}
+
+.periwinkle-community__choices legend {
+  margin-bottom: 1.2rem;
+}
+
+.periwinkle-community__choice,
+.periwinkle-community__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.periwinkle-community__choice input,
+.periwinkle-community__consent input {
+  flex: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--community-accent);
+}
+
+.periwinkle-community__submit {
+  min-height: 4.8rem;
+  margin-top: 3.2rem;
+  padding: 0 3.2rem;
+  border: 1px solid var(--community-accent);
+  border-radius: 0.4rem;
+  background-color: var(--community-accent);
+  color: var(--community-background);
+  font-family: var(--font-body-family);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.periwinkle-community__submit:hover {
+  background-color: transparent;
+  color: var(--community-accent);
+}
+
+@media screen and (max-width: 749px) {
+  .periwinkle-community__submit {
+    width: 100%;
+  }
+}
+
+.periwinkle-community__form-error {
+  margin-bottom: 2.4rem;
+  padding: 1.6rem;
+  border: 1px solid var(--community-text);
+  border-radius: 0.4rem;
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+.periwinkle-community__form-error p {
+  margin: 0;
+}
+
+.periwinkle-community__form-success {
+  margin: 0;
+  color: var(--community-accent);
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.4rem, 1vw + 2rem, 3rem);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* =========================================================
+   Read on Substack, and the care note
+   ========================================================= */
+
+.periwinkle-community__read {
+  max-width: 60rem;
+  margin: 8rem auto 0;
+  text-align: center;
+}
+
+.periwinkle-community__read-text {
+  margin-top: 2rem;
+  color: var(--community-muted);
+  font-size: 1.6rem;
+  line-height: 1.7;
+}
+
+.periwinkle-community__care {
+  max-width: 60rem;
+  margin: 8rem auto 0;
+  padding-top: 3.2rem;
+  border-top: 1px solid var(--community-line);
+  color: var(--community-muted);
+  font-size: 1.4rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+@media screen and (min-width: 990px) {
+  .periwinkle-community__read {
+    margin-top: 12rem;
+  }
+}
+
+/* =========================================================
+   Motion — opt-in only. The hero rises in once on load; nothing else moves.
+   ========================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  .periwinkle-community__rise {
+    animation: periwinkle-community-rise 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .periwinkle-community__rise:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .periwinkle-community__rise:nth-child(3) {
+    animation-delay: 240ms;
+  }
+
+  .periwinkle-community__rise:nth-child(4) {
+    animation-delay: 360ms;
+  }
+
+  .periwinkle-community__rise:nth-child(5) {
+    animation-delay: 600ms;
+  }
+}
+
+@keyframes periwinkle-community-rise {
+  from {
+    opacity: 0;
+    transform: translateY(2.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .periwinkle-community__cta,
+  .periwinkle-community__cta-icon,
+  .periwinkle-community__submit,
+  .periwinkle-community a:not([class]) {
+    transition: none;
+  }
+}

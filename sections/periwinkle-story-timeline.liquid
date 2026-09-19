@@ -228,6 +228,28 @@
                         {%- endif -%}
                       </div>
                     {%- endif -%}
+
+                    {%- liquid
+                      assign show_note_link = false
+                      if block.settings.note_link_label != blank and block.settings.note_link != blank
+                        assign show_note_link = true
+                      endif
+                    -%}
+                    {%- if block.settings.note != blank or show_note_link -%}
+                      <div class="periwinkle-story__note periwinkle-story__reveal" style="--reveal-delay: 480ms;">
+                        {%- if block.settings.note != blank -%}
+                          <div class="periwinkle-story__note-text">{{ block.settings.note }}</div>
+                        {%- endif -%}
+                        {%- if show_note_link -%}
+                          <a href="{{ block.settings.note_link }}" class="periwinkle-story__note-link">
+                            {{- block.settings.note_link_label | escape -}}
+                            <span class="periwinkle-story__note-icon" aria-hidden="true">
+                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                            </span>
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
                 {%- endcase -%}
               </div>
 
@@ -576,6 +598,27 @@
           "type": "url",
           "id": "button_link_2",
           "label": "Second button link"
+        },
+        {
+          "type": "header",
+          "content": "Closing note"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Note",
+          "info": "A quiet line under the buttons, for example pointing to The Unbroken Thread."
+        },
+        {
+          "type": "text",
+          "id": "note_link_label",
+          "label": "Note link label"
+        },
+        {
+          "type": "url",
+          "id": "note_link",
+          "label": "Note link",
+          "info": "The link is hidden until both a label and a link are set."
         }
       ]
     }

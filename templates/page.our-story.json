@@ -121,7 +121,10 @@
             "button_label_1": "Explore Sarees",
             "button_link_1": "shopify://collections/periwinkle-sarees",
             "button_label_2": "Shop all",
-            "button_link_2": "shopify://collections/all"
+            "button_link_2": "shopify://collections/all",
+            "note": "<p>If you are carrying the memory of someone you have lost, there is a place for their story here too.</p>",
+            "note_link_label": "The Unbroken Thread",
+            "note_link": "/pages/the-unbroken-thread"
           }
         }
       },

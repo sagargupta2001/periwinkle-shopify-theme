@@ -48,6 +48,7 @@ and hot-reloads CSS and section changes as you save. Useful paths:
 |---|---|
 | Home | http://localhost:9292/ |
 | Our Story | http://localhost:9292/pages/our-story |
+| The Unbroken Thread | http://localhost:9292/pages/the-unbroken-thread (before the page exists: `/pages/our-story?view=community`) |
 | A collection | http://localhost:9292/collections/sarees-benarasi-weaves |
 
 Notes:
@@ -115,6 +116,12 @@ Notes:
 - A single **Peri journal article** section. Assign it per post in admin
   (*Theme template → journal*). Per-post gallery and shop link come from the
   `custom.gallery`, `custom.shop_link` and `custom.shop_label` metafields.
+
+### The Unbroken Thread (`templates/page.community.json`)
+- A single **Peri community** section: the front door for the grief-stories
+  community, with a story form (Shopify contact form) and links to Substack.
+  Needs a page with handle `the-unbroken-thread` using the `page.community`
+  template.
 
 ### Product (`templates/product.json`)
 Main product (sticky info, stacked gallery) → Disclosures → Related products

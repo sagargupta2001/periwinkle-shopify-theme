@@ -1,0 +1,677 @@
+{{ 'section-periwinkle-community.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {%- comment -%}
+    Dawn only loads the upright heading face. The italic is loaded here so the
+    emphasised headings and the pull passages use real Cormorant italic.
+  {%- endcomment -%}
+  {%- assign heading_font_italic = settings.type_header_font | font_modify: 'style', 'italic' -%}
+  {%- if heading_font_italic -%}
+    {{ heading_font_italic | font_face: font_display: 'swap' }}
+  {%- endif -%}
+
+  #PeriwinkleCommunity-{{ section.id }} {
+    --community-background: {{ section.settings.background_color }};
+    --community-band: {{ section.settings.band_color }};
+    --community-text: {{ section.settings.text_color }};
+    --community-accent: {{ section.settings.accent_color }};
+    --community-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+    --community-line: {{ section.settings.text_color | color_modify: 'alpha', 0.16 }};
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign share_id = 'PeriwinkleCommunityShare-' | append: section.id
+  assign form_id = 'PeriwinkleCommunityForm-' | append: section.id
+
+  comment
+    Substack links stay hidden until the merchant sets the publication URL.
+    "/subscribe" works on both substack.com subdomains and custom domains.
+  endcomment
+  assign substack_url = section.settings.substack_url
+  assign subscribe_url = ''
+  if substack_url != blank
+    assign subscribe_url = substack_url | split: '?' | first
+    assign last_char = subscribe_url | slice: -1, 1
+    if last_char == '/'
+      assign subscribe_url = subscribe_url | remove_last: '/'
+    endif
+    assign subscribe_url = subscribe_url | append: '/subscribe'
+  endif
+
+  assign contact_email = section.settings.contact_email | default: shop.email
+  assign numerals = 'I,II,III' | split: ','
+
+  assign pillar_count = 0
+  assign excerpt_count = 0
+  for block in section.blocks
+    if block.type == 'pillar'
+      assign pillar_count = pillar_count | plus: 1
+    elsif block.type == 'excerpt' and block.settings.quote != blank
+      assign excerpt_count = excerpt_count | plus: 1
+    endif
+  endfor
+-%}
+
+<div
+  id="PeriwinkleCommunity-{{ section.id }}"
+  class="periwinkle-community section-{{ section.id }}-padding"
+>
+  <div class="page-width">
+    <header class="periwinkle-community__hero">
+      {%- if section.settings.botanical_illustration != blank -%}
+        <div class="periwinkle-community__mark periwinkle-community__rise" aria-hidden="true">
+          {{
+            section.settings.botanical_illustration
+            | image_url: width: 240
+            | image_tag: loading: 'eager', alt: '', width: 120, height: 120
+          }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="periwinkle-community__eyebrow periwinkle-community__rise">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="periwinkle-community__heading periwinkle-community__rise">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.intro != blank -%}
+        <div class="periwinkle-community__intro periwinkle-community__rise">{{ section.settings.intro }}</div>
+      {%- endif -%}
+
+      <div class="periwinkle-community__actions periwinkle-community__rise">
+        {%- if section.settings.show_form and section.settings.share_link_label != blank -%}
+          <a href="#{{ share_id }}" class="periwinkle-community__cta">
+            {{- section.settings.share_link_label | escape -}}
+            <span class="periwinkle-community__cta-icon periwinkle-community__cta-icon--down" aria-hidden="true">
+              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            </span>
+          </a>
+        {%- endif -%}
+        {%- if substack_url != blank and section.settings.read_label != blank -%}
+          <a href="{{ substack_url }}" class="periwinkle-community__cta" target="_blank" rel="noopener">
+            {{- section.settings.read_label | escape -}}
+            <span class="visually-hidden">(opens in a new tab)</span>
+            <span class="periwinkle-community__cta-icon" aria-hidden="true">
+              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </div>
+    </header>
+
+    {%- if section.settings.origin != blank -%}
+      <div class="periwinkle-community__origin">{{ section.settings.origin }}</div>
+    {%- endif -%}
+
+    {%- if pillar_count > 0 -%}
+      <ol class="periwinkle-community__pillars" role="list">
+        {%- assign pillar_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'pillar' -%}
+            <li class="periwinkle-community__pillar" {{ block.shopify_attributes }}>
+              <span class="periwinkle-community__numeral" aria-hidden="true">
+                {{- numerals[pillar_index] -}}
+              </span>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="periwinkle-community__pillar-heading">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="periwinkle-community__pillar-text">{{ block.settings.text }}</div>
+              {%- endif -%}
+            </li>
+            {%- assign pillar_index = pillar_index | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if excerpt_count > 0 -%}
+      <section class="periwinkle-community__excerpts" aria-labelledby="PeriwinkleCommunityExcerpts-{{ section.id }}">
+        <h2 class="periwinkle-community__subheading" id="PeriwinkleCommunityExcerpts-{{ section.id }}">
+          {{- section.settings.excerpts_heading -}}
+        </h2>
+        <ul class="periwinkle-community__excerpt-list" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'excerpt' and block.settings.quote != blank -%}
+              <li class="periwinkle-community__excerpt" {{ block.shopify_attributes }}>
+                <figure class="periwinkle-community__excerpt-figure">
+                  <blockquote class="periwinkle-community__quote">{{ block.settings.quote }}</blockquote>
+                  {%- if block.settings.attribution != blank -%}
+                    <figcaption class="periwinkle-community__attribution">
+                      {{- block.settings.attribution | escape -}}
+                    </figcaption>
+                  {%- endif -%}
+                </figure>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_form -%}
+    <section
+      class="periwinkle-community__share"
+      id="{{ share_id }}"
+      aria-labelledby="{{ share_id }}-heading"
+    >
+      <div class="page-width periwinkle-community__share-inner">
+        <div class="periwinkle-community__share-copy">
+          {%- if section.settings.share_eyebrow != blank -%}
+            <p class="periwinkle-community__eyebrow">{{ section.settings.share_eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="periwinkle-community__subheading" id="{{ share_id }}-heading">
+            {{- section.settings.share_heading | default: section.settings.share_eyebrow -}}
+          </h2>
+          {%- if section.settings.share_text != blank -%}
+            <div class="periwinkle-community__share-text">{{ section.settings.share_text }}</div>
+          {%- endif -%}
+          {%- if section.settings.share_promise != blank -%}
+            <div class="periwinkle-community__promise">{{ section.settings.share_promise }}</div>
+          {%- endif -%}
+          {%- if contact_email != blank -%}
+            <p class="periwinkle-community__email-note">
+              {{ section.settings.email_prefix | escape }}
+              <a href="mailto:{{ contact_email | escape }}">{{ contact_email | escape }}</a>
+            </p>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%}
+          A Shopify contact form, so stories arrive in the store's inbox for a
+          person to read before anything is published. Every contact[...] field
+          is included in that email under its bracketed name, which is why the
+          names read as plain labels.
+        {%- endcomment -%}
+        {%- form 'contact', id: form_id, class: 'periwinkle-community__form' -%}
+          <input type="hidden" name="contact[Form]" value="{{ section.settings.form_subject | escape }}">
+
+          {%- if form.posted_successfully? -%}
+            <p
+              class="periwinkle-community__form-success"
+              id="{{ form_id }}-success"
+              tabindex="-1"
+              autofocus
+            >
+              {{- section.settings.success_message | escape -}}
+            </p>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="periwinkle-community__form-error" id="{{ form_id }}-error" role="alert">
+                {%- for field in form.errors -%}
+                  <p>
+                    {%- if field == 'form' -%}
+                      {{- form.errors.messages[field] -}}
+                    {%- else -%}
+                      {{- form.errors.translated_fields[field] | capitalize }}
+                      {{ form.errors.messages[field] -}}
+                    {%- endif -%}
+                  </p>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            <div class="periwinkle-community__fields">
+              <div class="periwinkle-community__field">
+                <label class="periwinkle-community__label" for="{{ form_id }}-name">Your name</label>
+                <input
+                  id="{{ form_id }}-name"
+                  class="periwinkle-community__input"
+                  type="text"
+                  name="contact[name]"
+                  value="{{ form.name }}"
+                  autocomplete="name"
+                  aria-describedby="{{ form_id }}-name-hint"
+                >
+                <p class="periwinkle-community__hint" id="{{ form_id }}-name-hint">
+                  We only use your first name, and only if you choose to sign with it.
+                </p>
+              </div>
+
+              <div class="periwinkle-community__field">
+                <label class="periwinkle-community__label" for="{{ form_id }}-email">
+                  Email <span class="periwinkle-community__required" aria-hidden="true">*</span>
+                </label>
+                <input
+                  id="{{ form_id }}-email"
+                  class="periwinkle-community__input"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  required
+                  aria-required="true"
+                  aria-describedby="{{ form_id }}-email-hint"
+                  {% if form.errors contains 'email' %}
+                    aria-invalid="true"
+                  {% endif %}
+                >
+                <p class="periwinkle-community__hint" id="{{ form_id }}-email-hint">
+                  Only so we can write back to you. Never published.
+                </p>
+              </div>
+
+              <div class="periwinkle-community__field periwinkle-community__field--full">
+                <label class="periwinkle-community__label" for="{{ form_id }}-remembering">
+                  Who you are remembering
+                </label>
+                <input
+                  id="{{ form_id }}-remembering"
+                  class="periwinkle-community__input"
+                  type="text"
+                  name="contact[Remembering]"
+                  placeholder="{{ section.settings.remembering_placeholder | escape }}"
+                >
+              </div>
+
+              <div class="periwinkle-community__field periwinkle-community__field--full">
+                <label class="periwinkle-community__label" for="{{ form_id }}-story">
+                  Your story <span class="periwinkle-community__required" aria-hidden="true">*</span>
+                </label>
+                <textarea
+                  id="{{ form_id }}-story"
+                  class="periwinkle-community__input periwinkle-community__textarea"
+                  name="contact[body]"
+                  rows="10"
+                  required
+                  aria-required="true"
+                >
+                  {{- form.body -}}
+                </textarea>
+              </div>
+
+              <fieldset class="periwinkle-community__field periwinkle-community__field--full periwinkle-community__choices">
+                <legend class="periwinkle-community__label">If we publish it, sign it with</legend>
+                <label class="periwinkle-community__choice">
+                  <input type="radio" name="contact[Publish as]" value="My first name" checked>
+                  <span>My first name</span>
+                </label>
+                <label class="periwinkle-community__choice">
+                  <input type="radio" name="contact[Publish as]" value="Anonymous">
+                  <span>Anonymous</span>
+                </label>
+              </fieldset>
+
+              <label class="periwinkle-community__field periwinkle-community__field--full periwinkle-community__consent">
+                <input
+                  type="checkbox"
+                  name="contact[Permission to publish]"
+                  value="Yes"
+                  required
+                  aria-required="true"
+                >
+                <span>{{ section.settings.consent_label | escape }}</span>
+              </label>
+            </div>
+
+            <button type="submit" class="periwinkle-community__submit">
+              {{- section.settings.submit_label | escape -}}
+            </button>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  <div class="page-width">
+    {%- if substack_url != blank -%}
+      <section class="periwinkle-community__read" aria-labelledby="PeriwinkleCommunityRead-{{ section.id }}">
+        <h2 class="periwinkle-community__subheading" id="PeriwinkleCommunityRead-{{ section.id }}">
+          {{- section.settings.read_heading -}}
+        </h2>
+        {%- if section.settings.read_text != blank -%}
+          <div class="periwinkle-community__read-text">{{ section.settings.read_text }}</div>
+        {%- endif -%}
+        <div class="periwinkle-community__actions">
+          {%- if section.settings.read_label != blank -%}
+            <a href="{{ substack_url }}" class="periwinkle-community__cta" target="_blank" rel="noopener">
+              {{- section.settings.read_label | escape -}}
+              <span class="visually-hidden">(opens in a new tab)</span>
+              <span class="periwinkle-community__cta-icon" aria-hidden="true">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              </span>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.subscribe_label != blank -%}
+            <a href="{{ subscribe_url }}" class="periwinkle-community__cta" target="_blank" rel="noopener">
+              {{- section.settings.subscribe_label | escape -}}
+              <span class="visually-hidden">(opens in a new tab)</span>
+              <span class="periwinkle-community__cta-icon" aria-hidden="true">
+                {{- 'icon-arrow.svg' | inline_asset_content -}}
+              </span>
+            </a>
+          {%- endif -%}
+        </div>
+      </section>
+    {%- endif -%}
+
+    {%- if section.settings.care_text != blank -%}
+      <aside class="periwinkle-community__care" aria-label="Support">
+        {{ section.settings.care_text }}
+      </aside>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Peri community",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "botanical_illustration",
+      "label": "Botanical illustration",
+      "info": "A small mark above the heading. The Our Story page uses periwinkle-coloured.svg."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A Periwinkle community"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italicise part of the heading for an editorial accent.",
+      "default": "The Unbroken <em>Thread</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>For everyone who has lost someone they love, and carries them still.</p>"
+    },
+    {
+      "type": "text",
+      "id": "share_link_label",
+      "label": "Share link label",
+      "info": "Jumps to the story form.",
+      "default": "Share your story"
+    },
+    {
+      "type": "richtext",
+      "id": "origin",
+      "label": "Why it exists",
+      "info": "The first paragraph is set large, in italic."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "excerpts_heading",
+      "label": "Story excerpts heading",
+      "info": "Shown only when at least one Story excerpt block has a quote.",
+      "default": "From the <em>stories</em>"
+    },
+    {
+      "type": "header",
+      "content": "Story form"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_form",
+      "label": "Show story form",
+      "info": "Submissions arrive by email at the store's sender address, like the contact page.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "share_eyebrow",
+      "label": "Eyebrow",
+      "default": "Share your story"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "share_heading",
+      "label": "Heading",
+      "default": "Tell us <em>about them.</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "share_text",
+      "label": "Text",
+      "default": "<p>Who they were, what you miss, the small things you still keep. How you have coped, or how you haven’t yet. Write as much or as little as you like. There is no right way to do this.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "share_promise",
+      "label": "What happens next",
+      "default": "<p>We read every story ourselves. Nothing is published without your permission, and we will write to you before it goes up.</p>"
+    },
+    {
+      "type": "text",
+      "id": "remembering_placeholder",
+      "label": "“Who you are remembering” placeholder",
+      "default": "For example, my mother, Kamala"
+    },
+    {
+      "type": "text",
+      "id": "consent_label",
+      "label": "Permission checkbox label",
+      "default": "You may publish my story on The Unbroken Thread, signed as I chose above."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Button label",
+      "default": "Send my story"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for trusting us with their story. We will read it with care and write to you before anything is shared."
+    },
+    {
+      "type": "text",
+      "id": "form_subject",
+      "label": "Email label",
+      "info": "Added to each submission email so stories are easy to tell apart from other contact messages.",
+      "default": "The Unbroken Thread story"
+    },
+    {
+      "type": "text",
+      "id": "email_prefix",
+      "label": "Email note",
+      "default": "Would you rather write a letter? Email us at"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email address",
+      "info": "Leave blank to use the store's contact email."
+    },
+    {
+      "type": "header",
+      "content": "Substack"
+    },
+    {
+      "type": "url",
+      "id": "substack_url",
+      "label": "Substack publication URL",
+      "info": "For example https://theunbrokenthread.substack.com. The read and subscribe links stay hidden until this is set."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "read_heading",
+      "label": "Heading",
+      "default": "Read the <em>stories</em>"
+    },
+    {
+      "type": "richtext",
+      "id": "read_text",
+      "label": "Text",
+      "default": "<p>Every story we publish lives on our Substack. Subscribe to receive new ones by email, and leave a kind word for the writer if you wish.</p>"
+    },
+    {
+      "type": "text",
+      "id": "read_label",
+      "label": "Read link label",
+      "default": "Read the stories"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Subscribe link label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Care note"
+    },
+    {
+      "type": "richtext",
+      "id": "care_text",
+      "label": "Care note",
+      "info": "A quiet note at the end of the page. Keep a helpline number here.",
+      "default": "<p>The Unbroken Thread is a place to share and to listen. It is not a substitute for professional support. If grief feels too heavy to carry, please talk to someone you trust, or call Tele-MANAS on 14416, India’s free 24-hour mental health helpline.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAF8F3"
+    },
+    {
+      "type": "color",
+      "id": "band_color",
+      "label": "Story form background",
+      "default": "#EEE9DF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2E2C35"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Used for eyebrows, numerals, links and the button.",
+      "default": "#4F4A70"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "What it is"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "excerpt",
+      "name": "Story excerpt",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "A line or two from a published story. Only use words the writer has agreed to share."
+        },
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "attribution",
+          "label": "Attribution",
+          "info": "For example “Meera, remembering her father”. Leave blank for anonymous stories."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Peri community",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "heading": "What it is",
+            "text": "<p>A gathering of written stories about the people we have lost, and about how we carry on without them. The stories live on our Substack, where you can read them, reply, and know you are not the only one.</p>"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "heading": "Who it is for",
+            "text": "<p>Anyone grieving a mother, a father, or someone who was family in every way that mattered, whether the loss was last month or twenty years ago. You don’t need to be a customer, and you don’t need to be a writer.</p>"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "heading": "How it works",
+            "text": "<p>Send us your story using the form below. We read each one with care and, with your permission, share it on Substack under your first name or anonymously. Nothing is shared without your say.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

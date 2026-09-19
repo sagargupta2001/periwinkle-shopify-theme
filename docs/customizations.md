@@ -16,6 +16,7 @@ before touching one of these areas.
 | 8 | Our Story timeline page | `sections/periwinkle-story-timeline.liquid`, `section-periwinkle-story.css`, `periwinkle-story.js`, `templates/page.our-story.json` | #6 · `99012f9` |
 | 12 | Peri journal index (blog listing) | `sections/periwinkle-journal-blog.liquid`, `section-periwinkle-journal-blog.css`, `snippets/periwinkle-journal-card.liquid`, `templates/blog.json`, `assets/icon-whatsapp.svg` | — |
 | 11 | Peri journal article template | `sections/periwinkle-journal-article.liquid`, `section-periwinkle-journal.css`, `periwinkle-journal.js`, `templates/article.journal.json` | — |
+| 13 | The Unbroken Thread community page | `sections/periwinkle-community.liquid`, `section-periwinkle-community.css`, `templates/page.community.json` | — |
 | 10 | Peri coming soon section | `sections/periwinkle-coming-soon.liquid`, `section-periwinkle-coming-soon.css`, `periwinkle-coming-soon.js` | — |
 
 Theme settings (colours, fonts, radii) are also customized, but those live in
@@ -179,6 +180,8 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   the upright face.
 - Colours come in as `--story-*` properties. Deep and light variants are derived
   in Liquid with `color_darken` and `color_lighten`.
+- The **Closing** block has an optional *Closing note* (italic text plus an
+  underlined link) under its buttons. It points to The Unbroken Thread.
 
 ## 9. Footer
 
@@ -275,6 +278,9 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
   mis-decoded if the stylesheet is served without a charset.
 - Comments aren't rendered. If a blog turns comments on, use the stock
   template for those posts or add them here.
+- A **Community note** (eyebrow, italic text, link) sits between the share
+  row and the pager on every post, pointing to The Unbroken Thread. It hides
+  until both a link and a label are set.
 
 ## 12. Peri journal index (`templates/blog.json`)
 
@@ -294,6 +300,36 @@ Theme settings (colours, fonts, radii) are also customized, but those live in
 - Summary is the post's excerpt, or its first 32 words.
 - Each story is rendered by `snippets/periwinkle-journal-card.liquid` (`featured: true` for the split card). The featured story and the grid are two separate passes (`limit: 1`, then `offset`), not one loop that opens and closes the `<ul>` conditionally, which theme check flags.
 - Paginated with Dawn's `pagination` snippet (*Stories per page*, default 10).
+
+## 13. The Unbroken Thread (`periwinkle-community`)
+
+- A community for people grieving someone they love, parents above all. The
+  Shopify page is only the front door. Stories are read and discussed on the
+  client's **Substack**. The name ties back to Our Story ("cloth carried
+  memory").
+- Layout: centred hero (botanical mark, eyebrow, heading, italic intro, a
+  "Share your story" jump link), a *Why it exists* passage (first paragraph
+  set large in italic), three **Pillar** blocks (what / who / how, numbered
+  I–III), optional **Story excerpt** blocks, a Linen band with the story form,
+  the Substack links, and a care note with a helpline.
+- **Submissions come in through a Shopify contact form, not through
+  Substack.** Substack has no way for readers to submit posts (guest posts
+  need each writer invited as a contributor), and grief stories need a person
+  to read them before publishing. Every `contact[...]` field is included in the
+  store's contact email: name, email, `Remembering`, the story (`body`),
+  `Publish as` (first name / anonymous), `Permission to publish`, and a hidden
+  `Form` label so these emails can be told apart from other contact messages.
+- The Substack read and subscribe links stay hidden until *Substack
+  publication URL* is set. Subscribe is that URL plus `/subscribe`.
+- The page is intentionally still. Only the hero rises in once, gated on
+  `prefers-reduced-motion`. There are no scroll reveals.
+- Excerpt blocks have no default content. Don't add made-up quotes: use only
+  words a writer has agreed to share.
+- Setup in admin: create a page with handle **`the-unbroken-thread`** and
+  assign the `page.community` template. Our Story's closing note and the
+  journal community note link to `/pages/the-unbroken-thread`. Add the page to
+  the footer's *Explore* menu too. It is deliberately **not** in the header
+  menu, which is already full.
 
 ---
 
