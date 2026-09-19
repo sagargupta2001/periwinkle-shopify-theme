@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "community": {
+      "type": "periwinkle-community",
+      "blocks": {
+        "what": {
+          "type": "pillar",
+          "settings": {
+            "heading": "What it is",
+            "text": "<p>A gathering of written stories about the people we have lost, and about how we carry on without them. The stories live on our Substack, where you can read them, reply, and know you are not the only one.</p>"
+          }
+        },
+        "who": {
+          "type": "pillar",
+          "settings": {
+            "heading": "Who it is for",
+            "text": "<p>Anyone grieving a mother, a father, or someone who was family in every way that mattered, whether the loss was last month or twenty years ago. You don’t need to be a customer, and you don’t need to be a writer.</p>"
+          }
+        },
+        "how": {
+          "type": "pillar",
+          "settings": {
+            "heading": "How it works",
+            "text": "<p>Send us your story using the form below. We read each one with care and, with your permission, share it on Substack under your first name or anonymously. Nothing is shared without your say.</p>"
+          }
+        }
+      },
+      "block_order": ["what", "who", "how"],
+      "settings": {
+        "botanical_illustration": "shopify://shop_images/periwinkle-coloured.svg",
+        "eyebrow": "A Periwinkle community",
+        "heading": "The Unbroken <em>Thread</em>",
+        "intro": "<p>For everyone who has lost someone they love, and carries them still.</p>",
+        "share_link_label": "Share your story",
+        "origin": "<p>Periwinkle began with a mother who believed that cloth carried memory, and with a daughter who opened the door she never got to open herself.</p><p>Losing a parent changes the shape of everything. The love doesn’t end; it just has nowhere to go. The Unbroken Thread is a place to put it: somewhere to tell the story of the person you miss, and to read the stories of others who understand.</p>",
+        "substack_url": "",
+        "background_color": "#faf8f3",
+        "band_color": "#eee9df",
+        "text_color": "#2e2c35",
+        "accent_color": "#4f4a70",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": ["community"]
+}

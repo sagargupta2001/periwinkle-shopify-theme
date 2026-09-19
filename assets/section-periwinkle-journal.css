@@ -605,6 +605,34 @@
   transform: none;
 }
 
+/* Community note: a centred aside between the share row and the pager. */
+.periwinkle-journal__community {
+  max-width: 64rem;
+  margin: 4.8rem auto 0;
+  text-align: center;
+}
+
+.periwinkle-journal__community-eyebrow {
+  margin: 0 0 1.2rem;
+  color: var(--journal-accent);
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.periwinkle-journal__community-text {
+  margin-bottom: 2rem;
+  font-family: var(--font-heading-family);
+  font-size: 2.2rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.periwinkle-journal__community-text > * {
+  margin: 0;
+}
+
 .periwinkle-journal__pager {
   display: grid;
   gap: 2.4rem;

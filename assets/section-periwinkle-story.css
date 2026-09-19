@@ -663,6 +663,66 @@ periwinkle-story {
   margin: 0;
 }
 
+/* A quiet aside under the closing buttons, set apart by a short hairline. */
+.periwinkle-story__note {
+  max-width: 48ch;
+  margin-top: 4rem;
+  padding-top: 2.4rem;
+  border-top: 1px solid var(--story-line);
+}
+
+.periwinkle-story__note-text {
+  color: var(--story-muted);
+  font-family: var(--font-heading-family);
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.periwinkle-story__note-text > * {
+  margin: 0;
+}
+
+.periwinkle-story__note-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid currentColor;
+  color: var(--story-text);
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.periwinkle-story__note-icon {
+  display: inline-flex;
+  transition: transform 250ms ease;
+}
+
+.periwinkle-story__note-icon .icon {
+  width: 1.4rem;
+  height: 1rem;
+}
+
+.periwinkle-story__note-link:hover {
+  color: var(--story-accent);
+}
+
+.periwinkle-story__note-link:hover .periwinkle-story__note-icon {
+  transform: translateX(0.3rem);
+}
+
+.periwinkle-story__note-link:focus-visible {
+  outline: 2px solid var(--story-accent);
+  outline-offset: 0.3rem;
+  box-shadow: none;
+}
+
 /* =========================================================
    Desktop — centred spine, chapters alternate sides
    ========================================================= */
@@ -767,7 +827,8 @@ periwinkle-story {
     justify-content: center;
   }
 
-  .periwinkle-story__chapter--finale .periwinkle-story__text {
+  .periwinkle-story__chapter--finale .periwinkle-story__text,
+  .periwinkle-story__chapter--finale .periwinkle-story__note {
     margin-inline: auto;
   }
 }
@@ -793,7 +854,9 @@ periwinkle-story {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .periwinkle-story--growing .periwinkle-story__leaf {
+  .periwinkle-story--growing .periwinkle-story__leaf,
+  .periwinkle-story__note-link,
+  .periwinkle-story__note-icon {
     transition: none;
   }
 }

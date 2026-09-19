@@ -271,6 +271,23 @@
       {%- endif -%}
     </div>
 
+    {%- if section.settings.community_link != blank and section.settings.community_label != blank -%}
+      <aside class="periwinkle-journal__community" aria-label="{{ section.settings.community_eyebrow | default: section.settings.community_label | escape }}">
+        {%- if section.settings.community_eyebrow != blank -%}
+          <p class="periwinkle-journal__community-eyebrow">{{ section.settings.community_eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.community_text != blank -%}
+          <div class="periwinkle-journal__community-text">{{ section.settings.community_text }}</div>
+        {%- endif -%}
+        <a href="{{ section.settings.community_link }}" class="periwinkle-journal__cta">
+          {{- section.settings.community_label | escape -}}
+          <span class="periwinkle-journal__cta-icon" aria-hidden="true">
+            {{- 'icon-arrow.svg' | inline_asset_content -}}
+          </span>
+        </a>
+      </aside>
+    {%- endif -%}
+
     {%- if blog.previous_article or blog.next_article -%}
       <nav class="periwinkle-journal__pager" aria-label="More from {{ blog.title | escape }}">
         {%- if blog.next_article -%}
@@ -370,6 +387,37 @@
       "id": "shop_link",
       "label": "Shop link",
       "info": "A post’s custom.shop_link metafield overrides this."
+    },
+    {
+      "type": "header",
+      "content": "Community note"
+    },
+    {
+      "type": "paragraph",
+      "content": "A quiet note under every post pointing to The Unbroken Thread. Hidden until both a link and a label are set."
+    },
+    {
+      "type": "text",
+      "id": "community_eyebrow",
+      "label": "Eyebrow",
+      "default": "The Unbroken Thread"
+    },
+    {
+      "type": "richtext",
+      "id": "community_text",
+      "label": "Text",
+      "default": "<p>Carrying the memory of someone you have lost? There is a place for their story here.</p>"
+    },
+    {
+      "type": "text",
+      "id": "community_label",
+      "label": "Link label",
+      "default": "Share your story"
+    },
+    {
+      "type": "url",
+      "id": "community_link",
+      "label": "Link"
     },
     {
       "type": "header",
