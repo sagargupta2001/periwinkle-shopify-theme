@@ -50,6 +50,7 @@
         },
         "slide_X7DTj7": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/watermark-removed-hero-02.jpg",
             "image_overlay_opacity": 20,
