@@ -14,10 +14,12 @@ what the live site uses. Update this guide to match it.
 
 ## 1. Brand character
 
-Periwinkle sells clothing and objects rooted in Indian textile traditions (the
-store's own brand line is *"Thoughtfully crafted clothing and objects rooted in
-Indian textile traditions, made for a contemporary way of living."*). The design
-follows from that:
+Periwinkle is a miniatures-first brand: small, well-made objects in porcelain,
+bone china, hand-blown glass and wood, alongside clothing rooted in Indian
+textile traditions. (The store's older brand line, *"Thoughtfully crafted
+clothing and objects rooted in Indian textile traditions, made for a
+contemporary way of living."*, predates the 2026-09 shift and still leads with
+clothing.) The design follows from that:
 
 - **Editorial, not promotional.** Big serif headlines, small spaced-out
   eyebrows, plenty of warm negative space, and underlined text links in place of
@@ -323,7 +325,7 @@ crop falls.
 | **Full-width image banner** | 16:9 | 1920 × 1080 | Same `banner--*` heights as the hero (small 42rem, medium 56rem, large 72rem desktop). Not used on the homepage today. |
 | **Promotional horizontal banner** | 3:1 | 1800 × 600 | ⚠️ No 3:1 slot exists yet. The announcement bar is text only. The closest is an image banner set to **Small** (42rem desktop, 28rem mobile), which crops a 3:1 source at the sides. Add a purpose-built section rather than forcing the ratio. |
 | **Collection / category cards** (collection list, mega menu cards) | 4:5 | 1600 × 2000 | Collection list is set to **Adapt**, so the card takes the image's own ratio — consistency comes from the uploads, and one odd file shows. Mega menu cards are a hard 4:5 crop (20rem × 25rem). |
-| **Product cards** (featured collection, collection grid, search) | 4:5 | 1600 × 2000 | Set to **Adapt**, so 4:5 uploads give portrait cards. Mixed source ratios give ragged rows. |
+| **Product cards** (featured collection, collection grid, search) | 4:5 | 1600 × 2000 | Set to **Adapt**, so 4:5 uploads give portrait cards. Mixed source ratios give ragged rows. Exception: the homepage **Collector's Shelf** (miniatures) row is set to **Square**, because miniature product photos are shot roughly 1:1. |
 | **Related products, "All collections" page** | 4:5 | 1600 × 2000 | ⚠️ Both are set to **Square**, so a 4:5 file is centre-cropped to 1:1. Either switch them to Portrait for consistency with the rest of the site, or brief square-safe framing. |
 | **Editorial / craft slider cards** | 4:5 | 1600 × 2000 | Hard 4:5 crop, two cards on desktop and one on mobile. |
 | **Miniatures objects** | 4:5 | 1600 × 2000 | Deliberately varied per slot and breakpoint via `--miniatures-ratio`: quiet cards 4:5, the featured card 2:3 on desktop and 3:2 on tablet, and 1:1 for the quiet cards when only three objects are set. Expect side or top crop, so leave margin around the object. |

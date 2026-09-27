@@ -2,9 +2,12 @@
 
 ## What this is
 
-The Shopify Online Store 2.0 theme for **Periwinkle**, a store selling clothing
-and objects rooted in Indian textile traditions (sarees, salwar suits, and
-miniature objects such as hand-blown glass).
+The Shopify Online Store 2.0 theme for **Periwinkle**, a store that is
+**miniatures first** (small objects in porcelain, bone china, hand-blown glass
+and wood) and also sells clothing rooted in Indian textile traditions (sarees,
+salwar suits, dupattas, jewellery). The brand began apparel-first and was
+repositioned in 2026-09. Lead with miniatures in menus, heroes and home page
+order.
 
 The theme is a fork of **Dawn 16.0.0** (see `theme_info` in
 `config/settings_schema.json`), restyled through theme settings and extended
@@ -87,19 +90,26 @@ Notes:
 - **Footer**: scheme-4, newsletter heading "Subscribe to our emails".
 
 ### Homepage (`templates/index.json`)
-1. **Slideshow**: full-bleed hero, dots only.
-2. **Collection list**: "Shop by Category" (centred via `custom_css`).
-3. **Peri editorial slider** (`periwinkle-editorial-slider`): "The Art of
-   Craft / Crafted by hand, made to last", with a carousel of craft collection
-   cards.
-4. **Featured collection**: "Timeless Fashion" (centred via `custom_css`).
-5. **Peri miniatures** (`periwinkle-miniatures`): "Small Objects, *Beautiful
-   Stories.*"
-6. **Peri coming soon** (`periwinkle-coming-soon`): "Still *on the loom.*",
+Ordered miniatures first (2026-09):
+1. **Slideshow**: full-bleed hero, dots only. The first slide is miniatures
+   ("Small Objects, Big Stories").
+2. **Peri miniatures** (`periwinkle-miniatures`): "Glass, porcelain *and carved
+   wood.*", the shop-by-material entry point. The Resin object is disabled until
+   `miniatures-resin` has products.
+3. **Featured collection**: "The Collector's Shelf", 4 products from
+   `miniatures`, square cards (centred via `custom_css`).
+4. **Peri editorial slider** (`periwinkle-editorial-slider`): "The Art of
+   Craft / Crafted by hand, made to last". Cards run Hand-Blown Glass, Carved
+   Wood, then the two textile crafts.
+5. **Collection list**: "Wear the Craft", the apparel categories (centred via
+   `custom_css`).
+6. **Featured collection**: "Timeless Fashion" (centred via `custom_css`).
+7. **Image with text**: text first, "Objects with a story to tell", with a
+   jewellery image and button.
+8. **Peri coming soon** (`periwinkle-coming-soon`): "Still *on the loom.*",
    previewing Bridal Trousseaus and The Cloth That Remembers, with an email
    sign-up.
-7. **Image with text**: image first.
-8. **Image with text**: text first. Its "Our Story" button links to
+9. **Image with text**: image first. Its "Our Story" button links to
    `/pages/our-story`.
 
 ### Our Story (`templates/page.our-story.json`)
