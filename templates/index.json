@@ -125,151 +125,6 @@
         "accessibility_info": "Explore Periwinkle's handcrafted miniatures, alongside textiles, jewellery and artisan-made home décor."
       }
     },
-    "collection_list_hFNUxB": {
-      "type": "collection-list",
-      "blocks": {
-        "featured_collection_7AADgM": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "periwinkle-sarees"
-          }
-        },
-        "featured_collection_NQEYN4": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "frontpage"
-          }
-        },
-        "featured_collection_3qiYUU": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "salwar-suit-sets"
-          }
-        },
-        "featured_collection_wwxpCp": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "earrings-in-jewelry-1"
-          }
-        }
-      },
-      "block_order": [
-        "featured_collection_7AADgM",
-        "featured_collection_NQEYN4",
-        "featured_collection_3qiYUU",
-        "featured_collection_wwxpCp"
-      ],
-      "custom_css": [
-        ".title-wrapper-with-link {justify-content: center;}",
-        ".title {text-align: center;}"
-      ],
-      "name": "t:sections.collection-list.presets.name",
-      "settings": {
-        "title": "Wear the Craft",
-        "heading_size": "h1",
-        "image_ratio": "adapt",
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "show_view_all": false,
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 48,
-        "padding_bottom": 64
-      }
-    },
-    "periwinkle_editorial_slider_GhtTFK": {
-      "type": "periwinkle-editorial-slider",
-      "blocks": {
-        "card_LUVPca": {
-          "type": "card",
-          "settings": {
-            "collection": "the-block-print-edit",
-            "title": "The Signature Collection",
-            "description": "<p>From hand-carved wooden blocks to layers of colour, discover the timeless craft behind every print.</p>",
-            "link": ""
-          }
-        },
-        "card_VnGfAg": {
-          "type": "card",
-          "settings": {
-            "collection": "kantha-stitched-memory-copy",
-            "title": "Chikankari: The Lucknow Hand",
-            "description": "<p>Delicate embroidery, generations of skill and the quiet beauty of handwork from Lucknow.</p>",
-            "link": ""
-          }
-        },
-        "card_t37aU9": {
-          "type": "card",
-          "settings": {
-            "collection": "miniatures-hand-blown-glass-decor-items",
-            "title": "Hand-Blown Glass",
-            "description": "<p>Shaped by breath and fire while the glass is molten, so no two pieces are quite alike.</p>",
-            "link": ""
-          }
-        },
-        "card_nxLygL": {
-          "type": "card",
-          "settings": {
-            "collection": "miniatures-wooden",
-            "title": "Carved Wood",
-            "description": "<p>Small wooden forms with the warmth of the grain and the character of the carving.</p>",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "card_t37aU9",
-        "card_nxLygL",
-        "card_LUVPca",
-        "card_VnGfAg"
-      ],
-      "name": "Periwinkle editorial slider",
-      "settings": {
-        "botanical_illustration": "shopify://shop_images/periwinkle-coloured.svg",
-        "eyebrow": "The Art of Craft",
-        "heading": "Crafted by hand, made to last",
-        "description": "<p>Discover the traditional techniques and skilled hands behind the pieces we bring to Periwinkle.</p>",
-        "button_label": "Discover our craft",
-        "button_link": "",
-        "background_color": "#eee9df",
-        "text_color": "#2e2c35",
-        "padding_top": 64,
-        "padding_bottom": 64
-      }
-    },
-    "featured_collection": {
-      "type": "featured-collection",
-      "custom_css": [
-        ".collection__title {display: flex; flex-direction: column; align-items: center; text-align: center;}",
-        ".collection__title .title {width: 100%; text-align: center;}",
-        ".collection__title .collection__description {width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;}"
-      ],
-      "settings": {
-        "collection": "periwinkle-sarees",
-        "products_to_show": 4,
-        "title": "Timeless Fashion",
-        "heading_size": "h1",
-        "description": "<p>Pieces rooted in tradition, designed for today.</p>",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 64,
-        "padding_bottom": 64
-      }
-    },
     "periwinkle_miniatures": {
       "type": "periwinkle-miniatures",
       "blocks": {
@@ -376,6 +231,209 @@
         "quick_add": "none",
         "columns_mobile": "2",
         "swipe_on_mobile": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "periwinkle_editorial_slider_GhtTFK": {
+      "type": "periwinkle-editorial-slider",
+      "blocks": {
+        "card_t37aU9": {
+          "type": "card",
+          "settings": {
+            "collection": "miniatures-hand-blown-glass-decor-items",
+            "title": "Hand-Blown Glass",
+            "description": "<p>Shaped by breath and fire while the glass is molten, so no two pieces are quite alike.</p>",
+            "link": ""
+          }
+        },
+        "card_nxLygL": {
+          "type": "card",
+          "settings": {
+            "collection": "miniatures-wooden",
+            "title": "Carved Wood",
+            "description": "<p>Small wooden forms with the warmth of the grain and the character of the carving.</p>",
+            "link": ""
+          }
+        },
+        "card_LUVPca": {
+          "type": "card",
+          "settings": {
+            "collection": "the-block-print-edit",
+            "title": "The Signature Collection",
+            "description": "<p>From hand-carved wooden blocks to layers of colour, discover the timeless craft behind every print.</p>",
+            "link": ""
+          }
+        },
+        "card_VnGfAg": {
+          "type": "card",
+          "settings": {
+            "collection": "kantha-stitched-memory-copy",
+            "title": "Chikankari: The Lucknow Hand",
+            "description": "<p>Delicate embroidery, generations of skill and the quiet beauty of handwork from Lucknow.</p>",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_t37aU9",
+        "card_nxLygL",
+        "card_LUVPca",
+        "card_VnGfAg"
+      ],
+      "name": "Periwinkle editorial slider",
+      "settings": {
+        "botanical_illustration": "shopify://shop_images/periwinkle-coloured.svg",
+        "eyebrow": "The Art of Craft",
+        "heading": "Crafted by hand, made to last",
+        "description": "<p>Discover the traditional techniques and skilled hands behind the pieces we bring to Periwinkle.</p>",
+        "button_label": "Discover our craft",
+        "button_link": "",
+        "background_color": "#eee9df",
+        "text_color": "#2e2c35",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "collection_list_hFNUxB": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_7AADgM": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "periwinkle-sarees"
+          }
+        },
+        "featured_collection_NQEYN4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "frontpage"
+          }
+        },
+        "featured_collection_3qiYUU": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "salwar-suit-sets"
+          }
+        },
+        "featured_collection_wwxpCp": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "earrings-in-jewelry-1"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_7AADgM",
+        "featured_collection_NQEYN4",
+        "featured_collection_3qiYUU",
+        "featured_collection_wwxpCp"
+      ],
+      "custom_css": [
+        ".title-wrapper-with-link {justify-content: center;}",
+        ".title {text-align: center;}"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Wear the Craft",
+        "heading_size": "h1",
+        "image_ratio": "adapt",
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "show_view_all": false,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "disabled": true,
+      "custom_css": [
+        ".collection__title {display: flex; flex-direction: column; align-items: center; text-align: center;}",
+        ".collection__title .title {width: 100%; text-align: center;}",
+        ".collection__title .collection__description {width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;}"
+      ],
+      "settings": {
+        "collection": "periwinkle-sarees",
+        "products_to_show": 4,
+        "title": "Timeless Fashion",
+        "heading_size": "h1",
+        "description": "<p>Pieces rooted in tradition, designed for today.</p>",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "image_with_text_CQVAmm": {
+      "type": "image-with-text",
+      "blocks": {
+        "caption_JmyFpm": {
+          "type": "caption",
+          "settings": {
+            "caption": "THE PERIWINKLE EDIT",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "heading_ViQMfk": {
+          "type": "heading",
+          "settings": {
+            "heading": "Objects with a story to tell.",
+            "heading_size": "h1"
+          }
+        },
+        "text_eFQ6LF": {
+          "type": "text",
+          "settings": {
+            "text": "<p>From distinctive jewellery to thoughtfully made objects, discover pieces that carry the character of the hands and traditions behind them.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_6znzBN": {
+          "type": "button",
+          "settings": {
+            "button_label": "Explore Jewellery",
+            "button_link": "shopify://collections/earrings-in-jewelry-1",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "caption_JmyFpm",
+        "heading_ViQMfk",
+        "text_eFQ6LF",
+        "button_6znzBN"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/section-7.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
         "padding_top": 64,
         "padding_bottom": 64
       }
@@ -489,63 +547,6 @@
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "",
-        "color_scheme": "",
-        "padding_top": 64,
-        "padding_bottom": 64
-      }
-    },
-    "image_with_text_CQVAmm": {
-      "type": "image-with-text",
-      "blocks": {
-        "caption_JmyFpm": {
-          "type": "caption",
-          "settings": {
-            "caption": "THE PERIWINKLE EDIT",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium"
-          }
-        },
-        "heading_ViQMfk": {
-          "type": "heading",
-          "settings": {
-            "heading": "Objects with a story to tell.",
-            "heading_size": "h1"
-          }
-        },
-        "text_eFQ6LF": {
-          "type": "text",
-          "settings": {
-            "text": "<p>From distinctive jewellery to thoughtfully made objects, discover pieces that carry the character of the hands and traditions behind them.</p>",
-            "text_style": "body"
-          }
-        },
-        "button_6znzBN": {
-          "type": "button",
-          "settings": {
-            "button_label": "Explore Jewellery",
-            "button_link": "shopify://collections/earrings-in-jewelry-1",
-            "button_style_secondary": false
-          }
-        }
-      },
-      "block_order": [
-        "caption_JmyFpm",
-        "heading_ViQMfk",
-        "text_eFQ6LF",
-        "button_6znzBN"
-      ],
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/section-7.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "text_first",
         "image_behavior": "none",
         "content_layout": "no-overlap",
         "desktop_content_position": "middle",
