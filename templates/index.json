@@ -140,6 +140,7 @@
         },
         "object_bone_china": {
           "type": "object",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/miniatures-section-bone-china.jpg",
             "title": "Bone China",
