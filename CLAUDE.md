@@ -9,6 +9,8 @@ Start with [docs/README.md](docs/README.md):
 - [docs/design-guide.md](docs/design-guide.md): palette, colour schemes, type, spacing, motion
 - [docs/conventions.md](docs/conventions.md): how to write sections, CSS and JS here
 - [docs/our-story-page.md](docs/our-story-page.md): spec for the Our Story timeline page
+- [docs/store-status.md](docs/store-status.md): open launch items and the current store setup
+- [docs/decisions.md](docs/decisions.md): why collections, menus, tags and shipping are set up as they are
 
 Run it locally (serves at http://localhost:9292):
 
