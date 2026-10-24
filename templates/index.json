@@ -21,7 +21,7 @@
             "heading_size": "h0",
             "subheading": "From delicate porcelain to hand-blown glass,  carved wood and more - discover miniature objects that celebrate craft, culture and detail.",
             "button_label": "Explore Miniatures",
-            "link": "shopify://collections/miniatures",
+            "link": "shopify://collections/periwinkle-miniatures",
             "button_style_secondary": false,
             "show_text_box": false,
             "box_align": "top-left",
@@ -76,7 +76,7 @@
             "heading_size": "h0",
             "subheading": "Distinctive handcrafted pieces made to be discovered, collected and worn.",
             "button_label": "Explore Jewellery",
-            "link": "shopify://collections/imported-unusual-yours-first",
+            "link": "shopify://collections/periwinkle-jewellery-india-hasn-t-seen-yet",
             "button_style_secondary": false,
             "show_text_box": false,
             "box_align": "middle-left",
@@ -192,7 +192,7 @@
         "heading": "Glass, porcelain <em>and carved wood.</em>",
         "description": "<p>Each material asks something different of the maker. Explore miniatures chosen for their character, craft and quiet charm.</p>",
         "button_label": "Explore Miniatures",
-        "button_link": "shopify://collections/miniatures",
+        "button_link": "shopify://collections/periwinkle-miniatures",
         "featured_text_color": "#2e2c35",
         "featured_overlay_opacity": 0,
         "background_color": "#eee9df",
@@ -210,7 +210,7 @@
         ".collection__title .collection__description {width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;}"
       ],
       "settings": {
-        "collection": "miniatures",
+        "collection": "periwinkle-miniatures",
         "products_to_show": 4,
         "title": "The Collector's Shelf",
         "heading_size": "h1",
@@ -313,13 +313,13 @@
         "featured_collection_3qiYUU": {
           "type": "featured_collection",
           "settings": {
-            "collection": "salwar-suit-sets"
+            "collection": "periwinkle-salwar-suit-sets"
           }
         },
         "featured_collection_wwxpCp": {
           "type": "featured_collection",
           "settings": {
-            "collection": "earrings-in-jewelry-1"
+            "collection": "periwinkle-jewellery-india-hasn-t-seen-yet"
           }
         }
       },
@@ -410,7 +410,7 @@
           "type": "button",
           "settings": {
             "button_label": "Explore Jewellery",
-            "button_link": "shopify://collections/earrings-in-jewelry-1",
+            "button_link": "shopify://collections/periwinkle-jewellery-india-hasn-t-seen-yet",
             "button_style_secondary": false
           }
         }
