@@ -4,7 +4,8 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 24 October 2026. The store is still behind its password page.
+Last updated: 24 October 2026, after merging PRs #17–#19. The store is still
+behind its password page.
 
 ## Open items
 
@@ -29,13 +30,33 @@ visible, then delete it. Add new items with an owner and the date added.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
-- [ ] **Drafting notes in descriptions.** 28 saree descriptions still contain
-      "(confirm: …)", "[add details]" or "[please confirm …]". Each needs the
-      real fabric, length or dye. Owner: client. Added 24 Oct.
+- [x] **Drafting notes in descriptions.** All 31 were cleaned on 24 Oct; see
+      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
+      Fabric now comes from the title or variant name. Unconfirmed blouse,
+      length and dye lines were removed rather than guessed. Owner: Sagar.
+      Added 24 Oct.
+- [ ] **Enter real stock for 36 sold-out products.** Every variant now stops
+      selling at zero (see [decision 16](decisions.md#16-every-variant-tracks-stock-and-stops-selling-at-zero)),
+      so these show "Sold out" until their quantity is entered in Products →
+      Inventory. That includes **32 of the 44 jewellery pieces**, so the home
+      page's "Explore Jewellery" links lead to a mostly sold-out collection.
+      Grey Moirangphee Cotton Saree is at −1, which means it was oversold
+      once. Owner: client. Added 24 Oct.
+  - Ceramics: Blue & White Indian Cityscape Wall Plate; Japanese-Style Ceramic
+    Dipping Bowl Set
+  - Sarees: Grey Moirangphee Cotton Saree; Rust Red Hand Block Printed Cotton
+    Saree with Floral Buta
+  - Necklaces: Blue Ombre Square Link Pendant; Emerald & Navy Ombre and Sunset
+    Ombre Multi-Strand Seed Bead
+  - Ring: Silver Dual Rectangle Cabochon Open Ring
+  - 28 earrings: every European earring except the handful that already had
+    stock. The list is under Products, filtered by type "European earrings"
+    and "Availability: Out of stock".
 - [ ] **End-to-end test order.** See [Test order](#test-order) below. Owner:
       Sagar and client. Added 24 Oct.
-- [ ] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
-      subscribe link) and #18 (consistent contact details). Owner: Sagar.
+- [x] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
+      subscribe link), #18 (consistent contact details) and #19 (these docs)
+      were merged on 24 Oct and checked on localhost. Owner: Sagar.
       Added 24 Oct.
 
 ### Should fix soon
@@ -75,7 +96,7 @@ visible, then delete it. Add new items with an owner and the date added.
   - Blue Floral Glass Rectangular Drop Earrings
   - Teal Enamel Open-Loop Drop Earrings
   - Classic Black & White — Warli-Style Print and — Leaf Buti Print
-- [ ] **Products without a description.** About 70, including every miniature.
+- [ ] **Products without a description.** 69, including every miniature.
       Owner: client. Added 24 Oct.
 - [ ] **International shipping zone.** A dormant zone charges ₹1,800 flat to 28
       countries. The store only sells to India, and the policy says India only.
@@ -114,7 +135,9 @@ password, and a person has to place it.
 
 ### Catalogue
 
-- 500 active products and 21 drafts.
+- 501 active products and 21 drafts.
+- Every variant tracks its quantity and stops selling at zero, so a product
+  shows "Sold out" once nothing is available (on hand minus committed).
 - The product type drives collections. The types are Saree, Dupatta,
   Unstitched Salwar Suit, Miniature, Ceramics, Wooden Antique Box, Bag, and
   European earrings/necklace/ring.
