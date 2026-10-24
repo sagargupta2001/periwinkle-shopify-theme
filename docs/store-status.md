@@ -4,8 +4,7 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 24 October 2026, after merging PRs #17–#19. The store is still
-behind its password page.
+Last updated: 25 October 2026. The store is still behind its password page.
 
 ## Open items
 
@@ -22,19 +21,12 @@ visible, then delete it. Add new items with an owner and the date added.
       contain `[GSTIN]`, `[Registered address]`, `[Business type]` and
       `[Days and hours]`. Fill them in under Settings → Policies. Owner:
       client. Added 24 Oct.
-- [ ] **Store contact settings.** Settings → General still shows
-      `periwinklebysherry@gmail.com` and +91 93483 13910. Change them to
-      `support@periwinklebysherry.com` and +91 99726 95620. The sender email
-      needs a verification link sent to the `support@` inbox. Owner: client.
-      Added 24 Oct.
+- [x] **Store contact settings.** Settings → General now shows
+      `support@periwinklebysherry.com` and +91 99726 95620 (done 25 Oct).
+      Owner: client. Added 24 Oct.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
-- [x] **Drafting notes in descriptions.** All 31 were cleaned on 24 Oct; see
-      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
-      Fabric now comes from the title or variant name. Unconfirmed blouse,
-      length and dye lines were removed rather than guessed. Owner: Sagar.
-      Added 24 Oct.
 - [ ] **Enter real stock for 36 sold-out products.** Every variant now stops
       selling at zero (see [decision 16](decisions.md#16-every-variant-tracks-stock-and-stops-selling-at-zero)),
       so these show "Sold out" until their quantity is entered in Products →
@@ -54,23 +46,36 @@ visible, then delete it. Add new items with an owner and the date added.
     and "Availability: Out of stock".
 - [ ] **End-to-end test order.** See [Test order](#test-order) below. Owner:
       Sagar and client. Added 24 Oct.
-- [x] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
-      subscribe link), #18 (consistent contact details) and #19 (these docs)
-      were merged on 24 Oct and checked on localhost. Owner: Sagar.
-      Added 24 Oct.
 
 ### Should fix soon
 
-- [ ] **Copied descriptions.** These listings were made by duplicating
-      another product. They have been renamed after their photos, but they
-      still carry the original's description. Owner: client. Added 24 Oct.
-  - Navy Blue Handblock Print Cotton Saree with Peacock Motifs (copied from the teal one)
-  - Navy Ikat Saree with Red Border and Chakra Pallu (copied from Dusk Ikat, charcoal and orchid)
-  - Rose Pink — Threadwork Salwar Set (copied from Lavender Vine)
-  - Lilac Bloom — Kurta Set with Printed Dupatta (copied from Wheat Kantha)
-  - Rani Pink — Chikankari Kurta Set (copied from Slate Mist)
-  - Copper Bar Drop Earrings with Coloured Stones (copied from Ocean Swirl)
-  - The 11 Pattachitra Dupattas in Chanderi Silk, which all share one short description
+- [x] **Copied descriptions (renamed copies).** On 24–25 Oct, the 6 renamed
+      copies and the 11 Pattachitra dupattas got their own descriptions,
+      written from their photos following
+      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
+      Owner: Sagar. Added 24 Oct.
+- [ ] **More products sharing one description.** A full scan on 25 Oct found
+      12 more groups (27 products) with identical descriptions. Most look like
+      pieces listed by copying another product, so the text may describe a
+      different piece. Owner: client. Added 25 Oct.
+  - **Neel Kamal: Periwinkle Floral Saree with Ivory Procession Pallu** is
+    listed twice, with the same title and description. This is a new
+    duplicate; draft one of them.
+  - Pattachitra Dupatta in Cotton – Rust Red Colour · in Chanderi Silk – Blue
+    with Single Dancer motif · in Chanderi Silk – Black. The two Chanderi
+    pieces carry the cotton dupatta's text.
+  - Handblock Print On Cotton – Greyish green and Blue · Pink and Violet ·
+    Yellow and Teal
+  - Kantha Kavya · Suchimarga · The Cloth That Remembers
+  - Mashru Ivory Kurta Set · Rosewater — Ivory Kurta Set
+  - Dark Purple and Teal Kasuti Embroidered Cottonsilk Sarees
+  - Miniature Glass Flower Bouquet in Vase (two listings)
+  - Monochrome Paisley — Ivory Kurta Set · Banjara Bloom — White Kurta Set
+  - Emerald Vine — Tissue Silk Saree · Magenta Kairi — Handloom Cotton Saree
+  - Ivory Gajmala Saree · Teal Rajahamsa Saree
+  - Kaala Rani Ikat Dupatta · Gajayatra off-White Kalamkari Dupatta
+  - Japanese-Style Ceramic Dipping Bowl Set · Blue & White Indian Cityscape
+    Wall Plate
 - [ ] **Drafted listings need photos.** These 9 were set to draft because they
       had no image or duplicated another listing. Add photos and re-activate,
       or leave them as drafts. Owner: client. Added 24 Oct.
@@ -86,21 +91,31 @@ visible, then delete it. Add new items with an owner and the date added.
   - Handblown Murano-Style Glass Angelfish Figurines (identical duplicate; the
     live listing has 5 in stock)
 - [ ] **App screenshots used as product photos.** These show a shopping app's
-      buttons or size labels: both Teal Marbled necklaces, the Pastel
-      Patchwork studs, the Cloisonné Keepsake Pot and the Vintage Steel Kettle
-      Miniature. Owner: client. Added 24 Oct.
-- [ ] **Check names given from photos.** Several renamed products were named
-      from their photos. Owner: client. Added 24 Oct.
-  - The 11 Pattachitra dupattas, named by colour and motif
-  - Layered Multi-Hoop Pendant Necklace
-  - Blue Floral Glass Rectangular Drop Earrings
-  - Teal Enamel Open-Loop Drop Earrings
-  - Classic Black & White — Warli-Style Print and — Leaf Buti Print
-- [ ] **Products without a description.** 69, including every miniature.
+      buttons or size labels: the Teal Marbled necklace, the Pastel Patchwork
+      studs, the Cloisonné Keepsake Pot and the Vintage Steel Kettle Miniature.
+      The **Layered Multi-Hoop Pendant Necklace** photos are screenshots from
+      the Temu app, with the app's logo and "Add to cart" button visible.
+      Replace them before launch. Owner: client. Added 24 Oct.
+- [ ] **Check names and facts given from photos.** These were named and
+      described from their photos. On 25 Oct, three names were corrected after
+      a closer look: Mustard Yellow "with Lotus Pond" (was "with Painted
+      Border"), Cerulean Blue "with Tree and Peacocks" (was "Swans"), and
+      **Blue Poppy Print** Rectangular Drop Earrings (was "Blue Floral Glass";
+      they look printed, not glass). Old URLs redirect. Owner: client.
+      Added 24 Oct.
+  - Check the names of the 11 Pattachitra dupattas, the Layered Multi-Hoop
+    Pendant Necklace and the Teal Enamel Open-Loop Drop Earrings.
+  - **Classic Black & White — Warli-Style Print / — Leaf Buti Print:** is each
+    a saree or a suit set? Both have no product type, so they don't appear
+    in any type-based collection.
+  - **Layered Multi-Hoop Pendant Necklace:** are the earrings in the photos
+    included? The description currently says "Pictured with matching
+    earrings".
+- [ ] **Products without a description.** 63, including every miniature.
       Owner: client. Added 24 Oct.
-- [ ] **International shipping zone.** A dormant zone charges ₹1,800 flat to 28
-      countries. The store only sells to India, and the policy says India only.
-      Delete the zone or keep it on purpose. Owner: client. Added 24 Oct.
+- [x] **International shipping zone.** Deleted on 25 Oct; see
+      [decision 18](decisions.md#18-ship-within-india-only). Owner: Sagar.
+      Added 24 Oct.
 - [ ] **Order email delivery.** The domain's SPF record only authorises
       GoDaddy (Microsoft 365 mail). Add Shopify's sender-email DNS records so
       order emails from `support@` don't land in spam. Owner: client.
@@ -192,7 +207,6 @@ One profile, shipped from "Shop location".
 | | 1.5–2 kg | ₹399 |
 | | 2–3 kg | ₹449 |
 | | over 3 kg | ₹499 |
-| International (28 countries) | any | ₹1,800 flat (dormant) |
 
 ### Discounts
 
