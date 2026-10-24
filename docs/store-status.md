@@ -4,8 +4,7 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 24 October 2026, after merging PRs #17–#19. The store is still
-behind its password page.
+Last updated: 25 October 2026. The store is still behind its password page.
 
 ## Open items
 
@@ -22,19 +21,12 @@ visible, then delete it. Add new items with an owner and the date added.
       contain `[GSTIN]`, `[Registered address]`, `[Business type]` and
       `[Days and hours]`. Fill them in under Settings → Policies. Owner:
       client. Added 24 Oct.
-- [ ] **Store contact settings.** Settings → General still shows
-      `periwinklebysherry@gmail.com` and +91 93483 13910. Change them to
-      `support@periwinklebysherry.com` and +91 99726 95620. The sender email
-      needs a verification link sent to the `support@` inbox. Owner: client.
-      Added 24 Oct.
+- [x] **Store contact settings.** Settings → General now shows
+      `support@periwinklebysherry.com` and +91 99726 95620 (done 25 Oct).
+      Owner: client. Added 24 Oct.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
-- [x] **Drafting notes in descriptions.** All 31 were cleaned on 24 Oct; see
-      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
-      Fabric now comes from the title or variant name. Unconfirmed blouse,
-      length and dye lines were removed rather than guessed. Owner: Sagar.
-      Added 24 Oct.
 - [ ] **Enter real stock for 36 sold-out products.** Every variant now stops
       selling at zero (see [decision 16](decisions.md#16-every-variant-tracks-stock-and-stops-selling-at-zero)),
       so these show "Sold out" until their quantity is entered in Products →
@@ -54,10 +46,6 @@ visible, then delete it. Add new items with an owner and the date added.
     and "Availability: Out of stock".
 - [ ] **End-to-end test order.** See [Test order](#test-order) below. Owner:
       Sagar and client. Added 24 Oct.
-- [x] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
-      subscribe link), #18 (consistent contact details) and #19 (these docs)
-      were merged on 24 Oct and checked on localhost. Owner: Sagar.
-      Added 24 Oct.
 
 ### Should fix soon
 
@@ -98,9 +86,9 @@ visible, then delete it. Add new items with an owner and the date added.
   - Classic Black & White — Warli-Style Print and — Leaf Buti Print
 - [ ] **Products without a description.** 69, including every miniature.
       Owner: client. Added 24 Oct.
-- [ ] **International shipping zone.** A dormant zone charges ₹1,800 flat to 28
-      countries. The store only sells to India, and the policy says India only.
-      Delete the zone or keep it on purpose. Owner: client. Added 24 Oct.
+- [x] **International shipping zone.** Deleted on 25 Oct; see
+      [decision 18](decisions.md#18-ship-within-india-only). Owner: Sagar.
+      Added 24 Oct.
 - [ ] **Order email delivery.** The domain's SPF record only authorises
       GoDaddy (Microsoft 365 mail). Add Shopify's sender-email DNS records so
       order emails from `support@` don't land in spam. Owner: client.
@@ -192,7 +180,6 @@ One profile, shipped from "Shop location".
 | | 1.5–2 kg | ₹399 |
 | | 2–3 kg | ₹449 |
 | | over 3 kg | ₹499 |
-| International (28 countries) | any | ₹1,800 flat (dormant) |
 
 ### Discounts
 

@@ -279,3 +279,26 @@ problem. A missing line is not.
 
 **How to apply:** When the client confirms a detail (blouse piece included,
 5.5 m length, natural dye), add it back to that product's Details list.
+
+### 18. Ship within India only
+
+25 October 2026
+
+**Decision:** The "International" shipping zone was deleted from the General
+shipping profile. Only the Domestic (India) zone remains, with its six weight
+bands.
+
+**Why:**
+- The shipping policy says the store ships within India only.
+- The store only sells to India, so the zone was dormant.
+- If international selling were ever turned on, the zone would have started
+  charging a flat ₹1,800 that nobody had chosen on purpose.
+
+**What was removed:** a flat ₹1,800 "International" rate to 28 countries.
+- Europe: AT, BE, CH, CZ, DE, DK, ES, FI, FR, GB, IE, IT, NL, NO, PL, PT, SE
+- Rest of world: AE, AU, CA, HK, IL, JP, KR, MY, NZ, SG, US
+
+**How to apply:** To start shipping abroad:
+1. Add the countries to a market (Settings → Markets).
+2. Create a zone with rates in Settings → Shipping and delivery.
+3. Update the shipping policy in the same change.
