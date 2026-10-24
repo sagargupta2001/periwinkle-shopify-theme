@@ -4,7 +4,8 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 24 October 2026. The store is still behind its password page.
+Last updated: 24 October 2026, after merging PRs #17–#19. The store is still
+behind its password page.
 
 ## Open items
 
@@ -29,13 +30,14 @@ visible, then delete it. Add new items with an owner and the date added.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
-- [ ] **Drafting notes in descriptions.** 28 saree descriptions still contain
+- [ ] **Drafting notes in descriptions.** 31 saree descriptions still contain
       "(confirm: …)", "[add details]" or "[please confirm …]". Each needs the
       real fabric, length or dye. Owner: client. Added 24 Oct.
 - [ ] **End-to-end test order.** See [Test order](#test-order) below. Owner:
       Sagar and client. Added 24 Oct.
-- [ ] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
-      subscribe link) and #18 (consistent contact details). Owner: Sagar.
+- [x] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
+      subscribe link), #18 (consistent contact details) and #19 (these docs)
+      were merged on 24 Oct and checked on localhost. Owner: Sagar.
       Added 24 Oct.
 
 ### Should fix soon
@@ -75,7 +77,7 @@ visible, then delete it. Add new items with an owner and the date added.
   - Blue Floral Glass Rectangular Drop Earrings
   - Teal Enamel Open-Loop Drop Earrings
   - Classic Black & White — Warli-Style Print and — Leaf Buti Print
-- [ ] **Products without a description.** About 70, including every miniature.
+- [ ] **Products without a description.** 69, including every miniature.
       Owner: client. Added 24 Oct.
 - [ ] **International shipping zone.** A dormant zone charges ₹1,800 flat to 28
       countries. The store only sells to India, and the policy says India only.
