@@ -238,3 +238,44 @@ address, written as in [store-status.md](store-status.md#contact-details).
 **Why:** `main` syncs to the live theme both ways, so PRs are the review step
 for theme changes. Store data has no version history. Without this log, the
 reasoning behind it is lost.
+
+### 16. Every variant tracks stock and stops selling at zero
+
+24 October 2026
+
+**Decision:** Every variant has **Track quantity** on and **Continue selling
+when out of stock** off. On 24 October, 181 variants were changed:
+- 161 were tracked but kept selling past zero;
+- 17 weren't tracked at all;
+- 3 were drafts set to keep selling.
+
+**Why:** Most pieces are one of a kind. A storefront that keeps selling past
+zero takes orders for pieces that are already gone.
+
+**Known effect:** 36 products with 0 or less in stock now show "Sold out".
+They include 32 of the 44 jewellery pieces, whose stock was probably never
+entered. Their quantities need entering; see
+[store-status.md](store-status.md#should-fix-soon).
+
+**How to apply:** New products must keep both settings. Shopify tracks
+quantity by default, but check that **Continue selling when out of stock** is
+off before activating a product.
+
+### 17. Product descriptions state only what is known
+
+24 October 2026
+
+**Decision:** On 24 October, drafting notes ("(confirm: …)", "[add details]",
+"[please confirm …]") were removed from 31 descriptions:
+- Fabric comes from the product title or variant name, which are already
+  public.
+- Unconfirmed details (blouse piece, length, dye type, exact weave) were
+  removed, not guessed.
+- Four descriptions that had lost their opening paragraph were given a short
+  opening based on their title, photo and existing text.
+
+**Why:** A wrong fabric or length on a product page is a returns and trust
+problem. A missing line is not.
+
+**How to apply:** When the client confirms a detail (blouse piece included,
+5.5 m length, natural dye), add it back to that product's Details list.

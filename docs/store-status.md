@@ -30,9 +30,28 @@ visible, then delete it. Add new items with an owner and the date added.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
-- [ ] **Drafting notes in descriptions.** 31 saree descriptions still contain
-      "(confirm: …)", "[add details]" or "[please confirm …]". Each needs the
-      real fabric, length or dye. Owner: client. Added 24 Oct.
+- [x] **Drafting notes in descriptions.** All 31 were cleaned on 24 Oct; see
+      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
+      Fabric now comes from the title or variant name. Unconfirmed blouse,
+      length and dye lines were removed rather than guessed. Owner: Sagar.
+      Added 24 Oct.
+- [ ] **Enter real stock for 36 sold-out products.** Every variant now stops
+      selling at zero (see [decision 16](decisions.md#16-every-variant-tracks-stock-and-stops-selling-at-zero)),
+      so these show "Sold out" until their quantity is entered in Products →
+      Inventory. That includes **32 of the 44 jewellery pieces**, so the home
+      page's "Explore Jewellery" links lead to a mostly sold-out collection.
+      Grey Moirangphee Cotton Saree is at −1, which means it was oversold
+      once. Owner: client. Added 24 Oct.
+  - Ceramics: Blue & White Indian Cityscape Wall Plate; Japanese-Style Ceramic
+    Dipping Bowl Set
+  - Sarees: Grey Moirangphee Cotton Saree; Rust Red Hand Block Printed Cotton
+    Saree with Floral Buta
+  - Necklaces: Blue Ombre Square Link Pendant; Emerald & Navy Ombre and Sunset
+    Ombre Multi-Strand Seed Bead
+  - Ring: Silver Dual Rectangle Cabochon Open Ring
+  - 28 earrings: every European earring except the handful that already had
+    stock. The list is under Products, filtered by type "European earrings"
+    and "Availability: Out of stock".
 - [ ] **End-to-end test order.** See [Test order](#test-order) below. Owner:
       Sagar and client. Added 24 Oct.
 - [x] **Merge open PRs.** sagargupta2001/periwinkle-shopify-theme#17 (Substack
@@ -116,7 +135,9 @@ password, and a person has to place it.
 
 ### Catalogue
 
-- 500 active products and 21 drafts.
+- 501 active products and 21 drafts.
+- Every variant tracks its quantity and stops selling at zero, so a product
+  shows "Sold out" once nothing is available (on hand minus committed).
 - The product type drives collections. The types are Saree, Dupatta,
   Unstitched Salwar Suit, Miniature, Ceramics, Wooden Antique Box, Bag, and
   European earrings/necklace/ring.
