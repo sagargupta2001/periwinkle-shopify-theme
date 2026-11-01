@@ -346,10 +346,10 @@ carried it, so the Heirloom collection starts empty. The collection keeps
 its rule (tag `#heirloom`), its URL and its menu link. Pieces join it again
 only when the tag is added on purpose.
 
-**Why:** The tag had spread across 38 products, including suit sets and
-everyday cotton sarees, so the collection no longer meant "heirloom".
-Removing the tag empties the collection without touching anything else on
-the products. Only the one tag was removed.
+**Why:** Sagar asked for the collection to be emptied without deleting or
+otherwise changing the products. The tag had built up on 38 products,
+including suit sets. In a smart collection, removing the tag is the only way
+to take products out. Nothing else on the products was changed.
 
 **Rejected:**
 - *Replacing it with a hand-picked (manual) collection:* this would need a
