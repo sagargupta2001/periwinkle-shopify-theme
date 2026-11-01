@@ -4,7 +4,7 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 1 November 2026. The store is still behind its password page.
+Last updated: 2 November 2026.
 
 ## Open items
 
@@ -154,6 +154,25 @@ visible, then delete it. Add new items with an owner and the date added.
 - [ ] **"Milano glass" in the journal article** "Jewellery India Hasn't Seen
       Yet". The well-known glass is Murano; confirm which was meant. Owner:
       client. Added 24 Oct.
+- [ ] **Clean up the Colour and Fabric values** (the `shopify--color-pattern`
+      and `shopify--fabric` metaobjects behind the category metafields). There
+      are 50+ colours, entered as shade names with typos and duplicates:
+      - "Wine Purple" twice;
+      - "sky bblue";
+      - handle `turquoise` labelled "Blue";
+      - "Black" and "gray" alongside "Grey";
+      - "Deep Teal with Silver-Grey checks and border" mapped to Grey.
+
+      Fabrics have the same problem: "Cotton silk blend" twice and "Kota silk"
+      twice. Collection filtering is on, so these may show as messy filter
+      options. Fix:
+      1. Merge to a short set of plain colours (Blue, Green, Pink, Purple,
+         Red, …).
+      2. Repoint products to it.
+      3. Delete the leftovers.
+
+      Do it when the client has finished adding products. `/add-products`
+      already uses plain names only. Owner: Sagar. Added 2 Nov.
 
 ### Launch day
 
