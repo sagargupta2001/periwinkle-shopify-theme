@@ -302,3 +302,101 @@ bands.
 1. Add the countries to a market (Settings → Markets).
 2. Create a zone with rates in Settings → Shipping and delivery.
 3. Update the shipping policy in the same change.
+
+### 19. Shopify's SKU field is the product register, fed by an intake form
+
+1 November 2026
+
+**Decision:**
+- The unique ID for each piece lives in its Shopify **SKU** field. No
+  separate notebook or hand-kept sheet duplicates it.
+- New products come in through a Google Form (one per piece) that feeds a
+  Google Sheet. The sheet assigns the next SKU per category, and Sagar lists
+  products from it. See [adding-products.md](adding-products.md).
+- Target SKU format: `PBS-<CODE>-<NNN>`, with one code per category. This is
+  confirmed once the client answers the questions in
+  [sku-audit.md](sku-audit.md).
+
+**Why:**
+- The SKU already prints on packing slips and Shiprocket labels, drives admin
+  search and groups inventory reports.
+- A hand-kept list of IDs and links goes stale as products are renamed,
+  duplicated or moved, and 338 URLs changed in October alone.
+- The form also captures facts the photos can't show (fabric, length, blouse
+  piece, quantity, weight), whose absence caused much of the October
+  clean-up.
+
+**Rejected:**
+- *A Google Sheet of ID and product link, maintained by hand:* it's a second
+  copy that drifts.
+- *Carrying on with the notebook:* that's how 48 SKUs ended up shared by
+  different pieces.
+
+**How to apply:** Only the intake sheet hands out numbers. If a list is
+needed, generate it from Shopify (an export or a sync app) rather than
+typing it.
+
+### 20. Heirloom is curated by tag, starting empty
+
+1 November 2026. This supersedes the "22 products already carried the tag"
+reasoning in decision 7.
+
+**Decision:** The `#heirloom` tag was removed from all 38 products that
+carried it, so the Heirloom collection starts empty. The collection keeps
+its rule (tag `#heirloom`), its URL and its menu link. Pieces join it again
+only when the tag is added on purpose.
+
+**Why:** Sagar asked for the collection to be emptied without deleting or
+otherwise changing the products. The tag had built up on 38 products,
+including suit sets. In a smart collection, removing the tag is the only way
+to take products out. Nothing else on the products was changed.
+
+**Rejected:**
+- *Replacing it with a hand-picked (manual) collection:* this would need a
+  new collection and a repointed menu item.
+- *Switching the rule to a new tag:* this would leave 38 stale `#heirloom`
+  tags behind.
+
+**How to apply:**
+- Add `#heirloom` only to pieces that belong in Heirloom.
+- Until it has stock, consider taking Heirloom out of the main menu, because
+  the link currently leads to an empty page.
+
+### 21. Dupattas are rebuilt from scratch, through the shared album
+
+1 November 2026. This replaces the intake-form part of decision 19. The SKU
+field is still the register.
+
+**Decision:**
+- All 60 existing dupatta products were set to **Draft** and their SKUs
+  cleared. Dupattas are being rebuilt from scratch, with SKUs restarting at
+  `PBS-DUP-001`, as approved by the client.
+- New products come in through the client's **shared Apple Photos album**,
+  one per category, where the conversation about each piece happens. Products
+  are created as drafts in the Shopify app straight from the album photos.
+- Each product's status is a `wf-` tag in Shopify:
+  - `wf-needs-details`
+  - `wf-needs-sku`
+  - `wf-needs-photos`
+- Refined 4:5 photos (made in Gemini) replace the raw album photo before a
+  product goes live.
+
+**Why:**
+- The store has never been live, so recreating loses nothing. The old
+  dupattas had unoptimised photos and messy, partly shared SKUs anyway.
+- The client already uses the album daily, so it adds no new tool for her.
+- Adding photos to Shopify from the phone keeps images off Sagar's laptop,
+  which is low on disk space.
+- Albums can't filter or label photos, so status lives in Shopify, where admin
+  views can filter by tag.
+
+**Rejected:**
+- *Google Form and sheet (decision 19):* another tool for the client to learn.
+- *AirDropping photos to the laptop:* not enough disk space.
+- *Deleting the old dupattas outright:* drafting keeps their record until
+  the rebuild is done.
+
+**How to apply:** Follow [adding-products.md](adding-products.md). The old
+SKUs are kept in
+[archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv),
+not in Shopify. Delete the old drafts once every dupatta is rebuilt.

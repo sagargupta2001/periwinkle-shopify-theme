@@ -4,7 +4,7 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 25 October 2026. The store is still behind its password page.
+Last updated: 2 November 2026.
 
 ## Open items
 
@@ -13,6 +13,40 @@ visible, then delete it. Add new items with an owner and the date added.
 
 ### Blocking launch
 
+- [ ] **SKU audit and standardisation (top priority).** SKUs are the
+      client's notebook IDs, typed into Shopify by hand:
+      - 48 numbers are shared by two or three different pieces;
+      - 68 active variants have no SKU;
+      - about 6 in 7 SKUs use a non-standard format;
+      - 39 SKUs use the letter O instead of zero.
+
+      Packing slips and Shiprocket labels print the SKU, so a shared SKU can
+      mean the wrong piece gets shipped. The full findings, proposed fix and
+      questions for the client are in [sku-audit.md](sku-audit.md). Next:
+      1. The client answers the questions.
+      2. Sagar runs the automatic clean-up.
+      3. The client resolves the shared and missing IDs.
+      4. Sagar sets the intake form's SKU counters.
+
+      Owner: Sagar and client. Added 1 Nov.
+- [ ] **Rebuild the dupattas from the shared album.** All 60 old dupatta
+      products were set to Draft with their SKUs cleared on 1 Nov, and the
+      record is in
+      [archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv).
+      New dupattas follow [adding-products.md](adding-products.md), with SKUs
+      restarting at `PBS-DUP-001`. Until they're rebuilt:
+      - *Periwinkle Dupattas*, the **Dupattas & Stoles** menu link and the
+        home page's "Wear the Craft" dupatta tile all show nothing;
+      - Gifting has lost 46 dupattas.
+
+      Delete the old drafts once every dupatta is rebuilt. Owner: Sagar.
+      Added 1 Nov.
+- [ ] **Get the full SKU code list from the client** and record it in
+      [sku-codes.md](sku-codes.md). Owner: Sagar. Added 1 Nov.
+- [ ] **Fix "Midnight Navy Hand-Painted Pattachitra Saree".** It's a saree
+      (`PBS/SAR/069`) with the product type **Dupatta**, so it was left out
+      of the dupatta rebuild. Set the type to Saree and add it to *Periwinkle
+      Sarees*. Owner: Sagar. Added 1 Nov.
 - [ ] **Product weights.** Every variant weighs 0 kg, so every order pays the
       ₹249 minimum and Shiprocket can't book couriers. Waiting on average
       weights for sarees, dupattas and miniatures, which will be applied in
@@ -21,9 +55,6 @@ visible, then delete it. Add new items with an owner and the date added.
       contain `[GSTIN]`, `[Registered address]`, `[Business type]` and
       `[Days and hours]`. Fill them in under Settings → Policies. Owner:
       client. Added 24 Oct.
-- [x] **Store contact settings.** Settings → General now shows
-      `support@periwinklebysherry.com` and +91 99726 95620 (done 25 Oct).
-      Owner: client. Added 24 Oct.
 - [ ] **Shipping location address.** "Shop location" has no address.
       Shiprocket uses it as the pickup point, and it matters for GST. Set it
       in Settings → Locations. Owner: client. Added 24 Oct.
@@ -49,11 +80,14 @@ visible, then delete it. Add new items with an owner and the date added.
 
 ### Should fix soon
 
-- [x] **Copied descriptions (renamed copies).** On 24–25 Oct, the 6 renamed
-      copies and the 11 Pattachitra dupattas got their own descriptions,
-      written from their photos following
-      [decision 17](decisions.md#17-product-descriptions-state-only-what-is-known).
-      Owner: Sagar. Added 24 Oct.
+- [ ] **Heirloom is empty but still in the main menu.** On 1 Nov the
+      `#heirloom` tag was taken off all 38 products (at Sagar's request), so
+      the collection shows no products and the header's Heirloom link leads to
+      an empty page. Either tag the pieces that belong there with `#heirloom`,
+      or remove Heirloom from the main menu until it has stock. See
+      [decision 20](decisions.md#20-heirloom-is-curated-by-tag-starting-empty).
+      Owner: Sagar and client. Added 1 Nov.
+
 - [ ] **More products sharing one description.** A full scan on 25 Oct found
       12 more groups (27 products) with identical descriptions. Most look like
       pieces listed by copying another product, so the text may describe a
@@ -113,9 +147,6 @@ visible, then delete it. Add new items with an owner and the date added.
     earrings".
 - [ ] **Products without a description.** 63, including every miniature.
       Owner: client. Added 24 Oct.
-- [x] **International shipping zone.** Deleted on 25 Oct; see
-      [decision 18](decisions.md#18-ship-within-india-only). Owner: Sagar.
-      Added 24 Oct.
 - [ ] **Order email delivery.** The domain's SPF record only authorises
       GoDaddy (Microsoft 365 mail). Add Shopify's sender-email DNS records so
       order emails from `support@` don't land in spam. Owner: client.
@@ -123,6 +154,25 @@ visible, then delete it. Add new items with an owner and the date added.
 - [ ] **"Milano glass" in the journal article** "Jewellery India Hasn't Seen
       Yet". The well-known glass is Murano; confirm which was meant. Owner:
       client. Added 24 Oct.
+- [ ] **Clean up the Colour and Fabric values** (the `shopify--color-pattern`
+      and `shopify--fabric` metaobjects behind the category metafields). There
+      are 50+ colours, entered as shade names with typos and duplicates:
+      - "Wine Purple" twice;
+      - "sky bblue";
+      - handle `turquoise` labelled "Blue";
+      - "Black" and "gray" alongside "Grey";
+      - "Deep Teal with Silver-Grey checks and border" mapped to Grey.
+
+      Fabrics have the same problem: "Cotton silk blend" twice and "Kota silk"
+      twice. Collection filtering is on, so these may show as messy filter
+      options. Fix:
+      1. Merge to a short set of plain colours (Blue, Green, Pink, Purple,
+         Red, …).
+      2. Repoint products to it.
+      3. Delete the leftovers.
+
+      Do it when the client has finished adding products. `/add-products`
+      already uses plain names only. Owner: Sagar. Added 2 Nov.
 
 ### Launch day
 
@@ -170,13 +220,13 @@ added by hand.
 | Periwinkle Salwar Suit Sets | `periwinkle-salwar-suit-sets` | Manual | | 123 |
 | The Block Print Edit | `the-block-print-edit` | Manual | | 99 |
 | Looms of Kashi – The Benaras Edit | `threads-of-benaras` | Smart | tag `#benarasisilk` | 71 |
-| Periwinkle Dupattas | `frontpage` | Manual | Dawn's default handle, kept | 54 |
+| Periwinkle Dupattas | `frontpage` | Manual | Dawn's default handle, kept. All members drafted on 1 Nov for the rebuild. | 0 visible |
 | Periwinkle Jewellery | `periwinkle-jewellery-india-hasn-t-seen-yet` | Manual | | 44 |
 | Periwinkle Miniatures | `periwinkle-miniatures` | Manual | Add new miniatures by hand | 27 |
 | Periwinkle Couture | `periwinkle-couture` | Manual | | 11 |
 | Periwinkle Home Decor | `periwinkle-ceramics` | Manual | | 10 |
 | Periwinkle Accessories | `accessories-bags` | Manual | Hidden from menus | 1 |
-| Heirloom | `heirloom` | Smart | tag `#heirloom` | 23 |
+| Heirloom | `heirloom` | Smart | tag `#heirloom`. Emptied on 1 Nov by removing the tag from 38 products. | 0 |
 | Hand-Blown Glass Miniatures | `miniatures-hand-blown-glass-decor-items` | Smart | type Miniature + tag `#glass` | 9 |
 | Wooden Miniatures | `miniatures-wooden` | Smart | type Miniature + tag `#wooden` | 9 |
 | Porcelain Miniatures | `miniatures-porcelain` | Smart | type Miniature + tag `#porcelain` | 2 |
