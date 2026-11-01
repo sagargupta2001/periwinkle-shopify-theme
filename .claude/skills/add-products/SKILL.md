@@ -67,20 +67,58 @@ For each product tagged `wf-needs-details`:
    paragraphs about the piece and its craft. **State only what the photo
    shows** (decision 17). Leave out fabric, length or dye if unsure; never
    guess.
-4. In one `productUpdate`: title, `descriptionHtml`, a `handle` built from the
-   new title (with `redirectNewHandle: true`), `productType` (Dupatta for the
-   dupatta rebuild), and tags: keep existing ones, add `album-N`, remove
-   `wf-needs-details`, add `wf-needs-sku`. Keep status DRAFT.
-5. Add it to the category's manual collection with `collectionAddProducts`:
-   - Dupatta → Periwinkle Dupattas `gid://shopify/Collection/485522309143` (its handle is `frontpage`)
-   - Saree → Periwinkle Sarees `gid://shopify/Collection/487135739927`
-   - Miniature → Periwinkle Miniatures `gid://shopify/Collection/492680544279`
-6. With `productVariantsBulkUpdate`: `inventoryPolicy: DENY`,
-   `inventoryItem: {tracked: true}`.
+4. Write an **SEO description**: one plain sentence of 140–155 characters
+   about the piece, with no price and no "buy now". Leave the SEO title
+   empty; Shopify falls back to the product title.
+5. Pick **hashtag tags** only from tags already in the store (query
+   `productTags(first: 250)`), and only for a craft or fabric that is clear
+   from the photo or stated by the client: for example `#pattachitra`,
+   `#kanthastitch`, `#chanderisilk`, `#indianhandlooms`. Never invent a new
+   hashtag; suggest it to Sagar instead.
+6. In one `productUpdate`:
+   - `title`, `descriptionHtml`, `seo: {description}`
+   - `handle` built from the new title, with `redirectNewHandle: true`
+   - `productType` (Dupatta for the dupatta rebuild)
+   - `vendor: "Periwinkle By Sherry"`
+   - `category`: the taxonomy ID for the type (below)
+   - tags: keep existing ones, add `album-N` and the hashtags, remove
+     `wf-needs-details`, add `wf-needs-sku`
+   - keep status DRAFT
+7. Set **category metafields** with `metafieldsSet` (type
+   `list.metaobject_reference`, value a JSON array of metaobject IDs):
+   - **Colour** (`shopify.color-pattern`): the main one or two colours you can
+     see. Reuse an existing `shopify--color-pattern` metaobject, preferring the
+     plain names (Blue, Pink, Purple, Red, Black, White, Ivory, Cream, Beige,
+     Grey, Golden). If a plain colour is missing, for example Green, create it
+     with `metaobjectCreate` (`label`, hex `color` and
+     `color_taxonomy_reference`, copying an existing one's shape). Don't create
+     shade names like "dusty rose".
+   - **Fabric** (`shopify.fabric`): **only if the client stated it.** Reuse
+     the existing `shopify--fabric` metaobject with that name. Otherwise skip
+     it and add it in the `sku` step if her reply names the fabric.
+8. Add it to the category's manual collection with `collectionAddProducts`.
+9. **Variant:** Periwinkle products are one product, one variant. The variant
+   must be the single **Default Title** variant with no options. If the
+   product has any other option or more than one variant, stop and ask Sagar.
+   Don't restructure it yourself. With `productVariantsBulkUpdate` set
+   `inventoryPolicy: DENY`, `taxable: false` (like the rest of the store), and
+   `inventoryItem: {tracked: true, requiresShipping: true}`.
+10. **Weight:** leave it at 0 until category averages are recorded in
+    [docs/decisions.md](../../../docs/decisions.md) (decision 13). Once they
+    are, set `inventoryItem.measurement.weight` to the average for the type.
 
-Then give Sagar a list, "Draft N → new title", and point out anything you were
-unsure of (for example "fabric not stated, looks like cotton"). Remind him to
-ask the client for the SKU and price under each "Draft N" comment.
+| Type | Taxonomy category | Manual collection |
+|---|---|---|
+| Dupatta | `gid://shopify/TaxonomyCategory/aa-2-31-4` (Traditional Clothing Accessories > Dupattas) | Periwinkle Dupattas `gid://shopify/Collection/485522309143` (handle `frontpage`) |
+| Saree | look up "Saris" with `taxonomy { categories(search:) }` | Periwinkle Sarees `gid://shopify/Collection/487135739927` |
+| Miniature | look it up the same way | Periwinkle Miniatures `gid://shopify/Collection/492680544279` |
+
+Add new types to this table once their category is confirmed.
+
+Then give Sagar a list, "Draft N → new title", with the colours and hashtags
+chosen, and point out anything you were unsure of (for example "fabric not
+stated, looks like cotton"). Remind him to ask the client for the SKU and
+price under each "Draft N" comment, and for the fabric if it's not known.
 
 ## SKU
 
@@ -112,6 +150,9 @@ Show Sagar the checked list, then for each product that passed:
 - Set the quantity with `inventorySetQuantities` (name `available`, reason
   `correction`) at `gid://shopify/Location/102961152023` ("Shop location").
   Look the location up again if that ID fails.
+- If her reply names the fabric, set `shopify.fabric` (reuse an existing
+  metaobject of that name, or create one with her wording) and add it to the
+  description if it's missing.
 - Tags: add `gift` if the type is in the gift set (Miniature, European
   jewellery, Ceramics, Wooden Antique Box, Dupatta, Saree) and the price is
   ₹5,000 or less (decision 2). Remove `wf-needs-sku`, add `wf-needs-photos`.
@@ -122,10 +163,13 @@ Report what was set and what was held back, and why.
 
 Find the product by `album-N` or by SKU. Before activating, check:
 
-- at least two images, and no album screenshot or app screenshot left in
-  (ask Sagar if you can't tell which is the raw album photo)
-- title isn't a placeholder; description present
-- SKU set and unique, price > 0, quantity ≥ 1, tracked, policy DENY
+- at least two images, and no raw album photo or app screenshot left on the
+  product (the original stays in the album; ask Sagar if you can't tell which
+  is which)
+- title isn't a placeholder; description and SEO description present
+- one Default Title variant; SKU set and unique, price > 0, quantity ≥ 1,
+  tracked, policy DENY, taxable off
+- vendor, taxonomy category and Colour metafield set
 - in its category collection; `gift` tag correct for its price
 
 If anything fails, list it and don't activate. Otherwise, in one

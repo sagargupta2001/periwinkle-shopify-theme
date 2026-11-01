@@ -29,7 +29,7 @@ its `details`, `sku` and `live` steps.
 | 5. Ask for SKU and price under the "Draft N" comment | Sagar | Album | — |
 | 6. Reply under the same comment: `PBS-DUP-001, ₹2,850` (and quantity if more than one) | Client | Album | — |
 | 7. `/add-products sku` with a screenshot of the thread, or lines like `Draft 12 = PBS-DUP-001, ₹2,850`. Claude checks each SKU against the whole store, then sets SKU, price, quantity and `gift`. | Sagar → Claude | Chat → Shopify | `wf-needs-photos` |
-| 8. Make 2–3 shots at 4:5 in Gemini, add them to the product in the Shopify app, and delete the raw album photo | Sagar | Gemini, Shopify app | — |
+| 8. Make 2–3 shots at 4:5 in Gemini, add them to the product in the Shopify app, and remove the raw album photo **from the product** (the original stays in the album, which remains the source of truth) | Sagar | Gemini, Shopify app | — |
 | 9. `/add-products live Draft N`: checklist, then Active, with the link | Claude | Shopify | none |
 | 10. Comment `Listed · SKU · price · link` on the album photo | Sagar | Album | — |
 | 11. Print the SKU label **from Shopify**, never from the comment | Client | Retail Barcode Labels app | — |
@@ -68,31 +68,48 @@ the placeholder title is replaced. It's removed when the product goes live.
 ## Listing checklist
 
 Each line points to the decision behind it in [decisions.md](decisions.md).
+`/add-products` fills everything here except what's marked *client* or
+*Sagar*.
 
-- **Title:** describe the piece, for example "Teal Pattachitra Dupatta in
-  Chanderi Silk with Tree of Life". No supplier or marketplace brand names,
-  no "(Copy)", and no placeholder left behind (decisions 9–11).
+- **Title:** describe the piece, for example "Teal Pattachitra Dupatta with
+  Tree of Life". No supplier or marketplace brand names, no "(Copy)", and no
+  placeholder left behind (decisions 9–11).
 - **Description:** state only what is known from the client's comment or the
   photo. If fabric, length or another detail is unknown, leave it out rather
   than guess (decision 17).
+- **SEO:** leave the SEO title empty, since it falls back to the product
+  title. Write a meta description of about 155 characters.
+- **URL handle:** built from the final title, replacing the placeholder.
+- **Vendor:** Periwinkle By Sherry.
 - **Product type:** Saree, Dupatta, Unstitched Salwar Suit, Miniature,
   Ceramics, Bag, or European earrings / necklace / ring.
+- **Category** (Shopify's standard taxonomy): for dupattas, *Apparel &
+  Accessories > Clothing Accessories > Traditional Clothing Accessories >
+  Dupattas*.
+- **Category metafields:**
+  - Colour from the photo, using a plain existing colour name.
+  - Fabric only when the client states it.
 - **Collections:** add dupattas to *Periwinkle Dupattas*, sarees to
   *Periwinkle Sarees* and miniatures to *Periwinkle Miniatures* by hand,
   because those collections are manual (decision 5).
 - **Tags:**
   - `gift` for gift-worthy pieces at ₹5,000 or less (decisions 1–2).
+  - Hashtags (`#pattachitra`, `#kanthastitch`…), only from those already in
+    the store and only when the craft is clear.
   - Material tags for miniatures.
-  - The current `wf-` status tag and `album-N` until the product is live.
+  - The current `wf-` status tag, and `album-N` until the product is live.
+- **Variant:** one product, one variant. Use the single *Default Title*
+  variant with no options such as "Color" or "Fabric". A one-value option
+  makes the product page show a pointless picker.
+- **SKU, price, quantity:** *client*. Usually 1.
 - **Inventory:**
-  - Enter the quantity.
   - Keep *Track quantity* on.
   - Keep *Continue selling when out of stock* off (decision 16).
-- **Weight:** use the category average once it's set (decision 13).
-- **URL handle:** let Shopify build it from the final title. If the product
-  was created under a placeholder title, update the handle too.
-- **Photos:** use the client's own pieces, refined in Gemini at 4:5. Never
-  use screenshots from shopping apps.
+  - Taxable off, like the rest of the store.
+- **Weight:** 0 until category averages are set, then the average for the
+  type (decision 13).
+- **Photos:** *Sagar*. Use the client's own pieces, refined in Gemini at 4:5.
+  Never use screenshots from shopping apps.
 
 ## After listing
 
