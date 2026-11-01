@@ -335,3 +335,29 @@ bands.
 **How to apply:** Only the intake sheet hands out numbers. If a list is
 needed, generate it from Shopify (an export or a sync app) rather than
 typing it.
+
+### 20. Heirloom is curated by tag, starting empty
+
+1 November 2026. This supersedes the "22 products already carried the tag"
+reasoning in decision 7.
+
+**Decision:** The `#heirloom` tag was removed from all 38 products that
+carried it, so the Heirloom collection starts empty. The collection keeps
+its rule (tag `#heirloom`), its URL and its menu link. Pieces join it again
+only when the tag is added on purpose.
+
+**Why:** The tag had spread across 38 products, including suit sets and
+everyday cotton sarees, so the collection no longer meant "heirloom".
+Removing the tag empties the collection without touching anything else on
+the products. Only the one tag was removed.
+
+**Rejected:**
+- *Replacing it with a hand-picked (manual) collection:* this would need a
+  new collection and a repointed menu item.
+- *Switching the rule to a new tag:* this would leave 38 stale `#heirloom`
+  tags behind.
+
+**How to apply:**
+- Add `#heirloom` only to pieces that belong in Heirloom.
+- Until it has stock, consider taking Heirloom out of the main menu, because
+  the link currently leads to an empty page.

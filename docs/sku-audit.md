@@ -149,22 +149,34 @@ types.
    no separate list is kept by hand.
 2. **One format: `PBS-<CODE>-<NNN>`.** Uppercase, hyphens, no spaces, and at
    least three digits (`PBS-SAR-092`).
-3. **One code per category:**
+3. **One code per category.** Codes marked *confirmed* come from the client
+   (1 Nov). The rest are proposals still to be confirmed.
 
-   | Code | Category |
-   |---|---|
-   | SAR | Saree |
-   | DUP | Dupatta / stole |
-   | SKZ | Suit set (merging USS and SKR) |
-   | EPJ | Jewellery (merging JEW) |
-   | MIN | Miniature |
-   | CMS | Home decor / ceramics |
-   | BAG | Bag / accessory |
+   | Code | Category | Status |
+   |---|---|---|
+   | SAR | Saree | Confirmed |
+   | SKZ | Salwar kameez (suit sets). Replaces USS, and SKR, which is a misspelling. | Confirmed |
+   | RED | Readymade | Confirmed (no products use it yet) |
+   | MIN | Miniatures | Confirmed |
+   | GIFT | Gifts | Confirmed (no products use it yet) |
+   | DUP | Dupatta / stole | Proposed |
+   | EPJ | Jewellery (would absorb JEW) | Proposed |
+   | CMS | Home decor / ceramics | Proposed |
+   | BAG | Bag / accessory | Proposed |
+
+   `PBS` stands for Periwinkle by Sherry.
 
 4. **Every number is used once, for one piece.**
 5. **Clean-up:**
-   - **Automatic** (no client input needed): fix the format and case, change
-     the letter O to zero, and merge USS, SKR and JEW into SKZ and EPJ.
+   - **Automatic** (no client input needed): fix the format and case, and
+     change the letter O to zero.
+   - **USS and SKR become SKZ** (confirmed by the client). This can't be a
+     plain rename. 20 USS numbers already exist as SKZ numbers on different
+     suits (for example, PBS-USS-030 Ivory Azure Bloom and PBS-SKZ-030
+     Chikankari Parinda), and USS also clashes with itself on 017, 030 and
+     084. Those 23 suits need new SKZ numbers, and the notebook needs the
+     old-to-new list. Decided on 1 Nov: do this as part of the full clean-up,
+     not on its own.
    - **Needs the client:** decide which piece keeps each of the 48 shared
      numbers (the other gets a new number), confirm the IDs for the 68 missing
      ones, and confirm the SKZ-1850 outlier and the price-in-SKU case.
@@ -177,6 +189,27 @@ types.
 The automatic part should only run after the client has answered the
 questions below, because her answers may change the code list or the meaning
 of a number.
+
+## Answers from the client (1 November)
+
+- **Codes:** `PBS` = Periwinkle by Sherry, `SAR` = saree, `RED` =
+  readymade, `MIN` = miniatures, `GIFT` = gifts, `SKZ` = salwar kameez.
+- **USS and SKR** should both become SKZ. SKR is a misspelling.
+- **The number is the next free number in her notebook.** It isn't a supplier
+  or bill reference, so the intake form's per-category counter can take over
+  from the notebook.
+
+Still open: questions 1 and 4–7 below, and the codes not yet explained (DUP,
+EPJ, JEW, CMS, and "SKU" used as a code).
+
+New questions from the answers:
+
+- **GIFT and RED:**
+  - Is GIFT a category of its own (pieces sold only as gifts), or a code for
+    things like miniatures that are also in the Gifting menu? Gift-worthiness
+    is currently a tag, not a category.
+  - Which products count as readymade (RED), as opposed to SKZ suit sets?
+    Once confirmed, both codes get added to the intake form.
 
 ## Questions for the client
 

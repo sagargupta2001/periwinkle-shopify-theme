@@ -67,6 +67,14 @@ visible, then delete it. Add new items with an owner and the date added.
 
 ### Should fix soon
 
+- [ ] **Heirloom is empty but still in the main menu.** On 1 Nov the
+      `#heirloom` tag was taken off all 38 products (at Sagar's request), so
+      the collection shows no products and the header's Heirloom link leads to
+      an empty page. Either tag the pieces that belong there with `#heirloom`,
+      or remove Heirloom from the main menu until it has stock. See
+      [decision 20](decisions.md#20-heirloom-is-curated-by-tag-starting-empty).
+      Owner: Sagar and client. Added 1 Nov.
+
 - [ ] **More products sharing one description.** A full scan on 25 Oct found
       12 more groups (27 products) with identical descriptions. Most look like
       pieces listed by copying another product, so the text may describe a
@@ -186,7 +194,7 @@ added by hand.
 | Periwinkle Couture | `periwinkle-couture` | Manual | | 11 |
 | Periwinkle Home Decor | `periwinkle-ceramics` | Manual | | 10 |
 | Periwinkle Accessories | `accessories-bags` | Manual | Hidden from menus | 1 |
-| Heirloom | `heirloom` | Smart | tag `#heirloom` | 23 |
+| Heirloom | `heirloom` | Smart | tag `#heirloom`. Emptied on 1 Nov by removing the tag from 38 products. | 0 |
 | Hand-Blown Glass Miniatures | `miniatures-hand-blown-glass-decor-items` | Smart | type Miniature + tag `#glass` | 9 |
 | Wooden Miniatures | `miniatures-wooden` | Smart | type Miniature + tag `#wooden` | 9 |
 | Porcelain Miniatures | `miniatures-porcelain` | Smart | type Miniature + tag `#porcelain` | 2 |
