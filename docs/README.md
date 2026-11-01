@@ -24,9 +24,9 @@ load, so read only the ones your task needs.
 | Working on the Our Story page | [docs/our-story-page.md](our-story-page.md) | Content model, layout, animation |
 | Editing the home page or any template JSON | [docs/customizations.md](customizations.md), [docs/decisions.md](decisions.md) | Decisions 3–4; check collection handles in [docs/store-status.md](store-status.md#collections) |
 | Changing collections, menus, tags or gifting | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Collections and Menus tables; decisions 1–8 |
-| Adding a new product | [docs/adding-products.md](adding-products.md) | The intake flow and the listing checklist |
+| Adding a new product | [docs/adding-products.md](adding-products.md) | The album-to-Shopify flow, the `wf-` status tags, and the listing checklist |
 | Listing, duplicating or renaming products | [docs/decisions.md](decisions.md) | Decisions 9–11: titles, handles, brand names |
-| Working with SKUs or product IDs | [docs/sku-audit.md](sku-audit.md), [docs/decisions.md](decisions.md) | Inconsistencies, the target format, decision 19 |
+| Working with SKUs or product IDs | [docs/sku-codes.md](sku-codes.md), [docs/sku-audit.md](sku-audit.md) | The code list, then the inconsistencies and the target format; decisions 19 and 21 |
 | Changing shipping, discounts, weights or payments | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Shipping and Discounts sections; decisions 12–13 |
 | Changing contact details or policies | [docs/store-status.md](store-status.md#contact-details), [docs/decisions.md](decisions.md) | The canonical details; decision 14 |
 | Preparing for launch or running the test order | [docs/store-status.md](store-status.md) | Open items, Test order, Launch day |
@@ -52,6 +52,8 @@ load, so read only the ones your task needs.
   the client to a live product, with the listing checklist.
 - [docs/sku-audit.md](sku-audit.md): SKU inconsistencies, the proposed fix,
   and the questions for the client.
+- [docs/sku-codes.md](sku-codes.md): what each SKU category code means and
+  how its numbering runs.
 
 ## Keeping docs current
 

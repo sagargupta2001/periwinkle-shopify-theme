@@ -361,3 +361,42 @@ to take products out. Nothing else on the products was changed.
 - Add `#heirloom` only to pieces that belong in Heirloom.
 - Until it has stock, consider taking Heirloom out of the main menu, because
   the link currently leads to an empty page.
+
+### 21. Dupattas are rebuilt from scratch, through the shared album
+
+1 November 2026. This replaces the intake-form part of decision 19. The SKU
+field is still the register.
+
+**Decision:**
+- All 60 existing dupatta products were set to **Draft** and their SKUs
+  cleared. Dupattas are being rebuilt from scratch, with SKUs restarting at
+  `PBS-DUP-001`, as approved by the client.
+- New products come in through the client's **shared Apple Photos album**,
+  one per category, where the conversation about each piece happens. Products
+  are created as drafts in the Shopify app straight from the album photos.
+- Each product's status is a `wf-` tag in Shopify:
+  - `wf-needs-details`
+  - `wf-needs-sku`
+  - `wf-needs-photos`
+- Refined 4:5 photos (made in Gemini) replace the raw album photo before a
+  product goes live.
+
+**Why:**
+- The store has never been live, so recreating loses nothing. The old
+  dupattas had unoptimised photos and messy, partly shared SKUs anyway.
+- The client already uses the album daily, so it adds no new tool for her.
+- Adding photos to Shopify from the phone keeps images off Sagar's laptop,
+  which is low on disk space.
+- Albums can't filter or label photos, so status lives in Shopify, where admin
+  views can filter by tag.
+
+**Rejected:**
+- *Google Form and sheet (decision 19):* another tool for the client to learn.
+- *AirDropping photos to the laptop:* not enough disk space.
+- *Deleting the old dupattas outright:* drafting keeps their record until
+  the rebuild is done.
+
+**How to apply:** Follow [adding-products.md](adding-products.md). The old
+SKUs are kept in
+[archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv),
+not in Shopify. Delete the old drafts once every dupatta is rebuilt.

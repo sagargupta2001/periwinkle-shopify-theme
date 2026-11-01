@@ -1,4 +1,7 @@
 /**
+ * NOT IN USE: superseded on 1 Nov 2026 by the shared-album workflow in
+ * docs/adding-products.md (decision 21). Kept in case a form is needed again.
+ *
  * Periwinkle product intake: a Google Form for the client and a linked Google
  * Sheet for whoever lists products in Shopify.
  *

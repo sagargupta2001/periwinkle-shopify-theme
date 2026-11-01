@@ -29,11 +29,24 @@ visible, then delete it. Add new items with an owner and the date added.
       4. Sagar sets the intake form's SKU counters.
 
       Owner: Sagar and client. Added 1 Nov.
-- [ ] **Set up the product intake form.** Run
-      [`tools/product-intake-form.gs`](../tools/product-intake-form.gs) once,
-      add the Photos upload question by hand, and send the form link to the
-      client. Set the *SKU counters* after the SKU audit. See
-      [adding-products.md](adding-products.md). Owner: Sagar. Added 1 Nov.
+- [ ] **Rebuild the dupattas from the shared album.** All 60 old dupatta
+      products were set to Draft with their SKUs cleared on 1 Nov, and the
+      record is in
+      [archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv).
+      New dupattas follow [adding-products.md](adding-products.md), with SKUs
+      restarting at `PBS-DUP-001`. Until they're rebuilt:
+      - *Periwinkle Dupattas*, the **Dupattas & Stoles** menu link and the
+        home page's "Wear the Craft" dupatta tile all show nothing;
+      - Gifting has lost 46 dupattas.
+
+      Delete the old drafts once every dupatta is rebuilt. Owner: Sagar.
+      Added 1 Nov.
+- [ ] **Get the full SKU code list from the client** and record it in
+      [sku-codes.md](sku-codes.md). Owner: Sagar. Added 1 Nov.
+- [ ] **Fix "Midnight Navy Hand-Painted Pattachitra Saree".** It's a saree
+      (`PBS/SAR/069`) with the product type **Dupatta**, so it was left out
+      of the dupatta rebuild. Set the type to Saree and add it to *Periwinkle
+      Sarees*. Owner: Sagar. Added 1 Nov.
 - [ ] **Product weights.** Every variant weighs 0 kg, so every order pays the
       ₹249 minimum and Shiprocket can't book couriers. Waiting on average
       weights for sarees, dupattas and miniatures, which will be applied in
@@ -188,7 +201,7 @@ added by hand.
 | Periwinkle Salwar Suit Sets | `periwinkle-salwar-suit-sets` | Manual | | 123 |
 | The Block Print Edit | `the-block-print-edit` | Manual | | 99 |
 | Looms of Kashi – The Benaras Edit | `threads-of-benaras` | Smart | tag `#benarasisilk` | 71 |
-| Periwinkle Dupattas | `frontpage` | Manual | Dawn's default handle, kept | 54 |
+| Periwinkle Dupattas | `frontpage` | Manual | Dawn's default handle, kept. All members drafted on 1 Nov for the rebuild. | 0 visible |
 | Periwinkle Jewellery | `periwinkle-jewellery-india-hasn-t-seen-yet` | Manual | | 44 |
 | Periwinkle Miniatures | `periwinkle-miniatures` | Manual | Add new miniatures by hand | 27 |
 | Periwinkle Couture | `periwinkle-couture` | Manual | | 11 |
