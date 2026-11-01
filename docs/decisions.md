@@ -302,3 +302,36 @@ bands.
 1. Add the countries to a market (Settings → Markets).
 2. Create a zone with rates in Settings → Shipping and delivery.
 3. Update the shipping policy in the same change.
+
+### 19. Shopify's SKU field is the product register, fed by an intake form
+
+1 November 2026
+
+**Decision:**
+- The unique ID for each piece lives in its Shopify **SKU** field. No
+  separate notebook or hand-kept sheet duplicates it.
+- New products come in through a Google Form (one per piece) that feeds a
+  Google Sheet. The sheet assigns the next SKU per category, and Sagar lists
+  products from it. See [adding-products.md](adding-products.md).
+- Target SKU format: `PBS-<CODE>-<NNN>`, with one code per category. This is
+  confirmed once the client answers the questions in
+  [sku-audit.md](sku-audit.md).
+
+**Why:**
+- The SKU already prints on packing slips and Shiprocket labels, drives admin
+  search and groups inventory reports.
+- A hand-kept list of IDs and links goes stale as products are renamed,
+  duplicated or moved, and 338 URLs changed in October alone.
+- The form also captures facts the photos can't show (fabric, length, blouse
+  piece, quantity, weight), whose absence caused much of the October
+  clean-up.
+
+**Rejected:**
+- *A Google Sheet of ID and product link, maintained by hand:* it's a second
+  copy that drifts.
+- *Carrying on with the notebook:* that's how 48 SKUs ended up shared by
+  different pieces.
+
+**How to apply:** Only the intake sheet hands out numbers. If a list is
+needed, generate it from Shopify (an export or a sync app) rather than
+typing it.
