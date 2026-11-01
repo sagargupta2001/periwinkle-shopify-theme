@@ -15,34 +15,40 @@ needed again.
 
 ## The flow
 
-| Step | Who | Where | Status tag after |
+Run these with the `/add-products` skill
+([`.claude/skills/add-products/SKILL.md`](../.claude/skills/add-products/SKILL.md)).
+On its own it shows the status board; the steps marked **Claude** below are
+its `details`, `sku` and `live` steps.
+
+| Step | Who | Where | Tags after |
 |---|---|---|---|
-| 1. Post the piece's photos in the shared album (one album per category; dupattas first) | Client | Album | — |
-| 2. Create a **draft** product in the Shopify iPhone app. Add the album photo straight from the photo picker, which shows shared albums, so nothing is saved to the laptop. Use a placeholder title such as "Album dupatta 12". | Sagar | Shopify app | `wf-needs-details` |
-| 3. Fill in title, description, product type, collections, tags, weight and inventory from the photo, following the checklist below. Claude can do this step from the draft's photos. | Sagar / Claude | Shopify | `wf-needs-sku` |
-| 4. Comment the draft title and a short summary on the photo in the album | Sagar | Album | — |
-| 5. Reply with the **SKU and price** | Client | Album | — |
-| 6. Check the SKU hasn't been used before (see below), then set the SKU and price | Sagar / Claude | Shopify | `wf-needs-photos` |
-| 7. Make 2–3 refined 4:5 shots in Gemini and upload them to the product from the phone. Remove the raw album photo. | Sagar | Shopify app | — |
-| 8. Remove the `wf-` tag, set the product **Active**, and comment "Listed · SKU · price · link" on the album photo | Sagar | Shopify + album | none |
-| 9. Print the SKU label **from Shopify**, never from the comment, and attach it to the piece | Client | Retail Barcode Labels app | — |
+| 1. Post the piece's photos in the shared album | Client | Album | — |
+| 2. Create a **draft** in the Shopify iPhone app. Title `Album dupatta N` (next number), photo from the shared album in the photo picker, tag `wf-needs-details`. Nothing is saved to the laptop. | Sagar | Shopify app | `wf-needs-details` |
+| 3. Comment **"Draft N"** on that photo in the album | Sagar | Album | — |
+| 4. `/add-products details`: title, description, type, handle, collection and stock settings from the photo. Sagar checks the list of new titles. | Claude | Shopify | `wf-needs-sku`, `album-N` |
+| 5. Ask for SKU and price under the "Draft N" comment | Sagar | Album | — |
+| 6. Reply under the same comment: `PBS-DUP-001, ₹2,850` (and quantity if more than one) | Client | Album | — |
+| 7. `/add-products sku` with a screenshot of the thread, or lines like `Draft 12 = PBS-DUP-001, ₹2,850`. Claude checks each SKU against the whole store, then sets SKU, price, quantity and `gift`. | Sagar → Claude | Chat → Shopify | `wf-needs-photos` |
+| 8. Make 2–3 shots at 4:5 in Gemini, add them to the product in the Shopify app, and delete the raw album photo | Sagar | Gemini, Shopify app | — |
+| 9. `/add-products live Draft N`: checklist, then Active, with the link | Claude | Shopify | none |
+| 10. Comment `Listed · SKU · price · link` on the album photo | Sagar | Album | — |
+| 11. Print the SKU label **from Shopify**, never from the comment | Client | Retail Barcode Labels app | — |
+
+Sagar only ever types one tag (`wf-needs-details`, at step 2). Claude moves
+the rest whenever a step is handed over. If you do a step without Claude,
+change the tag in the app at the same time.
 
 ### Status board
 
-In Shopify admin → Products, save one view per tag (`wf-needs-details`,
-`wf-needs-sku`, `wf-needs-photos`). Each view is a to-do list. A product with
-no `wf-` tag that is Active is done.
+- **Shopify:** admin → Products has saved views "1 · Needs details",
+  "2 · Needs SKU" and "3 · Needs photos". An Active product with no `wf-` tag
+  is done. `/add-products` shows the same board and flags tags that don't
+  match the product.
+- **Album:** no comment means not started, "Draft N" means in progress, and
+  "Listed" means done.
 
-### Working with Claude
-
-To have Claude draft products, say which tag to work from. For example:
-"draft the products tagged `wf-needs-details`". Claude reads each draft's
-photos from Shopify, fills in the details, and moves the tag to
-`wf-needs-sku`. It also gives you a short summary to paste into the album.
-
-When the client replies, paste her SKU and price lines, such as
-"Album dupatta 12 = PBS-DUP-001, ₹2,850". Claude checks each SKU against the
-whole store before setting it.
+`album-N` keeps the link between the product and its "Draft N" comment after
+the placeholder title is replaced. It's removed when the product goes live.
 
 ## SKUs
 
@@ -77,7 +83,7 @@ Each line points to the decision behind it in [decisions.md](decisions.md).
 - **Tags:**
   - `gift` for gift-worthy pieces at ₹5,000 or less (decisions 1–2).
   - Material tags for miniatures.
-  - The current `wf-` status tag.
+  - The current `wf-` status tag and `album-N` until the product is live.
 - **Inventory:**
   - Enter the quantity.
   - Keep *Track quantity* on.
