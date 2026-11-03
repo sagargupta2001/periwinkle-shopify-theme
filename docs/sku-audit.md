@@ -180,11 +180,11 @@ types.
    - **Needs the client:** decide which piece keeps each of the 48 shared
      numbers (the other gets a new number), confirm the IDs for the 68 missing
      ones, and confirm the SKZ-1850 outlier and the price-in-SKU case.
-   - **New numbers continue from the highest number in each category.** That
-     number goes into the intake form's "SKU counters" tab.
-6. **From then on:** new products come in through the intake form, which
-   assigns the next number automatically. See
-   [adding-products.md](adding-products.md).
+   - **New numbers continue from the highest number in each category.** The
+     client's notebook continues from that number.
+6. **From then on:** new products come in through the
+   [New Product](product-operations/new-product.md) shortcut. The client enters
+   the next number, and duplicates in the register are rejected.
 
 The automatic part should only run after the client has answered the
 questions below, because her answers may change the code list or the meaning
@@ -196,8 +196,7 @@ of a number.
   readymade, `MIN` = miniatures, `GIFT` = gifts, `SKZ` = salwar kameez.
 - **USS and SKR** should both become SKZ. SKR is a misspelling.
 - **The number is the next free number in her notebook.** It isn't a supplier
-  or bill reference, so the intake form's per-category counter can take over
-  from the notebook.
+  or bill reference.
 
 Still open: questions 1 and 4–7 below, and the codes not yet explained (DUP,
 EPJ, JEW, CMS, and "SKU" used as a code).
@@ -209,7 +208,7 @@ New questions from the answers:
     things like miniatures that are also in the Gifting menu? Gift-worthiness
     is currently a tag, not a category.
   - Which products count as readymade (RED), as opposed to SKZ suit sets?
-    Once confirmed, both codes get added to the intake form.
+    Once confirmed, both codes get added to [sku-codes.md](sku-codes.md).
 
 ## Questions for the client
 

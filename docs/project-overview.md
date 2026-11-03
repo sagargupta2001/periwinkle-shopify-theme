@@ -78,6 +78,7 @@ Notes:
 | `config/settings_data.json` | Current theme settings: colour schemes, fonts, radii, cart type… |
 | `locales/` | Translations. Only `en.default*.json` has been updated for custom settings. |
 | `docs/` | These docs |
+| `product-ops/` | Scripts that build the Apple Shortcuts. See [product-operations/](product-operations/README.md). Not part of the theme. |
 
 ## Page composition (as of 2026-09)
 

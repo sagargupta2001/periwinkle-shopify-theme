@@ -4,7 +4,7 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 2 November 2026.
+Last updated: 4 November 2026.
 
 ## Open items
 
@@ -26,14 +26,14 @@ visible, then delete it. Add new items with an owner and the date added.
       1. The client answers the questions.
       2. Sagar runs the automatic clean-up.
       3. The client resolves the shared and missing IDs.
-      4. Sagar sets the intake form's SKU counters.
+      4. The client continues numbering from the highest in each category.
 
       Owner: Sagar and client. Added 1 Nov.
-- [ ] **Rebuild the dupattas from the shared album.** All 60 old dupatta
+- [ ] **Rebuild the dupattas.** All 60 old dupatta
       products were set to Draft with their SKUs cleared on 1 Nov, and the
       record is in
       [archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv).
-      New dupattas follow [adding-products.md](adding-products.md), with SKUs
+      New dupattas go through [the shortcuts](product-operations/README.md), with SKUs
       restarting at `PBS-DUP-001`. Until they're rebuilt:
       - *Periwinkle Dupattas*, the **Dupattas & Stoles** menu link and the
         home page's "Wear the Craft" dupatta tile all show nothing;
@@ -171,8 +171,28 @@ visible, then delete it. Add new items with an owner and the date added.
       2. Repoint products to it.
       3. Delete the leftovers.
 
-      Do it when the client has finished adding products. `/add-products`
-      already uses plain names only. Owner: Sagar. Added 2 Nov.
+      Do it when the client has finished adding products. The
+      [listing checklist](product-operations/listing-checklist.md) asks for plain
+      names only. Owner: Sagar. Added 2 Nov.
+
+### Product operations
+
+- [ ] **Hand the shortcuts over to the client.** Only tested on Sagar's iPhone so
+      far. Share the folder, and test the client's Apple Account first, which is the
+      main risk. See
+      [Installation](product-operations/installation.md#3-handing-over-to-the-client).
+      Owner: Sagar. Added 4 Nov.
+- [ ] **Delete the test post `PBS-TEST-002` from the Shared Album.** Owner: Sagar.
+      Added 4 Nov.
+- [ ] **Clear old intake leftovers in Shopify.** Check for `wf-needs-*` and `album-*`
+      tags on drafts and the saved admin views "1 · Needs details", "2 · Needs SKU"
+      and "3 · Needs photos". Owner: Sagar. Added 4 Nov.
+- [ ] **Decide on photo lookup by SKU.** Photos search doesn't find captions in the
+      Shared Album. Test whether an iCloud Shared Photo Library would. Owner: Sagar.
+      Added 4 Nov.
+- [ ] **Decide whether to archive existing products** and recreate them through the
+      shortcuts. They aren't in the register, so Update Stock can't find them. Owner:
+      Sagar. Added 4 Nov.
 
 ### Launch day
 
