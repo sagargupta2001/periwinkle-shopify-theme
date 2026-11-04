@@ -149,20 +149,9 @@ types.
    no separate list is kept by hand.
 2. **One format: `PBS-<CODE>-<NNN>`.** Uppercase, hyphens, no spaces, and at
    least three digits (`PBS-SAR-092`).
-3. **One code per category.** Codes marked *confirmed* come from the client
-   (1 Nov). The rest are proposals still to be confirmed.
-
-   | Code | Category | Status |
-   |---|---|---|
-   | SAR | Saree | Confirmed |
-   | SKZ | Salwar kameez (suit sets). Replaces USS, and SKR, which is a misspelling. | Confirmed |
-   | RED | Readymade | Confirmed (no products use it yet) |
-   | MIN | Miniatures | Confirmed |
-   | GIFT | Gifts | Confirmed (no products use it yet) |
-   | DUP | Dupatta / stole | Proposed |
-   | EPJ | Jewellery (would absorb JEW) | Proposed |
-   | CMS | Home decor / ceramics | Proposed |
-   | BAG | Bag / accessory | Proposed |
+3. **One code per category.** The client confirmed the list on 4 Nov: SAR,
+   SKZ, MIN, RED, DUP, HOM and JEW. See [sku-codes.md](sku-codes.md), which also
+   covers the old codes not on it. SKZ replaces USS, and SKR, which is a misspelling.
 
    `PBS` stands for Periwinkle by Sherry.
 
@@ -198,17 +187,16 @@ of a number.
 - **The number is the next free number in her notebook.** It isn't a supplier
   or bill reference.
 
-Still open: questions 1 and 4–7 below, and the codes not yet explained (DUP,
-EPJ, JEW, CMS, and "SKU" used as a code).
+## Answers from the client (4 November)
 
-New questions from the answers:
+- **The code list:** SAR, SKZ, MIN, RED, DUP, HOM and JEW, now in
+  [sku-codes.md](sku-codes.md). GIFT, EPJ and CMS aren't on it.
 
-- **GIFT and RED:**
-  - Is GIFT a category of its own (pieces sold only as gifts), or a code for
-    things like miniatures that are also in the Gifting menu? Gift-worthiness
-    is currently a tag, not a category.
-  - Which products count as readymade (RED), as opposed to SKZ suit sets?
-    Once confirmed, both codes get added to [sku-codes.md](sku-codes.md).
+Still open: questions 1 and 4–7 below, and these from the answers:
+
+- **EPJ and CMS:** do the 32 EPJ products become JEW, and the 10 CMS products
+  become HOM?
+- **RED:** which products count as readymade, as opposed to SKZ suit sets?
 
 ## Questions for the client
 

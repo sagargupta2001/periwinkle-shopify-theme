@@ -41,8 +41,11 @@ visible, then delete it. Add new items with an owner and the date added.
 
       Delete the old drafts once every dupatta is rebuilt. Owner: Sagar.
       Added 1 Nov.
-- [ ] **Get the full SKU code list from the client** and record it in
-      [sku-codes.md](sku-codes.md). Owner: Sagar. Added 1 Nov.
+- [x] **Get the full SKU code list from the client.** Recorded in
+      [sku-codes.md](sku-codes.md) (done 4 Nov). Owner: Sagar. Added 1 Nov.
+- [ ] **Confirm what happens to the old EPJ and CMS codes.** They aren't on the
+      client's list. EPJ (32 products) probably becomes JEW, and CMS (10) probably
+      becomes HOM. Owner: Sagar and client. Added 4 Nov.
 - [ ] **Fix "Midnight Navy Hand-Painted Pattachitra Saree".** It's a saree
       (`PBS/SAR/069`) with the product type **Dupatta**, so it was left out
       of the dupatta rebuild. Set the type to Saree and add it to *Periwinkle
