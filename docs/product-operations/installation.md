@@ -98,7 +98,9 @@ made on the client's phone. The logic is identical, and only that reference diff
 python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/client --role client
 ```
 
-5. AirDrop the three signed files to the client, who taps each and then **Add Shortcut**.
+5. AirDrop the three signed files to the client, who taps each and then **Add Shortcut**. If
+   you're not together, copy them into the shared folder, and have the client open them from
+   Files. Remove them from the folder afterwards. This route hasn't been tested.
 6. On the client's phone, run New Product with a test SKU, and check the record reaches
    your phone. Then run Update Stock and Fix Product.
 

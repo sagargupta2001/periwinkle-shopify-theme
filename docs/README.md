@@ -24,7 +24,8 @@ load, so read only the ones your task needs.
 | Working on the Our Story page | [docs/our-story-page.md](our-story-page.md) | Content model, layout, animation |
 | Editing the home page or any template JSON | [docs/customizations.md](customizations.md), [docs/decisions.md](decisions.md) | Decisions 3–4; check collection handles in [docs/store-status.md](store-status.md#collections) |
 | Changing collections, menus, tags or gifting | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Collections and Menus tables; decisions 1–8 |
-| Adding a new product, or handling a stock change | [docs/product-operations/README.md](product-operations/README.md) | The shortcuts, the daily routine, and the [listing checklist](product-operations/listing-checklist.md) |
+| Adding a new product, or handling a stock change | [docs/product-operations/README.md](product-operations/README.md) | The shortcuts, the daily routine, the [listing checklist](product-operations/listing-checklist.md), and the `/add-products` skill |
+| Improving a shortcut, or looking for known bugs | [docs/product-operations/improvements.md](product-operations/improvements.md) | The list on hold until the client's phone is tested |
 | Changing or recreating a shortcut | [docs/product-operations/building-and-signing.md](product-operations/building-and-signing.md), then that shortcut's page | The scripts, and the iPhone behaviours they rely on; decision 22 |
 | Listing, duplicating or renaming products | [docs/decisions.md](decisions.md) | Decisions 9–11: titles, handles, brand names |
 | Working with SKUs or product IDs | [docs/sku-codes.md](sku-codes.md), [docs/sku-audit.md](sku-audit.md) | The code list, then the inconsistencies and the target format; decisions 19, 21, 22 and 23 |
@@ -51,6 +52,8 @@ load, so read only the ones your task needs.
   why they were made.
 - [docs/product-operations/](product-operations/README.md): the Apple Shortcuts
   system for new products and stock changes, with a page for each shortcut.
+- [docs/product-operations/improvements.md](product-operations/improvements.md): shortcut
+  fixes and ideas to pick up later.
 - [docs/sku-audit.md](sku-audit.md): SKU inconsistencies, the proposed fix,
   and the questions for the client.
 - [docs/sku-codes.md](sku-codes.md): what each SKU category code means and

@@ -409,6 +409,8 @@ not in Shopify. Delete the old drafts once every dupatta is rebuilt.
 
 ### 22. New products and stock changes run through Apple Shortcuts
 
+**Partly superseded by #24**, which brings back `/add-products` without tags. The rest stands.
+
 4 November 2026. This replaces the album-comment workflow and `wf-` tags in decision 21,
 and the intake form in decision 19.
 
@@ -478,3 +480,28 @@ starting number before using it if it has older products.
 
 **How to apply:** Only change a suggested number for a reason, because numbers skipped this
 way aren't suggested again.
+
+### 24. `/add-products` lists what the register holds, and never tracks status
+
+4 November 2026. This reverses the part of decision 22 that deleted the skill.
+
+**Decision:**
+- `/add-products` is back, rewritten for the shortcuts. It creates the Shopify draft and takes
+  it live. The operator still moves the status with the shortcuts.
+- The register owns the SKU, prices, and publication and stock status. Shopify owns the listing
+  content, photos and quantity.
+- The skill reads the register from the iCloud folder on the Mac, and never writes to it. It
+  doesn't use `wf-` or `album-` tags.
+- It sets Shopify's cost per item from the register's cost price, as existing products have.
+
+**Why:** Decision 22 removed the skill because two records of the same status would drift. That
+came from the tags, not from having a skill. Without it, every listing step is done by hand or
+by prompting from scratch, including the SKU clash check.
+
+**Rejected:**
+- *Having the skill update the register:* those changes would skip the activity log, and the
+  shortcuts are the only writers the design allows for.
+- *Having the skill change stock:* stock changes stay with Process Stock Requests for now.
+
+**How to apply:** Run the shortcut first, then the skill. See
+[product-operations/README.md](product-operations/README.md#daily-routine).

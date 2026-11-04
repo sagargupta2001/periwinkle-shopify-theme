@@ -31,8 +31,8 @@ flowchart TD
 ```
 
 Find the photos in the album using the submitted date, because Photos can't
-search by SKU. Then list the piece using the
-[listing checklist](listing-checklist.md).
+search by SKU. Then list the piece with `/add-products list <SKU>` in Claude Code, which
+follows the [listing checklist](listing-checklist.md).
 
 ## Add or fix a Shopify link
 
