@@ -47,6 +47,13 @@ python3 -m unittest test_build
 
 Using a new action? Test it on an iPhone, then add it to `TESTED_ACTIONS` in `test_build.py`.
 
+## Adding an SKU category
+
+1. Add it to `CATEGORIES` in `build.py`, with a three-capital code.
+2. Add it to [sku-codes.md](../sku-codes.md).
+3. Rebuild and reinstall the client's shortcuts. A category missing from `sku-start.json`
+   starts at `001`, so that file only needs changing if numbers are already in use.
+
 ## Signing
 
 `build.py` calls Apple's own tool:
@@ -90,6 +97,7 @@ the ones it can.
 | Unbound parameters can silently pick up odd values. Text fields such as Trim and Match need a text token, not a plain variable. | `text()` is used for these. |
 | Opening a sheet: Mail opened when the file was saved as `.json` with no `WFApp` setting. A real `.csv` with `WFApp` set opens Numbers. Which of the two mattered wasn't isolated. | Register does both. |
 | Numbers changes `0012` to `12`, even in quotes, but keeps `="0012"`. | Register writes SKUs that way. |
+| The number keypad in Ask for Input shows no default answer, and drops leading zeros as you type. The text keyboard does neither. | New Product uses the text keyboard for its suggested number. Update Stock and Fix Product use the keypad and pad the number. |
 
 Two earlier explanations turned out to be wrong, in case they come up again: the delete
 action, and running from a menu, weren't the causes of the ToolDialogHandler error. Delete

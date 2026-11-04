@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Creates the record folders and settings file. Safe to run again: records and an existing settings file are left alone."""
+"""Creates the record folders and starting files. Safe to run again: records and existing starting files are left alone."""
 import json
 import os
 import sys
+
+from build import CATEGORIES
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
     "~/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations")
@@ -26,8 +28,11 @@ for folder in FOLDERS:
     os.makedirs(path, exist_ok=True)
     with open(os.path.join(path, "_keep.txt"), "w") as f:
         f.write("Keeps this folder from being empty. Please don't delete it.\n")
-settings = os.path.join(ROOT, "settings.json")
-if not os.path.exists(settings):
-    with open(settings, "w") as f:
-        json.dump(SETTINGS, f, indent=2)
+# Each category's number already in use outside the register. New Product suggests the next one.
+INITIAL_FILES = {"settings.json": SETTINGS, "sku-start.json": {code: 0 for _, code in CATEGORIES}}
+for name, content in INITIAL_FILES.items():
+    path = os.path.join(ROOT, name)
+    if not os.path.exists(path):
+        with open(path, "w") as f:
+            json.dump(content, f, indent=2)
 print("Ready:", ROOT)

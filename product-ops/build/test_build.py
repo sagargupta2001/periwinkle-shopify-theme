@@ -3,6 +3,7 @@
 
     python3 -m unittest test_build
 """
+import re
 import unittest
 
 import build
@@ -13,7 +14,7 @@ TESTED_ACTIONS = {
     "alert", "appendvariable", "ask", "calculateexpression", "choosefromlist", "choosefrommenu", "conditional", "count",
     "date", "detect.dictionary", "documentpicker.open", "documentpicker.save", "exit", "file", "file.delete",
     "file.getfoldercontents", "file.move", "format.date", "gettext", "getvalueforkey", "notification", "openin",
-    "properties.files", "repeat.each", "selectphoto", "setclipboard", "setitemname", "setvariable", "share",
+    "properties.files", "repeat.each", "selectphoto", "setclipboard", "setitemname", "setvariable", "share", "statistics",
     "text.changecase", "text.combine", "text.match", "text.replace", "text.trimwhitespace",
 }
 READS_FILE = {"detect.dictionary", "getvalueforkey"}
@@ -103,6 +104,26 @@ class ShortcutChecks(unittest.TestCase):
         for s in self.shortcuts:
             if s.name != "Periwinkle – Register":
                 self.assertNotIn("file.delete", [action_name(a) for a in s.actions], s.name)
+
+
+class SkuRules(unittest.TestCase):
+    def pad(self, number):
+        return re.sub(build.PAD_FIND, build.PAD_REPLACE.replace("$", "\\"), "00" + number)  # Python writes $1 as \1
+
+    def test_numbers_pad_to_at_least_three_digits(self):
+        for number, padded in [("1", "001"), ("13", "013"), ("001", "001"), ("0004", "004"), ("999", "999"), ("1000", "1000")]:
+            self.assertEqual(self.pad(number), padded)
+
+    def test_only_positive_whole_numbers_are_accepted(self):
+        for good in ["1", "001", "1000"]:
+            self.assertRegex(good, build.NUMBER_RULE)
+        for bad in ["", "0", "000", "1.5", "-1", "A1", "12 3"]:
+            self.assertNotRegex(bad, build.NUMBER_RULE)
+
+    def test_category_codes_are_three_capitals(self):
+        # ask_category reads the code back out of the menu label
+        for _, code in build.CATEGORIES:
+            self.assertRegex(code, r"^[A-Z]{3}$")
 
 
 if __name__ == "__main__":

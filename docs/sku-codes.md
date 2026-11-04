@@ -1,20 +1,24 @@
 # SKU codes
 
 The reference list of category codes used in SKUs (`PBS-<CODE>-<NNN>`).
-`PBS` stands for **Periwinkle by Sherry**. The client assigns each number:
-the next free number in her notebook for that category.
+`PBS` stands for **Periwinkle by Sherry**. The client picks the category in the
+[New Product](product-operations/new-product.md) shortcut, which suggests the next
+number. The client's notebook is no longer used (decision 23).
+
+Numbers have at least three digits and keep growing past that: `PBS-DUP-001`,
+`PBS-DUP-999`, `PBS-DUP-1000`.
 
 The client sent this list on 4 November 2026.
 
 | Code | Full form | Numbering |
 |---|---|---|
-| SAR | Saree | Continues the existing sequence |
-| SKZ | Salwar Kameez | Continues. USS and SKR (a misspelling) are being folded in; see [sku-audit.md](sku-audit.md). |
-| MIN | Miniature | Continues |
+| SAR | Saree | Continues the existing sequence. Set its starting number before first use. |
+| SKZ | Salwar Kameez | Continues. USS and SKR (a misspelling) are being folded in; see [sku-audit.md](sku-audit.md). Set its starting number before first use. |
+| MIN | Miniature | Continues. Set its starting number before first use. |
 | RED | Readymades | Not used yet |
 | DUP | Dupatta | **Restarted at 001 in November 2026.** The old numbers are retired; see [archive/dupattas-before-rebuild-2026-11.csv](archive/dupattas-before-rebuild-2026-11.csv). |
 | HOM | Home Decor | New code, with no existing products |
-| JEW | Jewellery | 9 existing products use it. Where numbering continues from is to confirm. |
+| JEW | Jewellery | 9 existing products use it. Where numbering continues from is to confirm, before first use. |
 
 ## Codes not on the client's list
 

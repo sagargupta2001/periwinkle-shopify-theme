@@ -26,6 +26,20 @@ macOS 27.0.1 and synced through iCloud. Records were checked by reading the file
 | Share to the real Shared Album | Posted, with the caption shown as a comment |
 | 500 dummy records | Listing about 5 s, reading about 1 min 50 s |
 
+## Passed on iPhone: category menu and numbering
+
+Tested on 4 November 2026.
+
+| Test | Result |
+|---|---|
+| New Product suggests the next number | `002` after `001`, with `PBS-DUP-002` on the price screens |
+| Each category counts separately | Saree suggested `001` while Dupatta was at `002` |
+| Starting numbers | A fake file with `SAR: 408` suggested `409` |
+| Changing the number to an existing one | `1` was read as `PBS-DUP-001` and rejected as a duplicate |
+| Entering `0` | Rejected |
+| Update Stock and Fix Product by category and number | Found `PBS-DUP-001` from `1`; `99` wasn't found |
+| Cancelling the latest submission | Its number was suggested again |
+
 ## Not tested yet
 
 | Test | Why it matters |

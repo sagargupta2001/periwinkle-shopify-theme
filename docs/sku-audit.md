@@ -169,11 +169,11 @@ types.
    - **Needs the client:** decide which piece keeps each of the 48 shared
      numbers (the other gets a new number), confirm the IDs for the 68 missing
      ones, and confirm the SKZ-1850 outlier and the price-in-SKU case.
-   - **New numbers continue from the highest number in each category.** The
-     client's notebook continues from that number.
+   - **New numbers continue from the highest number in each category.** That
+     number becomes the category's starting number in `sku-start.json`.
 6. **From then on:** new products come in through the
-   [New Product](product-operations/new-product.md) shortcut. The client enters
-   the next number, and duplicates in the register are rejected.
+   [New Product](product-operations/new-product.md) shortcut, which suggests the
+   next number, and duplicates in the register are rejected.
 
 The automatic part should only run after the client has answered the
 questions below, because her answers may change the code list or the meaning
