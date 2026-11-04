@@ -26,7 +26,7 @@ visible, then delete it. Add new items with an owner and the date added.
       1. The client answers the questions.
       2. Sagar runs the automatic clean-up.
       3. The client resolves the shared and missing IDs.
-      4. The client continues numbering from the highest in each category.
+      4. Set each category's starting number in `sku-start.json`.
 
       Owner: Sagar and client. Added 1 Nov.
 - [ ] **Rebuild the dupattas.** All 60 old dupatta
@@ -185,6 +185,12 @@ visible, then delete it. Add new items with an owner and the date added.
       main risk. See
       [Installation](product-operations/installation.md#3-handing-over-to-the-client).
       Owner: Sagar. Added 4 Nov.
+- [ ] **Set SKU starting numbers before using another category.** Only dupattas are in
+      use, and every category starts at `001`. Sarees, suits, miniatures and jewellery have
+      older SKUs in Shopify, so `001` could match one of those until they're archived or
+      a starting number is set. See
+      [Installation](product-operations/installation.md#initial-files). Owner: Sagar.
+      Added 4 Nov.
 - [ ] **Delete the test post `PBS-TEST-002` from the Shared Album.** Owner: Sagar.
       Added 4 Nov.
 - [ ] **Clear old intake leftovers in Shopify.** Check for `wf-needs-*` and `album-*`

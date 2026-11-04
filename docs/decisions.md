@@ -449,3 +449,32 @@ and the intake form in decision 19.
 
 **How to apply:** Change shortcuts through the scripts, not in the app. See
 [building-and-signing.md](product-operations/building-and-signing.md).
+
+### 23. The shortcuts assign SKU numbers, replacing the notebook
+
+4 November 2026.
+
+**Decision:**
+- In New Product, the client picks a category from a menu, and the shortcut suggests the
+  next number, which can be changed. It builds `PBS-<CODE>-<NNN>`.
+- The next number comes from the highest in `products/` or the category's starting number
+  in `sku-start.json`, plus 1.
+- Update Stock and Fix Product use the same menu, with the client entering the number.
+- The client's notebook is no longer used for numbers.
+
+**Why:** Most of the problems in [sku-audit.md](sku-audit.md) came from typing SKUs by
+hand: mixed formats, the letter O for zero, and misspelt codes. The menu makes those
+impossible, and the suggestion removes the need to keep a separate count.
+
+**Rejected:**
+- *A counter file:* it could drift from the records, and it would be one more file for two
+  phones to overwrite.
+- *Four digits, like `0001`:* three digits already grow to `1000` without breaking, and
+  this matches the agreed format.
+- *`SAR-003` without `PBS`:* decision 19's format stands, and the shortcut adds it.
+
+**Known effect:** the register can't see SKUs on older Shopify products. Set a category's
+starting number before using it if it has older products.
+
+**How to apply:** Only change a suggested number for a reason, because numbers skipped this
+way aren't suggested again.

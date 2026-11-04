@@ -67,7 +67,8 @@ pieces are one of a kind, so that's usually 1.
 ## Daily routine
 
 **Client**
-1. New piece: run New Product, then paste the caption and post to the album.
+1. New piece: run New Product, pick the category, and tap through the suggested number.
+   Then paste the caption and post to the album.
 2. Sold or back: run Update Stock.
 3. Typed something wrong: run Fix Product straight away. If work has started,
    message the operator.
@@ -91,6 +92,7 @@ created by hand at the top level of iCloud Drive. It can't go inside the
 ```text
 Periwinkle Product Operations/
   settings.json                     Valid statuses, currency, time zone
+  sku-start.json                    Each category's starting number
   products/<sku>.json               What was submitted. Used to spot duplicates
   products/_cancelled/<time>/       Cancelled submissions
   register/<STATUS>/<sku>.json      A product's current row, in one status folder
@@ -134,10 +136,16 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
 
 ## SKUs
 
-- The format is in [sku-codes.md](../sku-codes.md): `PBS-<CODE>-<NNN>`.
-- The shortcuts accept letters, numbers, hyphens, dots and underscores, and
-  must start with a letter or number. A slash would break the file path, so
-  old SKUs like `PBS/SAR/069` are rejected.
+- The format and codes are in [sku-codes.md](../sku-codes.md): `PBS-<CODE>-<NNN>`.
+- The client picks a category and a number, and the shortcut builds the SKU. New
+  Product [suggests the next number](new-product.md#how-the-number-is-chosen). This
+  replaces the client's notebook.
+- **Before using a category that has older products,** set its starting number. See
+  [Installation](installation.md#initial-files). Otherwise the register starts at `001`,
+  which may match an SKU already in Shopify.
+- Where the operator types a full SKU, the shortcut accepts letters, numbers, hyphens,
+  dots and underscores. A slash would break the file path, so old SKUs like
+  `PBS/SAR/069` are rejected.
 - Duplicates are only checked against this register, not against SKUs already
   in Shopify. If an old product is still active with the same SKU, Shopify
   won't warn you here.

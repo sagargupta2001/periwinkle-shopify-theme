@@ -27,7 +27,7 @@ load, so read only the ones your task needs.
 | Adding a new product, or handling a stock change | [docs/product-operations/README.md](product-operations/README.md) | The shortcuts, the daily routine, and the [listing checklist](product-operations/listing-checklist.md) |
 | Changing or recreating a shortcut | [docs/product-operations/building-and-signing.md](product-operations/building-and-signing.md), then that shortcut's page | The scripts, and the iPhone behaviours they rely on; decision 22 |
 | Listing, duplicating or renaming products | [docs/decisions.md](decisions.md) | Decisions 9–11: titles, handles, brand names |
-| Working with SKUs or product IDs | [docs/sku-codes.md](sku-codes.md), [docs/sku-audit.md](sku-audit.md) | The code list, then the inconsistencies and the target format; decisions 19, 21 and 22 |
+| Working with SKUs or product IDs | [docs/sku-codes.md](sku-codes.md), [docs/sku-audit.md](sku-audit.md) | The code list, then the inconsistencies and the target format; decisions 19, 21, 22 and 23 |
 | Changing shipping, discounts, weights or payments | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Shipping and Discounts sections; decisions 12–13 |
 | Changing contact details or policies | [docs/store-status.md](store-status.md#contact-details), [docs/decisions.md](decisions.md) | The canonical details; decision 14 |
 | Preparing for launch or running the test order | [docs/store-status.md](store-status.md) | Open items, Test order, Launch day |

@@ -61,6 +61,9 @@ second step through Publish Products.
 
 ## Move a product back
 
+This and the next option ask for the full SKU, such as `PBS-DUP-004`. Older SKUs with
+other codes can be entered the same way.
+
 ```mermaid
 flowchart TD
     A[Enter SKU] --> B{"Found?"}

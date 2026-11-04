@@ -22,7 +22,11 @@ from shortcutlib import HAS_VALUE, IS, IS_NOT, NO_VALUE, REPEAT_ITEM, Shortcut, 
 
 STATUSES = ["NEW", "IN_PROGRESS", "READY_TO_PUBLISH", "LIVE"]
 REQUEST_STATUSES = ["PENDING", "COMPLETED", "REJECTED"]
+CATEGORIES = [("Saree", "SAR"), ("Salwar Kameez", "SKZ"), ("Miniature", "MIN"), ("Readymades", "RED"),
+              ("Dupatta", "DUP"), ("Home Decor", "HOM"), ("Jewellery", "JEW")]  # See docs/sku-codes.md
 SKU_RULE = r"^[A-Za-z0-9][A-Za-z0-9._-]*$"
+NUMBER_RULE = r"^0*[1-9][0-9]*$"
+PAD_FIND, PAD_REPLACE = r"^0*([0-9]{3,})$", "$1"  # Applied to "00" + number: 4 -> 004, 1000 -> 1000
 FILE_RULE = r"^[a-z0-9][a-z0-9._-]*$"
 PRICE_RULE = r"^[0-9]+(\.[0-9]+)?$"
 URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.myshopify\.com)"
@@ -30,7 +34,7 @@ URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.my
 ISO = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 ID = "yyyyMMddHHmmss"
 PURPLE, BLUE = 2071128575, 946986751  # client shortcuts, operator shortcuts
-BUILD = 8  # Shown in Work on Product's first menu, to confirm which version a phone has. Raise on each release.
+BUILD = 9  # Shown in Work on Product's first menu, to confirm which version a phone has. Raise on each release.
 
 
 class Store(Shortcut):
@@ -151,10 +155,12 @@ class Store(Shortcut):
     def stop(self):
         self.add("exit")
 
-    def ask(self, prompt, kind="Text"):
+    def ask(self, prompt, kind="Text", default=None, decimals=True):
         params = {"WFAskActionPrompt": prompt, "WFInputType": kind}
         if kind == "Number":
-            params.update(WFAskActionAllowsDecimalNumbers=True, WFAskActionAllowsNegativeNumbers=False)
+            params.update(WFAskActionAllowsDecimalNumbers=decimals, WFAskActionAllowsNegativeNumbers=False)
+        if default is not None:
+            params["WFAskActionDefaultAnswer"] = default
         return self.add("ask", output="Answer", **params)
 
     def ask_sku(self):
@@ -168,6 +174,57 @@ class Store(Shortcut):
         self.end_if(check)
         lower = self.add("text.changecase", output="SKU key", text=text(sku), WFCaseType="lowercase")
         return sku, lower
+
+    def ask_category(self):
+        """Returns the chosen category's code, and the same in lowercase."""
+        choice = self.pick("Which category?", [f"{name} ({code})" for name, code in CATEGORIES])
+        match = self.add("text.match", output="Code", text=text(choice), WFMatchTextPattern=r"[A-Z]{3}(?=\)$)", WFMatchTextCaseSensitive=True)
+        code = self.compose(match, output="Code")
+        return code, self.add("text.changecase", output="Code key", text=text(code), WFCaseType="lowercase")
+
+    def next_number(self, code, lower):
+        """The highest number used in a category, or its starting point in sku-start.json, plus 1, padded."""
+        names = self.add("properties.files", output="Name", WFInput=attachment(self.list_folder("products")), WFContentItemPropertyName="Name")
+        joined = self.add("text.combine", output="Names", text=attachment(names), WFTextSeparator="New Lines")
+        used = self.add("text.match", output="Numbers", text=text(joined), WFMatchTextPattern=text("(?m)(?<=^pbs-", lower, "-)[0-9]+"), WFMatchTextCaseSensitive=True)
+        self.add("appendvariable", WFVariableName="numbers", WFInput=attachment(used))
+        starts = self.add("detect.dictionary", output="Starts", WFInput=attachment(self.get("sku-start.json")))
+        start = self.add("getvalueforkey", output="Start", WFInput=attachment(starts), WFGetDictionaryValueType="Value", WFDictionaryKey=text(code))
+        check = self.if_(start, HAS_VALUE)
+        self.add("appendvariable", WFVariableName="numbers", WFInput=attachment(start))
+        self.else_(check)
+        self.add("appendvariable", WFVariableName="numbers", WFInput=attachment(self.literal("0")))
+        self.end_if(check)
+        highest = self.add("statistics", output="Highest", Input=attachment(named("numbers")), WFStatisticsOperation="Maximum")
+        following = self.add("calculateexpression", output="Next", Input=text(highest, "+1"))
+        return self.add("text.replace", output="Next number", WFInput=text("00", following), WFReplaceTextFind=PAD_FIND,
+                        WFReplaceTextReplace=PAD_REPLACE, WFReplaceTextRegularExpression=True, WFReplaceTextCaseSensitive=True)
+
+    def category_sku(self, code, lower, answer):
+        """Builds the SKU and its file key. The keypad drops leading zeros while typing, so numbers are padded here."""
+        digits = self.add("text.trimwhitespace", output="Number", WFInput=text(answer))
+        valid = self.add("text.match", output="Valid number", text=text(digits), WFMatchTextPattern=NUMBER_RULE, WFMatchTextCaseSensitive=True)
+        check = self.if_(valid, NO_VALUE)
+        self.alert("Please check the number", "Enter a whole number, 1 or more. Nothing has been saved. Please start again.")
+        self.stop()
+        self.end_if(check)
+        number = self.add("text.replace", output="Padded number", WFInput=text("00", digits), WFReplaceTextFind=PAD_FIND,
+                          WFReplaceTextReplace=PAD_REPLACE, WFReplaceTextRegularExpression=True, WFReplaceTextCaseSensitive=True)
+        return self.compose("PBS-", code, "-", number, output="SKU"), self.compose("pbs-", lower, "-", number, output="SKU key")
+
+    def ask_new_sku(self):
+        """Category menu, then the next free number filled in, which can be changed."""
+        code, lower = self.ask_category()
+        suggested = self.next_number(code, lower)
+        # Text, because iPhone's number keypad doesn't show a default answer.
+        answer = self.ask(text(code, " number"), default=text(suggested))
+        return self.category_sku(code, lower, answer)
+
+    def ask_existing_sku(self):
+        """Category menu, then the product's number."""
+        code, lower = self.ask_category()
+        answer = self.ask(text(code, " number"), kind="Number", decimals=False)
+        return self.category_sku(code, lower, answer)
 
     def ask_price(self, prompt):
         answer = self.ask(prompt, kind="Number")
@@ -212,7 +269,7 @@ def text_pair(cost, selling):
 
 def new_product(folder):
     s = Store("Periwinkle – New Product", folder, PURPLE)
-    sku, lower = s.ask_sku()
+    sku, lower = s.ask_new_sku()
     existing = s.lookup("products", lower, ".json")
     check = s.if_(existing, HAS_VALUE)
     record = s.add("detect.dictionary", output="Record", WFInput=attachment(existing))
@@ -221,8 +278,8 @@ def new_product(folder):
     s.stop()
     s.end_if(check)
 
-    cost = s.ask_price("Cost price in ₹")
-    selling = s.ask_price("Selling price in ₹")
+    cost = s.ask_price(text(sku, " cost price in ₹"))
+    selling = s.ask_price(text(sku, " selling price in ₹"))
     photos = s.add("selectphoto", output="Photos", WFSelectMultiplePhotos=True)
     count = s.add("count", output="Photo count", Input=attachment(photos), WFCountType="Items")
     check = s.if_(count, IS, number=0)
@@ -252,7 +309,7 @@ def new_product(folder):
 
 def update_stock(folder):
     s = Store("Periwinkle – Update Stock", folder, PURPLE)
-    sku, lower = s.ask_sku()
+    sku, lower = s.ask_existing_sku()
     product = s.lookup("products", lower, ".json")
     check = s.if_(product, NO_VALUE)
     s.alert("SKU not found", "We couldn't find this SKU. Please check the code.")
@@ -282,7 +339,7 @@ def update_stock(folder):
 
 def fix_product(folder):
     s = Store("Periwinkle – Fix Product", folder, PURPLE)
-    sku, lower = s.ask_sku()
+    sku, lower = s.ask_existing_sku()
     product = s.lookup("products", lower, ".json")
     check = s.if_(product, NO_VALUE)
     s.alert("SKU not found", "We couldn't find this SKU. Please check the code.")

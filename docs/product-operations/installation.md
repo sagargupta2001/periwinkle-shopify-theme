@@ -44,13 +44,18 @@ inside it, so a missing folder stops the shortcut.
 | `views/` | Tables for Numbers |
 | `_keep.txt` in **each folder above** | A one-line placeholder that keeps the folder from being empty, so iCloud always keeps it. Shortcuts skip it. |
 | `settings.json` | Valid statuses, default currency (INR) and time zone (Asia/Kolkata), for reference. No shortcut reads it today. |
+| `sku-start.json` | Each category's starting number, all 0 to begin with, so the first suggestion is `001`. New Product reads it. |
+
+**Setting a starting number:** if a category already has SKUs outside the register, set its
+number to the highest in use, on the Mac, for example `"SAR": 408`, and the next suggestion
+is `409`. A category missing from the file counts as 0.
 
 Everything else is created as the shortcuts run: product and request records, log entries,
 timestamped folders under `_replaced`, `_cancelled` and `_handled`, and the CSV files in
 `views/`.
 
 **If a folder gets deleted by mistake,** run the script again. It recreates anything missing,
-and it doesn't touch your records or an existing `settings.json`. Records already deleted
+and it doesn't touch your records, or an existing `settings.json` or `sku-start.json`. Records already deleted
 can't be rebuilt from it, so check **Files → Recently Deleted** first.
 
 ## 2. The operator's shortcuts

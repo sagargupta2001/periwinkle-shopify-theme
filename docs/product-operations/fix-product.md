@@ -10,7 +10,7 @@ work has started, so corrections go through the operator.
 
 ```mermaid
 flowchart TD
-    A[Enter SKU] --> B{"Valid and in products/?"}
+    A["Choose a category,<br/>enter the product's number"] --> B{"Valid and in products/?"}
     B -->|No| STOP([Stop with a message])
     B -->|Yes| C{"Status is NEW?"}
     C -->|No| C1[/"Already being listed.<br/>Please message the operator."/] --> STOP
@@ -28,8 +28,8 @@ flowchart TD
 
 ## Rules
 
-- Cancelling frees the SKU, so the right one can be submitted, and the wrong
-  one can be used again later.
+- Cancelling frees the SKU, so the right one can be submitted, and the wrong one can
+  be used again. If it was the category's latest number, New Product suggests it next.
 - Nothing is deleted. The cancelled files and the log keep the history.
 - Photos already in the album stay there until the client deletes them. A
   shortcut can't do that.
