@@ -21,6 +21,38 @@ and sign the shortcuts. Daily use is on iPhone.
 python3 product-ops/build/setup_folder.py
 ```
 
+### Initial files
+
+The folder needs these before any shortcut runs. Lookups list a folder before checking
+inside it, so a missing folder stops the shortcut.
+
+| Path | What it's for |
+|---|---|
+| `products/` | One file per submitted product |
+| `products/_cancelled/` | Cancelled submissions |
+| `register/NEW/` | Products waiting to be started |
+| `register/IN_PROGRESS/` | Products being listed |
+| `register/READY_TO_PUBLISH/` | Listed products with a link, waiting to be marked live |
+| `register/LIVE/` | Live products |
+| `register/_replaced/` | Earlier versions of each product's row |
+| `register/_cancelled/` | Rows of cancelled submissions |
+| `stock-requests/PENDING/` | Requests waiting for the operator |
+| `stock-requests/COMPLETED/` | Completed requests |
+| `stock-requests/REJECTED/` | Rejected requests |
+| `stock-requests/_handled/` | The original of each processed request |
+| `log/` | The Activity log, one file per event |
+| `views/` | Tables for Numbers |
+| `_keep.txt` in **each folder above** | A one-line placeholder that keeps the folder from being empty, so iCloud always keeps it. Shortcuts skip it. |
+| `settings.json` | Valid statuses, default currency (INR) and time zone (Asia/Kolkata), for reference. No shortcut reads it today. |
+
+Everything else is created as the shortcuts run: product and request records, log entries,
+timestamped folders under `_replaced`, `_cancelled` and `_handled`, and the CSV files in
+`views/`.
+
+**If a folder gets deleted by mistake,** run the script again. It recreates anything missing,
+and it doesn't touch your records or an existing `settings.json`. Records already deleted
+can't be rebuilt from it, so check **Files → Recently Deleted** first.
+
 ## 2. The operator's shortcuts
 
 1. Make the [folder reference and build](building-and-signing.md#for-a-new-apple-account).

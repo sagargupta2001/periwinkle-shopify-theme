@@ -107,7 +107,8 @@ Periwinkle Product Operations/
 File names use the SKU in lowercase, which makes duplicate checks
 case-insensitive and exact. The SKU as typed is kept inside the file, so
 hyphens and leading zeros survive. Every folder holds a `_keep.txt`: please
-leave those in place.
+leave those in place. [Installation](installation.md#initial-files) lists what the
+folder needs before first use.
 
 **Why one small file per event:** two phones editing one file can produce sync
 conflicts and lost records. New files can't overwrite each other. The only records

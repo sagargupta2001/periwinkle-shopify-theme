@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Creates the record folders and settings file. Safe to run again: nothing is overwritten."""
+"""Creates the record folders and settings file. Safe to run again: records and an existing settings file are left alone."""
 import json
 import os
 import sys
