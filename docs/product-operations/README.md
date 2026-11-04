@@ -4,9 +4,11 @@ How a new piece gets from the client to a live Shopify product, and how stock
 changes reach Shopify, using only Apple Shortcuts on two iPhones, a shared
 iCloud folder and Numbers. There is no server, database or paid app.
 
-Shopify is updated by hand. These shortcuts keep the record of what's been
-submitted, what's being worked on, and what's live or out of stock. They never
-change Shopify.
+These shortcuts keep the record of what's been submitted, what's being worked on,
+and what's live or out of stock. They never change Shopify. Shopify is updated by the
+operator, by hand or with the `/add-products` skill in Claude Code, which reads this
+register but never writes to it
+([decision 24](../decisions.md#24-add-products-lists-what-the-register-holds-and-never-tracks-status)).
 
 ## The shortcuts
 
@@ -28,6 +30,8 @@ Also here:
   shortcuts, and the iPhone behaviours they're written around.
 - [Listing checklist](listing-checklist.md): what a Shopify listing needs.
 - [Test report](test-report.md): what has been tested, and what hasn't.
+- [Improvements](improvements.md): fixes and ideas to pick up later, on hold until the
+  client's phone has been tested.
 
 ## How a product moves
 
@@ -77,10 +81,12 @@ pieces are one of a kind, so that's usually 1.
 1. Run Register → Products to see what's waiting.
 2. Run Work on Product → Start a new product. The details are copied, ready
    for Claude.
-3. Find the photos in the album using the submitted date, list the piece in
-   Shopify with Claude, following the [listing checklist](listing-checklist.md).
+3. Find the photos in the album using the submitted date, and run
+   `/add-products list <SKU>` in Claude Code with a photo. It creates the draft and
+   gives you the store link. Then add the photos in Shopify.
 4. Run Work on Product → Add or fix a Shopify link.
-5. Run Publish Products once the products are live.
+5. Run `/add-products live <SKU>`, which checks the [listing checklist](listing-checklist.md)
+   and publishes it. Then run Publish Products.
 6. Run Process Stock Requests.
 
 ## Where the data lives
@@ -179,8 +185,8 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
 ## Next phase
 
 - **Photo lookup by SKU:** consider moving from the Shared Album to an iCloud
-  Shared Photo Library. Nothing has been tested yet, including whether captions
-  there can be searched, so test it before planning around it.
+  Shared Photo Library. Nothing has been tested yet. See
+  [Finding photos](improvements.md#finding-photos).
 - **Existing products:** they aren't in the register, so Update Stock doesn't
   know them. The idea of archiving them and recreating them through this system
   is still undecided.

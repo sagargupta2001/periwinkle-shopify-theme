@@ -1,7 +1,8 @@
 # Listing checklist
 
-What a Shopify listing needs, for the operator working with Claude. Each line
-points to the decision behind it in [decisions.md](../decisions.md).
+What a Shopify listing needs. The `/add-products` skill follows this list, so it's also
+the place to change what the skill checks. Each line points to the decision behind it in
+[decisions.md](../decisions.md).
 
 - **Title:** describe the piece, for example "Teal Pattachitra Dupatta with Tree of
   Life". No supplier or marketplace brand names, no "(Copy)", no placeholders
@@ -29,9 +30,10 @@ points to the decision behind it in [decisions.md](../decisions.md).
 - **Variant:** one product, one variant. Use the single *Default Title* variant, with
   no options such as "Color" or "Fabric", because a one-value option shows a pointless
   picker on the product page.
-- **SKU, price:** from the register, exactly as the client submitted them. Search for
-  the SKU in Shopify admin first, because the register can't see SKUs on older products,
-  and two pieces sharing one means the wrong piece can be packed.
+- **SKU, price, cost:** from the register's row, which includes any corrections. Cost goes
+  in *Cost per item*. Search for the SKU in Shopify admin first, in both the `PBS-SAR-069` and
+  `PBS/SAR/069` forms, because the register can't see SKUs on older products, and two pieces
+  sharing one means the wrong piece can be packed.
 - **Quantity:** usually 1.
 - **Inventory:** keep *Track quantity* on and *Continue selling when out of stock* off
   (decision 16). Taxable off, like the rest of the store.
