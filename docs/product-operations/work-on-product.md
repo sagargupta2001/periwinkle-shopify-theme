@@ -61,12 +61,14 @@ second step through Publish Products.
 
 ## Move a product back
 
-This and the next option ask for the full SKU, such as `PBS-DUP-004`. Older SKUs with
-other codes can be entered the same way.
+From build 11, this and the next option use the same category menu and number
+entry as the client shortcuts. Choose **Dupatta**, then enter **4** to find
+`PBS-DUP-004`. Leading zeros are optional, and numbers keep growing beyond 999.
+The menu uses the seven current category codes; it does not accept retired codes.
 
 ```mermaid
 flowchart TD
-    A[Enter SKU] --> B{"Found?"}
+    A["Choose category,<br/>enter product number"] --> B{"Found?"}
     B -->|No| STOP([Stop with a message])
     B -->|Yes| C{"Move to which status?"}
     C -->|Leave it| STOP
@@ -83,7 +85,7 @@ shouldn't be on sale.
 
 ```mermaid
 flowchart TD
-    A[Enter SKU] --> B{"Found?"}
+    A["Choose category,<br/>enter product number"] --> B{"Found?"}
     B -->|No| STOP([Stop with a message])
     B -->|Yes| C[Enter both prices]
     C --> D["Overwrite the row in its current folder<br/>Write PRICE_CORRECTED with old and new"]

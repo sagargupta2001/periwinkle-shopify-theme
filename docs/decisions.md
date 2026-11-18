@@ -505,3 +505,93 @@ by prompting from scratch, including the SKU clash check.
 
 **How to apply:** Run the shortcut first, then the skill. See
 [product-operations/README.md](product-operations/README.md#daily-routine).
+
+### 25. The client prints the SKU label right after submitting
+
+4 November 2026.
+
+**Decision:** After New Product, while the piece is still in hand, the client prints a label with its
+SKU and sticks it on the piece. The album's photo and caption show which SKU belongs to which piece.
+
+**Why:** New Product creates the SKU at submission, so the label no longer has to wait for the operator's
+comment. Labelling straight away makes a wrong label less likely, leaves no piece waiting unlabelled,
+and shows at a glance that a piece has been added.
+
+**Rejected:** *Printing once the product is live:* it means checking back on each piece, and pieces
+could sit unlabelled until then.
+
+**Known effects:**
+- A cancelled submission's label has to be thrown away.
+- The printer is on order, and where the label goes on the piece isn't decided yet. Until it arrives,
+  the client writes the SKU on a temporary sticker or tag, and prints the labels later using the album's
+  captions. The register's list catches anything missing from the album or cancelled since.
+
+**How to apply:** The label needs only the SKU. Don't print prices on it. Status comments in the album
+are optional notes, and the register remains the record.
+
+### 26. Stay with the Shared Album, not a Shared Library
+
+5 November 2026.
+
+**Decision:** New Product keeps posting to the Shared Album, with the SKU in the caption.
+
+**Why:** Searching for a caption in an iCloud Shared Photo Library didn't work when tested between
+the client's and the operator's phones, and search was the reason to move. The album already shows
+each photo with its SKU, which the client needs for labels (decision 25).
+
+**Rejected:** *A Shared Library:* besides the failed search, a person can only be in one, everyone in
+it can edit and delete everything, and all of it counts against the creator's iCloud storage.
+
+**Known effect:** Photos still can't be found by SKU, so the operator finds them by submitted date.
+
+### 27. Prepare SKU labels as PDFs for NIIMBOT after album sharing
+
+18 November 2026.
+
+**Decision:** Build 10 adds Prepare SKU label after New Product's album Share
+sheet. It generates a PDF containing only the SKU and opens NIIMBOT. The client
+still taps Add and completes printing inside NIIMBOT. A separate Print Product
+Label shortcut prepares another label for an existing submission without
+changing any product, stock or activity records.
+
+**Why:** On the operator's iPhone, PNG Share and Open In both opened NIIMBOT
+without loading the image. PDF Open In reached Crop and split with the label
+visible, and the operator confirmed it could be added. The clipboard keeps the
+album caption until the label option is chosen; only the SKU goes to the printer.
+Resolving NIIMBOT's bundle ID at runtime avoids Mac import rebinding an
+iPhone-only app to an unrelated Mac app.
+
+**Known effects:** The initial label page is 50 × 30 mm, pending confirmation of
+the client's roll. The B1 is with the client in Bangalore. The successful test
+establishes PDF import on the operator's phone, not physical printing; dynamic
+SKU generation and the complete intake still need iPhone testing before client
+handover. Print failures are retried through Print Product Label, not by
+resubmitting a product.
+
+### 28. Category plus number replaces every manually typed SKU; share versioned client releases
+
+18 November 2026.
+
+**Decision:** Build 11 changes Work on Product's Move back and Correct prices
+branches to the same category menu and number entry already used by New Product,
+Update Stock, Fix Product and Print Product Label. Product-list selectors stay
+as lists. For example, Dupatta + 4 resolves to `PBS-DUP-004`; nobody needs to
+type `PBS-`, the category code or leading zeros. The seven current codes apply;
+retired codes are not offered during this catalogue rebuild.
+
+All workflows, including the PDF label actions, are generated from repo source.
+The client's four shortcuts are built with her saved folder reference and
+staged in a versioned folder beside the shared register, starting with
+`shortcuts/client-build-11/`. The package includes installation notes and a file
+hash manifest. Operator files and raw folder-reference exports stay local.
+
+**Why:** Sagar requested consistent SKU selection and the same Files-based
+client installation used previously. Versioned packages can be reinstalled,
+and the source scripts plus documented commands can recreate them. The two
+Apple Account folder references remain necessary private inputs; if lost,
+each must be recreated on the corresponding phone.
+
+**Known effects:** The operator's installed Work on Product was updated on Mac.
+The client package is available in shared iCloud Drive, but installation and
+physical printing on her phone/B1 still need confirmation. Installing these
+shortcuts does not reset or change the shared product records.

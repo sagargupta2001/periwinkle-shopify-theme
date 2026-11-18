@@ -105,6 +105,22 @@ class ShortcutChecks(unittest.TestCase):
             if s.name != "Periwinkle – Register":
                 self.assertNotIn("file.delete", [action_name(a) for a in s.actions], s.name)
 
+    def test_manual_full_sku_entry_is_not_offered(self):
+        for shortcut in self.shortcuts:
+            for action in shortcut.actions:
+                if action_name(action) == "ask":
+                    prompt = action["WFWorkflowActionParameters"].get("WFAskActionPrompt")
+                    self.assertNotEqual(prompt, "Enter product SKU", shortcut.name)
+
+    def test_operator_corrections_both_use_the_category_number_picker(self):
+        shortcut = build.work_on_product({"filename": "test"})
+        category_menus = [a["WFWorkflowActionParameters"] for a in shortcut.actions
+                          if action_name(a) == "choosefrommenu"
+                          and a["WFWorkflowActionParameters"].get("WFMenuPrompt") == "Which category?"]
+        self.assertEqual(len(category_menus), 2)
+        for menu in category_menus:
+            self.assertEqual(menu["WFMenuItems"], [f"{label} ({code})" for label, code in build.CATEGORIES])
+
 
 class SkuRules(unittest.TestCase):
     def pad(self, number):

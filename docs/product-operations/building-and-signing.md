@@ -9,7 +9,11 @@ the next build.
 |---|---|
 | `shortcutlib.py` | Writes the shortcut file format: actions, variables, ifs, loops and menus |
 | `build.py` | One function per shortcut, plus signing |
+| `label_printing.py` | Generates SKU-only PDF labels on iPhone and hands them to NIIMBOT |
+| `stage_client_release.py` | Stages the four client files, installation notes and hash manifest in shared iCloud Drive |
 | `test_build.py` | Checks each shortcut for known mistakes, with no phone or signing |
+| `test_label_printing.py` | Validates generated PDFs, safe SKU handling and read-only reprints |
+| `printing_experiment.py`, `test_printing_experiment.py` | Recreate the isolated PNG/PDF investigation; not part of releases |
 | `setup_folder.py` | Creates the record folders and `settings.json` |
 
 Signed files and folder references contain iCloud IDs, and this repo is public. They go
@@ -30,6 +34,40 @@ Options:
 
 The file name becomes the shortcut's name on import, so `build.py` names the files.
 
+## Rebuild and share a release
+
+All runtime actions are generated from the repo; there are no app-only edits to
+recreate. The two saved folder-reference files are the only account-specific
+inputs. They stay under ignored `product-ops/local/`, because they contain iCloud
+IDs. If one is lost, recreate it on that person's phone using the instructions
+below; source code alone cannot reconstruct the account's folder IDs.
+
+Build 11 uses category plus number for every manual SKU selection, including
+Work on Product → Move a product back and Correct a product's prices. Existing
+product-list pickers remain lists. New Product and Print Product Label retain
+the build 10 PDF label integration (NIIMBOT Add and Print are manual).
+
+From the repo root:
+
+```bash
+python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-11/operator --role all
+python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-11/client --role client
+python3 product-ops/build/stage_client_release.py product-ops/local/releases/build-11/client "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations/shortcuts/client-build-11"
+```
+
+The first command builds all eight workflows for the operator's Apple Account;
+the second builds only the four client workflows with her folder reference.
+The final command copies the four signed client files and writes README.txt
+and manifest.json, then verifies every copy. It rejects unexpected shortcut
+files, unsigned plists, and overwriting a different version in the destination.
+Use a new version folder after raising BUILD for a later release.
+
+Keep operator files local. The client installs from Files → iCloud Drive →
+Periwinkle Product Operations → shortcuts → client-build-11. This is separate
+from products/, register/, log/ and views/: installing never resets those records.
+Only source/build instructions belong in Git; the generated release directories
+and account references remain ignored.
+
 ## Changing a shortcut
 
 1. Pull `main`, and edit the shortcut's function in `build.py`.
@@ -41,7 +79,14 @@ The file name becomes the shortcut's name on import, so `build.py` names the fil
 python3 -m unittest test_build
 ```
 
-4. Build with `--only`, delete the old copy on the phone, and open the new file.
+For label PDF validation, use the bundled Python runtime with `pypdf`,
+ReportLab and Pillow and run `python3 -m unittest test_build
+test_printing_experiment test_label_printing` from the same folder.
+
+4. Build with `--only`, close the old shortcut's editor, and import the new file.
+   Choose Replace if offered. An open old editor can leave a duplicate behind;
+   verify the new tile/build before removing the older tile. Keep an exported
+   backup locally when updating an installed workflow.
 5. Test it on an iPhone. The Mac's command line can't show prompts, so it can't test these.
 6. Update that shortcut's page in these docs, in the same PR.
 
@@ -98,6 +143,8 @@ the ones it can.
 | Opening a sheet: Mail opened when the file was saved as `.json` with no `WFApp` setting. A real `.csv` with `WFApp` set opens Numbers. Which of the two mattered wasn't isolated. | Register does both. |
 | Numbers changes `0012` to `12`, even in quotes, but keeps `="0012"`. | Register writes SKUs that way. |
 | The number keypad in Ask for Input shows no default answer, and drops leading zeros as you type. The text keyboard does neither. | New Product uses the text keyboard for its suggested number. Update Stock and Fix Product use the keypad and pad the number. |
+| The Mac can rebind a static descriptor for an iPhone-only app to another Mac app. Legacy app-selection fields may also be ignored. | The NIIMBOT handoff uses `WFSelectedApp` with a Text action containing its bundle ID, resolved at runtime on iPhone. |
+| PNG handoffs opened NIIMBOT without importing anything; PDF Open In reached Crop and split with the label. | Use a `.pdf` label. Add and actual printing remain manual in NIIMBOT. |
 
 Two earlier explanations turned out to be wrong, in case they come up again: the delete
 action, and running from a menu, weren't the causes of the ToolDialogHandler error. Delete
