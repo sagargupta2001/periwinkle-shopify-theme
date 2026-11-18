@@ -19,12 +19,12 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from shortcutlib import HAS_VALUE, IS, IS_NOT, NO_VALUE, REPEAT_ITEM, Shortcut, attachment, named, text
+from label_printing import add_label_handoff
 
 STATUSES = ["NEW", "IN_PROGRESS", "READY_TO_PUBLISH", "LIVE"]
 REQUEST_STATUSES = ["PENDING", "COMPLETED", "REJECTED"]
 CATEGORIES = [("Saree", "SAR"), ("Salwar Kameez", "SKZ"), ("Miniature", "MIN"), ("Readymades", "RED"),
               ("Dupatta", "DUP"), ("Home Decor", "HOM"), ("Jewellery", "JEW")]  # See docs/sku-codes.md
-SKU_RULE = r"^[A-Za-z0-9][A-Za-z0-9._-]*$"
 NUMBER_RULE = r"^0*[1-9][0-9]*$"
 PAD_FIND, PAD_REPLACE = r"^0*([0-9]{3,})$", "$1"  # Applied to "00" + number: 4 -> 004, 1000 -> 1000
 FILE_RULE = r"^[a-z0-9][a-z0-9._-]*$"
@@ -34,7 +34,7 @@ URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.my
 ISO = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 ID = "yyyyMMddHHmmss"
 PURPLE, BLUE = 2071128575, 946986751  # client shortcuts, operator shortcuts
-BUILD = 9  # Shown in Work on Product's first menu, to confirm which version a phone has. Raise on each release.
+BUILD = 11  # Shown in Work on Product's first menu, to confirm which version a phone has. Raise on each release.
 
 
 class Store(Shortcut):
@@ -162,18 +162,6 @@ class Store(Shortcut):
         if default is not None:
             params["WFAskActionDefaultAnswer"] = default
         return self.add("ask", output="Answer", **params)
-
-    def ask_sku(self):
-        """Returns the typed SKU and its lowercase form, which names its files."""
-        answer = self.ask("Enter product SKU")
-        sku = self.add("text.trimwhitespace", output="SKU", WFInput=text(answer))
-        valid = self.add("text.match", output="Valid SKU", text=text(sku), WFMatchTextPattern=SKU_RULE, WFMatchTextCaseSensitive=True)
-        check = self.if_(valid, NO_VALUE)
-        self.alert("Please check the SKU", "The SKU can't be blank, and can only use letters, numbers, hyphens, dots and underscores.")
-        self.stop()
-        self.end_if(check)
-        lower = self.add("text.changecase", output="SKU key", text=text(sku), WFCaseType="lowercase")
-        return sku, lower
 
     def ask_category(self):
         """Returns the chosen category's code, and the same in lowercase."""
@@ -304,6 +292,22 @@ def new_product(folder):
     s.add("notification", WFNotificationActionTitle="Periwinkle",
           WFNotificationActionBody="Product details prepared. Select the Periwinkle Shared Album and paste the copied caption.")
     s.add("share", WFInput=attachment(photos))
+    label = s.pick("Product saved. Once the album post is done:", ["Prepare SKU label", "Finish for now"])
+    printing = s.if_(label, IS, string="Prepare SKU label")
+    add_label_handoff(s, sku)
+    s.end_if(printing)
+    return s
+
+
+def print_product_label(folder):
+    s = Store("Periwinkle – Print Product Label", folder, PURPLE)
+    sku, lower = s.ask_existing_sku()
+    product = s.lookup("products", lower, ".json")
+    missing = s.if_(product, NO_VALUE)
+    s.alert("SKU not found", "Check the category and number. No product was created or changed.")
+    s.stop()
+    s.end_if(missing)
+    add_label_handoff(s, sku)
     return s
 
 
@@ -446,7 +450,7 @@ def work_on_product(folder):
     s.end_if(branch)
 
     branch = s.if_(action, IS, string=BACK)
-    sku, lower = s.ask_sku()
+    sku, lower = s.ask_existing_sku()
     s.find_row(lower)
     missing = s.if_(named("rowFile"), NO_VALUE)
     s.alert("SKU not found", "We couldn't find this SKU.")
@@ -470,7 +474,7 @@ def work_on_product(folder):
     s.end_if(branch)
 
     branch = s.if_(action, IS, string=FIX)
-    sku, lower = s.ask_sku()
+    sku, lower = s.ask_existing_sku()
     s.find_row(lower)
     missing = s.if_(named("rowFile"), NO_VALUE)
     s.alert("SKU not found", "We couldn't find this SKU.")
@@ -635,12 +639,12 @@ def register(folder):
     return s
 
 
-CLIENT = [new_product, update_stock, fix_product]
+CLIENT = [new_product, update_stock, fix_product, print_product_label]
 OPERATOR = [work_on_product, publish_products, process_stock_requests, register]
 
 
-def read_folder_reference(path):
-    """Reads the folder reference out of a signed shortcut made on the iPhone."""
+def read_workflow(path):
+    """Read a raw or Apple-signed shortcut for folder-reference/release checks."""
     data = open(path, "rb").read()
     if data[:6] == b"bplist":
         workflow = plistlib.loads(data)
@@ -656,7 +660,12 @@ def read_folder_reference(path):
             os.mkdir(out)
             subprocess.run(["aa", "extract", "-i", archive, "-d", out], check=True)
             workflow = plistlib.load(open(os.path.join(out, "Shortcut.wflow"), "rb"))
-    return workflow["WFWorkflowActions"][0]["WFWorkflowActionParameters"]["WFFolder"]
+    return workflow
+
+
+def read_folder_reference(path):
+    """Reads the folder reference out of a signed shortcut made on the iPhone."""
+    return read_workflow(path)["WFWorkflowActions"][0]["WFWorkflowActionParameters"]["WFFolder"]
 
 
 def main():

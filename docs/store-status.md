@@ -41,6 +41,15 @@ visible, then delete it. Add new items with an owner and the date added.
 
       Delete the old drafts once every dupatta is rebuilt. Owner: Sagar.
       Added 1 Nov.
+- [ ] **Clear the shortcut test data before real use.** The client and Sagar are testing the
+      shortcuts for about two weeks from 5 Nov, so the register holds test records such as
+      `PBS-DUP-001`. Before the first real product:
+      1. Clear the records from `products/`, `register/`, `stock-requests/` and `log/`, keeping the
+         folders and their `_keep.txt` files, so numbering restarts at `001`.
+      2. Delete the test posts from the Shared Album.
+      3. Throw away any test labels, because real pieces will reuse those SKUs.
+
+      Owner: Sagar, with Claude clearing the records when asked. Added 5 Nov.
 - [x] **Get the full SKU code list from the client.** Recorded in
       [sku-codes.md](sku-codes.md) (done 4 Nov). Owner: Sagar. Added 1 Nov.
 - [ ] **Confirm what happens to the old EPJ and CMS codes.** They aren't on the
@@ -180,11 +189,14 @@ visible, then delete it. Add new items with an owner and the date added.
 
 ### Product operations
 
-- [ ] **Hand the shortcuts over to the client.** Only tested on Sagar's iPhone so
-      far. Share the folder, and test the client's Apple Account first, which is the
-      main risk. See
+- [ ] **Install and test client build 11.** The client's account and original
+      three workflows passed on 5 Nov. The updated four-file package is now in
+      shared iCloud Drive → Periwinkle Product Operations → shortcuts →
+      client-build-11, built with her folder reference. Confirm installation,
+      category/number lookup and dynamic SKU label import, then verify a physical
+      print on her NIIMBOT B1 and its label roll size. See
       [Installation](product-operations/installation.md#3-handing-over-to-the-client).
-      Owner: Sagar. Added 4 Nov.
+      Owner: Sagar and client. Updated 18 Nov.
 - [ ] **Set SKU starting numbers before using another category.** Only dupattas are in
       use, and every category starts at `001`. Sarees, suits, miniatures and jewellery have
       older SKUs in Shopify, so `001` could match one of those until they're archived or

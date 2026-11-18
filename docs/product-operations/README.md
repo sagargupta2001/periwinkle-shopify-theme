@@ -17,6 +17,7 @@ Each one has its own page, with a diagram of what it does.
 | Shortcut | Who | What it's for |
 |---|---|---|
 | [New Product](new-product.md) | Client | Submit a new piece with its photos |
+| [Print Product Label](new-product.md#print-again-without-resubmitting) | Client | Prepare or reprint a submitted piece's SKU label in NIIMBOT |
 | [Update Stock](update-stock.md) | Client | Report that a piece is out of stock or back in stock |
 | [Fix Product](fix-product.md) | Client | Correct a price or cancel a wrong SKU, until work starts |
 | [Work on Product](work-on-product.md) | Operator | Start a product, record its link, move it back, correct prices |
@@ -25,6 +26,8 @@ Each one has its own page, with a diagram of what it does.
 | [Register](register.md) | Operator | Build the tables you read in Numbers |
 
 Also here:
+- [Rebuild and share a release](building-and-signing.md#rebuild-and-share-a-release):
+  reproduce all workflows from source and stage the client's four files in iCloud.
 - [Installation](installation.md): setting up a phone, and sharing with the client.
 - [Building and signing](building-and-signing.md): recreating or changing the
   shortcuts, and the iPhone behaviours they're written around.
@@ -72,7 +75,10 @@ pieces are one of a kind, so that's usually 1.
 
 **Client**
 1. New piece: run New Product, pick the category, and tap through the suggested number.
-   Then paste the caption and post to the album.
+   Then paste the caption and post to the album. Choose **Prepare SKU label** to
+   open its PDF in NIIMBOT, tap **Add**, and print the label for the piece straight
+   away ([decision 25](../decisions.md#25-the-client-prints-the-sku-label-right-after-submitting)).
+   For a retry, use **Print Product Label**, without submitting the product again.
 2. Sold or back: run Update Stock.
 3. Typed something wrong: run Fix Product straight away. If work has started,
    message the operator.
@@ -184,9 +190,9 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
 
 ## Next phase
 
-- **Photo lookup by SKU:** consider moving from the Shared Album to an iCloud
-  Shared Photo Library. Nothing has been tested yet. See
-  [Finding photos](improvements.md#finding-photos).
+- **Photo lookup by SKU:** a Shared Library was tested and ruled out
+  ([decision 26](../decisions.md#26-stay-with-the-shared-album-not-a-shared-library)), so the
+  album stays. See [Finding photos](improvements.md#finding-photos) for what else could help.
 - **Existing products:** they aren't in the register, so Update Stock doesn't
   know them. The idea of archiving them and recreating them through this system
   is still undecided.

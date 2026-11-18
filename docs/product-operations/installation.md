@@ -63,14 +63,15 @@ can't be rebuilt from it, so check **Files → Recently Deleted** first.
 1. Make the [folder reference and build](building-and-signing.md#for-a-new-apple-account).
 2. Open each signed file on the Mac and click **Add Shortcut**. They sync to any iPhone
    on the same Apple Account.
-3. Check there's one copy of each. Importing a name that already exists can add a copy
-   called `… 2`, so delete the old one first when updating.
+3. Close the old shortcut's editor before importing. Choose Replace when offered,
+   then check there's one current copy of each. If an older copy had a different
+   name, remove its tile after identifying the new one. Shortcut tiles and shared
+   product records are separate; do not delete the shared data folders.
 4. Run each once from the Shortcuts app, tapping **Always Allow** on prompts.
 
 ## 3. Handing over to the client
 
-This hasn't been tested yet. It's the biggest remaining unknown, so try it with one
-small step before anything else.
+Tested on 5 November 2026, using the steps below and installing from the shared folder.
 
 **How the client's phone reaches your folder:** you share the folder with the client's
 Apple Account, with permission to make changes. It then appears in the client's iCloud
@@ -78,11 +79,10 @@ Drive, and iCloud keeps both phones in sync. When the client's shortcut saves a 
 saves into that shared folder, and the file appears on your phone too. Nothing is sent
 to you directly.
 
-**Why the client probably needs separate copies:** each shortcut stores a reference to
-the folder, and that reference contains IDs tied to the Apple Account that made it. Your
-copies point at the folder as your account sees it. They may not find it from the
-client's account. So the client probably needs the same shortcuts built with a reference
-made on the client's phone. The logic is identical, and only that reference differs.
+**Why the client needs separate copies:** each shortcut stores a reference to the folder,
+and that reference contains IDs tied to the Apple Account that made it. The client's IDs
+differ from the operator's, so the client's shortcuts are built with a reference made on
+the client's phone. The logic is identical, and only that reference differs.
 
 **Steps:**
 1. In Files, long-press the folder, tap **Share**, set it so only invited people can
@@ -92,15 +92,21 @@ made on the client's phone. The logic is identical, and only that reference diff
 3. On the client's phone, make a shortcut called `folderref` with one action, **Get
    Contents of Folder**, pointing at the shared folder. Share it as a file, and get it to
    the Mac, for example by AirDrop or by saving it in the shared folder.
-4. Build the client's three shortcuts with it.
+4. Build the client's four shortcuts with it (build 10 added Print Product Label;
+   build 11 standardises manual SKU entry). See the complete
+   [release commands](building-and-signing.md#rebuild-and-share-a-release).
 
 ```bash
 python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/client --role client
 ```
 
-5. AirDrop the three signed files to the client, who taps each and then **Add Shortcut**. If
-   you're not together, copy them into the shared folder, and have the client open them from
-   Files. Remove them from the folder afterwards. This route hasn't been tested.
+5. AirDrop the four signed files to the client, who taps each and then **Add Shortcut**. If
+   you're not together, stage them in the shared folder with
+   `stage_client_release.py`. For build 11 she opens **Files → iCloud Drive →
+   Periwinkle Product Operations → shortcuts → client-build-11**, then opens the
+   four .shortcut files and chooses Replace for matching older shortcuts. Keep
+   this version folder for reinstalling. It contains README.txt and a file-hash
+   manifest, and never includes the raw folder-reference file or operator files.
 6. On the client's phone, run New Product with a test SKU, and check the record reaches
    your phone. Then run Update Stock and Fix Product.
 
@@ -109,8 +115,22 @@ Also delete any `folderref` file left in the folder.
 
 ## Client instructions
 
-Add New Product, Update Stock and Fix Product to the Home Screen from each shortcut's
-**Share** menu, so they're one tap away. The client doesn't need the operator shortcuts.
+Run New Product, Update Stock and Fix Product by opening the **Shortcuts** app and tapping the
+shortcut's tile. Print Product Label is also a client shortcut, for retries and
+reprints without submitting another product. Install NIIMBOT from the App Store
+and connect her B1 inside it. Match the label roll size (the initial PDF template
+is 50 × 30 mm). The client doesn't need the operator shortcuts.
+
+- **Check Home Screen icons on each phone.** On 5 November 2026 an icon opened the first menu on the
+  operator's phone. On the client's phone, neither an icon nor a widget opened anything, and the menu
+  was waiting when the Shortcuts app was opened separately. The cause isn't known yet. Some users report
+  that prompts get stuck outside the Shortcuts app.
+- **Tap the tile, not its •••.** The ••• opens the editor. Shortcuts can't be locked against editing,
+  as far as we could find.
+- **If a shortcut gets changed or deleted,** delete it and reinstall it from
+  the current version folder under the shared folder's `shortcuts/` directory.
+  Records are in the shared folder, not in the shortcut, so they aren't
+  affected. Files already saved by a wrongly edited shortcut would still need checking.
 
 ## If something goes wrong
 

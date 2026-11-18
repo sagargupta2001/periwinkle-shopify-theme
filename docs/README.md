@@ -26,7 +26,7 @@ load, so read only the ones your task needs.
 | Changing collections, menus, tags or gifting | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Collections and Menus tables; decisions 1–8 |
 | Adding a new product, or handling a stock change | [docs/product-operations/README.md](product-operations/README.md) | The shortcuts, the daily routine, the [listing checklist](product-operations/listing-checklist.md), and the `/add-products` skill |
 | Improving a shortcut, or looking for known bugs | [docs/product-operations/improvements.md](product-operations/improvements.md) | The list on hold until the client's phone is tested |
-| Changing or recreating a shortcut | [docs/product-operations/building-and-signing.md](product-operations/building-and-signing.md), then that shortcut's page | The scripts, and the iPhone behaviours they rely on; decision 22 |
+| Changing, recreating or sharing a shortcut | [docs/product-operations/building-and-signing.md](product-operations/building-and-signing.md), then that shortcut's page | Source scripts, role-specific builds, shared-folder releases, and iPhone behaviours; decisions 22, 27–28 |
 | Listing, duplicating or renaming products | [docs/decisions.md](decisions.md) | Decisions 9–11: titles, handles, brand names |
 | Working with SKUs or product IDs | [docs/sku-codes.md](sku-codes.md), [docs/sku-audit.md](sku-audit.md) | The code list, then the inconsistencies and the target format; decisions 19, 21, 22 and 23 |
 | Changing shipping, discounts, weights or payments | [docs/store-status.md](store-status.md), [docs/decisions.md](decisions.md) | Shipping and Discounts sections; decisions 12–13 |
