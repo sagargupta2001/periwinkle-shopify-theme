@@ -54,8 +54,9 @@ command requires the client reference and verifies that binding before writing.
    Keep a signed predecessor privately for rollback. Never delete the shared
    operations folder or Shared Albums as part of this migration.
 
-The build-19 signing, installer staging and iPhone import/runtime checks are
-pending. The folders above are installation targets. Existing build-18 tiles
+Build 19 is signed and the installation folders above are staged with verified
+copies and hash manifests. iPhone import/runtime checks are pending. Mac import
+did not complete, so no new synced tile was observed. Existing build-18 tiles
 remain available until the checks above pass. An automated action comparison
 does not establish iOS import behaviour for the larger bundles.
 

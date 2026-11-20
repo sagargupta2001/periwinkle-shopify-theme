@@ -1,7 +1,7 @@
 # Building and signing
 
-The current generator release is **build 19**; signing and phone rollout are
-pending. Build 18 remains installed. Change the generators, not the installed
+The current signed release is **build 19**; installation packages are staged and
+phone rollout is pending. Build 18 remains installed. Change the generators, not the installed
 shortcut: app-only edits disappear on rebuild. Every operational workflow can
 be recreated from source plus the two private account-specific folder references.
 See [Recovery](recovery.md) before recreating a deleted operations folder.

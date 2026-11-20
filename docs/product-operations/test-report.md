@@ -5,9 +5,24 @@
 20 November 2026. The eight operation builders are now inlined into two
 self-contained role bundles, each with four first-menu choices and one account
 binding. No Run Shortcut dependencies or installed helpers are required.
-Client has 911 actions and Operator has 2,104 actions. The generators are ready;
-Apple signing, installer staging and phone import have not yet been completed
-for this build. Existing build-18 installers remain the deployed release.
+Client has 911 actions and Operator has 2,104 actions. After Sagar explicitly
+approved Apple signing, all three files were signed: operator-account Client
+and Operator, plus client-account Client. Each signed payload was decoded and
+its complete action graph compared with a fresh builder after UUID normalization.
+The folder bindings match their intended private references and differ between
+accounts. Apple's signed payload omits WFWorkflowName; the filename determines
+the imported name.
+
+The private **Periwinkle Operator Install - Build 19 - 2026-11-20** iCloud folder
+contains both operator-account files, README.txt and a SHA-256 manifest. The
+shared **shortcuts/client-build-19** folder contains only client-account Client,
+README.txt and manifest.json. Staging rechecked the client binding/current menu;
+copied file bytes were verified. No account identifiers or installers are committed.
+
+Mac import did not complete: the native Import dialog kept Open disabled for
+the signed file, and subsequent UI access timed out. No new installed role tile
+was observed. Files-based iPhone installation and runtime checks are pending;
+the existing build-18 operation tiles/installers remain available.
 
 The full generator suite passes **54 tests**. New checks compare every inlined
 branch with its original operation after UUID/root normalization, verify menu
