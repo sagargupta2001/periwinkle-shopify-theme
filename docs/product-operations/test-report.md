@@ -35,6 +35,16 @@ cross-account matching, removal behaviour and physical B1 printing remain
 rollout checks. Existing build-18 operation tiles are retained until bundle
 checks pass. No records or photo metadata are reset by bundling.
 
+**Installer-folder cleanup:** At Sagar's request, the private operator build-18
+folder and shared client-build-11/client-build-18 folders were moved out of
+iCloud to Mac Trash after an 18-file rollback archive was hash-verified under
+ignored product-ops/local/backups/. The missing private operator build-19 folder
+was restored from the signed local files and its account binding/action graphs
+were rechecked. Only private operator build 19 and shared client-build-19 remain
+as iCloud installer folders; both current manifests match their file bytes.
+Installed operation tiles, personal shortcuts, records and Shared Albums were
+unchanged. Older installers remain recoverable locally, without cluttering Files.
+
 ## Prior verified phone state — build 18
 
 20 November 2026. Sagar confirmed that Register now successfully previews the
