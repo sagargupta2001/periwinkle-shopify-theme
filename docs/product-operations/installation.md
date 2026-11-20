@@ -42,6 +42,9 @@ inside it, so a missing folder stops the shortcut.
 | `stock-requests/_handled/` | The original of each processed request |
 | `log/` | The Activity log, one file per event |
 | `views/` | Tables for Numbers |
+| `photo-links/` | Confirmed/pending SKU-to-Shared-Album references; metadata only |
+| `photo-pending/` | Before-post album-name snapshots, replaced with completion markers |
+| `shortcuts/` | Account-specific client installer packages, created by the staging script |
 | `_keep.txt` in **each folder above** | A one-line placeholder that keeps the folder from being empty, so iCloud always keeps it. Shortcuts skip it. |
 | `settings.json` | Valid statuses, default currency (INR) and time zone (Asia/Kolkata), for reference. No shortcut reads it today. |
 | `sku-start.json` | Each category's starting number, all 0 to begin with, so the first suggestion is `001`. New Product reads it. |
@@ -54,9 +57,11 @@ Everything else is created as the shortcuts run: product and request records, lo
 timestamped folders under `_replaced`, `_cancelled` and `_handled`, and the CSV files in
 `views/`.
 
-**If a folder gets deleted by mistake,** run the script again. It recreates anything missing,
-and it doesn't touch your records, or an existing `settings.json` or `sku-start.json`. Records already deleted
-can't be rebuilt from it, so check **Files → Recently Deleted** first.
+**If a folder gets deleted by mistake,** start with [Recovery](recovery.md).
+Setup recreates missing structure without changing existing data, but it cannot
+restore deleted product/photo metadata or history. Check Files → Recently Deleted
+or your data backup first. A recreated root also needs new account-specific
+folder references and rebuilt installers, even if its name is unchanged.
 
 ## 2. The operator's shortcuts
 
@@ -92,8 +97,8 @@ the client's phone. The logic is identical, and only that reference differs.
 3. On the client's phone, make a shortcut called `folderref` with one action, **Get
    Contents of Folder**, pointing at the shared folder. Share it as a file, and get it to
    the Mac, for example by AirDrop or by saving it in the shared folder.
-4. Build the client's four shortcuts with it (build 10 added Print Product Label;
-   build 11 standardises manual SKU entry). See the complete
+4. Build the client's four shortcuts with it. Build 18 includes posted-photo
+   confirmation and resume support with explicit text typing. See the complete
    [release commands](building-and-signing.md#rebuild-and-share-a-release).
 
 ```bash
@@ -102,8 +107,8 @@ python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut p
 
 5. AirDrop the four signed files to the client, who taps each and then **Add Shortcut**. If
    you're not together, stage them in the shared folder with
-   `stage_client_release.py`. For build 11 she opens **Files → iCloud Drive →
-   Periwinkle Product Operations → shortcuts → client-build-11**, then opens the
+   `stage_client_release.py`. For build 18 she opens **Files → iCloud Drive →
+   Periwinkle Product Operations → shortcuts → client-build-18**, then opens the
    four .shortcut files and chooses Replace for matching older shortcuts. Keep
    this version folder for reinstalling. It contains README.txt and a file-hash
    manifest, and never includes the raw folder-reference file or operator files.
@@ -141,3 +146,12 @@ is 50 × 30 mm). The client doesn't need the operator shortcuts.
 | "Unknown Action" in the editor | The action doesn't exist in this version of Shortcuts. |
 | Mail opens rather than Numbers | The saved file isn't a `.csv`. Check `views/`. |
 | A shortcut is called `… 2` | A duplicate import. Delete the older one. |
+
+## Shared Album setup
+
+Create the seven Shared Albums listed in [New Product](new-product.md#automatic-photo-reference)
+and invite both accounts to that same set. New Product uses the category's exact
+configured name. After posting, the client previews and confirms the uploaded
+asset; the saved link uses its actual album name/date, even if upload renamed it.
+Finish a pending post through Fix Product → Finish photo linking. Operator
+installers stay private; only client-account installers go in the shared folder.

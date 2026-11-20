@@ -220,3 +220,48 @@ cross-reference offsets, numbers beyond 999, invalid input rejection, read-only
 reprinting, and the ordering after album sharing. Sample rendered labels were
 visually inspected. The new dynamic generation actions and complete intake
 flow still need an iPhone run; the earlier successful import used a static PDF.
+
+## Automatic photo reference
+
+Build 17 records the **uploaded Shared Album asset**, rather than assuming the
+selected library photo keeps its original name. In the phone test, IMG_0499
+became a UUID-style name after posting, so build 15's original-name reference
+could not find it.
+
+1. Before Share, read the target album's existing photo names and save a small
+   metadata snapshot in `photo-pending/<sku>.json` alongside a pending link.
+2. The client posts the selected photo(s) to the album named in the notification.
+3. After the existing finish/label choice, find names newly added to that album.
+4. Show the newly posted photo for client confirmation. With several new photos,
+   the client chooses the correct one first. The operator does not search comments.
+5. Save the confirmed album asset's actual Name and Date Taken to
+   `photo-links/<sku>.json` with source shared_album_confirmed. Replace the
+   snapshot contents with a tiny completion marker.
+
+If upload has not synced or the client finishes later, use **Fix Product → Finish
+photo linking**. Complete this before creating another product in the same album.
+Only a client-confirmed reference becomes eligible for automatic operator preview;
+Register does not silently select an unconfirmed new album photo. This matters
+when another person uploads during intake. No image bytes are saved in Drive.
+
+Create these as Shared Albums, with both accounts invited to the same albums:
+
+| Category | Exact album name |
+|---|---|
+| Saree | Periwinkle - Sarees |
+| Salwar Kameez | Periwinkle - Salwar Kameez |
+| Miniature | Periwinkle - Miniatures |
+| Readymades | Periwinkle - Readymades |
+| Dupatta | Periwinkle - Dupattas |
+| Home Decor | Periwinkle - Home Decor |
+| Jewellery | Periwinkle - Jewellery |
+
+All seven mappings are in CATEGORY_ALBUMS in photo_links.py. A new unmapped
+category prompts for an exact album name. Existing confirmed links retain their
+own album names, including Miniatures Available. Album posting, caption paste,
+photo confirmation, and NIIMBOT Add/Print remain client actions.
+
+**Phone verification needed:** own-account intake/post/confirmation/preview,
+then client-to-operator delivery. Use the operator-account files on the operator
+phone and client-account files on the client phone. The pending/renamed-upload
+protocol has generator regression coverage but is not yet confirmed on-device.

@@ -595,3 +595,139 @@ each must be recreated on the corresponding phone.
 The client package is available in shared iCloud Drive, but installation and
 physical printing on her phone/B1 still need confirmation. Installing these
 shortcuts does not reset or change the shared product records.
+
+### 29. Browse the register in Shortcuts; keep CSV as an export
+
+20 November 2026.
+
+**Decision:** Build 12 adds status/category browsing and category-plus-number
+lookup to the operator's Register shortcut. A selected product has a detail
+screen and read-only actions to copy its SKU/link or prepare a label. CSVs and
+Numbers remain available under Export to Numbers. JSON files in the shared
+folder remain authoritative. No data reset or client shortcut reinstall is
+part of this change.
+
+**Why:** Sagar approved a cleaner register interface before launch. Inspecting
+one piece should not require rebuilding a spreadsheet. The browser filters
+filenames first and reads the selected row only; duplicate status copies use
+the same furthest-status precedence as existing workflows.
+
+**Future app constraint:** Product photos stay in the existing Shared Album.
+A future native app should use PhotoKit to display thumbnails and store photo
+references rather than uploading images to another server. Sagar also rejected
+a persistent device-only preview collection: album removal must make the photo
+unavailable, not leave a preview or resolve to a personal-library copy. First
+investigate direct retrieval from both Register and Work on Product before
+considering an app. Separate Apple
+accounts require a real-device linking prototype; shared captions and local
+photo IDs must not be assumed to provide a reliable cross-account SKU index.
+
+### 30. Preview Shared Album photos through metadata-only SKU links
+
+20 November 2026.
+
+**Decision:** Build 13 adds a shared photo helper to Register and Work on
+Product. The operator links a SKU once by choosing its Shared Album photo and
+confirming the preview. Save only album name, exact Photos Name and Date Taken
+in `photo-links/<sku>.json`. Future previews re-query album membership and
+metadata; never upload images, save an independent preview collection, or fall
+back to the personal library. Product, stock and activity schemas stay unchanged.
+
+**Evidence:** Sagar's iPhone found all 413 items in Miniatures Available, found
+one photo by its extensionless name, and displayed the correct image after the
+Quick Look identifier was corrected to `is.workflow.actions.previewdocument`.
+
+**Limits:** Matching metadata is not a globally unique asset ID. Ambiguous
+matches require a chooser, missing matches show unavailable, and Photos can
+still cache data for display. Album deletion/removal and the complete integrated
+link/save/view flow need phone checks. Auto-linking during client intake is
+not implemented until cross-account name/date preservation is tested. Album
+photo removal does not itself update stock. The client workflows stay unchanged.
+
+### 31. Require a positive file match before previewing a linked photo
+
+20 November 2026.
+
+**Decision:** Build 14 discovers photo links by enumerating existing directories
+and exact SKU filenames. It uses an explicit yes/no found flag and validates
+album, photo name and date before querying Photos. No link means the operator
+can reach Link or change photo without any album lookup.
+
+**Why:** Build 13 failed on the operator's phone before the link menu with an
+empty album error. The shared folder had no photo-links directory. Its
+missing-file/blank placeholder was not a reliable Has Value test. Regression
+checks now execute that first-use path and incomplete-record cases.
+
+### 32. Capture photo links at intake; manual linking is only recovery
+
+20 November 2026.
+
+**Decision:** New Product build 15 captures the first selected photo's exact
+Photos Name and Date Taken and assigns the category's configured Shared Album.
+It saves a metadata-only photo link automatically, before the Share sheet, and
+tells the client which album to post to. The operator should not search and
+manually link each new product. Manual linking remains for existing records
+and corrections. Sagar requested proposed new album names for testing; all
+seven use the Periwinkle - prefix, listed in New Product's documentation.
+
+**Verification boundary:** Sagar can test the complete flow on his own phone
+using an operator-account New Product build. A subsequent client-to-operator
+test is needed to verify that name/date survive the actual Shared Album upload
+and cross-account delivery. No duplicate image store is introduced.
+
+**Lookup correction:** the saved PBS-SAR-001 reference was valid, but build 14
+silently missed it because nested loops reused the outer Repeat Item variable.
+Build 15 separates folder/file enumeration. The regression harness now models
+nested Repeat Item names and reproduced the failure before the fix.
+
+### 33. Compare photo dates at whole-second precision
+
+20 November 2026.
+
+**Decision:** Build 16 ignores fractional seconds in saved/album Date Taken
+comparison, retaining exact album, filename and whole-second matching. Saved
+metadata keeps its original precision. Distinct errors report no filename
+match versus different date metadata. No personal-library fallback or image
+copy is introduced.
+
+**Why:** PBS-SAR-006's automatically saved original timestamp has fractional
+seconds. A whole-second album copy would be incorrectly excluded by the
+millisecond equality check. That case was reproduced and corrected in the
+regression harness; the actual album-copy timestamp is still awaiting phone
+confirmation. Product submission and linking succeeded independently of preview.
+
+### 34. Confirm the uploaded album asset, not the selected library filename
+
+20 November 2026.
+
+**Evidence:** PBS-SAR-006 intake saved IMG_0499. The actual photo in Periwinkle -
+Sarees had a UUID-style name; the operator confirmed that exact-name lookup and
+preview worked after removing a pasted line break. Original filename
+preservation was therefore not a valid assumption. Fractional-second tolerance
+alone could not fix this.
+
+**Decision:** New Product build 17 records the album's existing names before
+Share, then identifies newly posted album items and requires client confirmation.
+The saved reference uses the posted asset's actual name/date. Unfinished uploads
+resume through Fix Product; operator viewing does not silently confirm pending
+additions. Metadata snapshots are replaced with small completion markers after
+confirmation. There are no extra image copies or servers.
+
+**Recovery:** a user-verified exact shared name can be marked verified_shared_name
+for one-time date capture from that album asset. It never falls back to a
+personal-library image. This recovers the existing SAR-006 test without resetting
+or recreating products. Phone testing of the new complete flow remains required.
+
+### 35. Materialize photo metadata dictionary fields as Text
+
+20 November 2026.
+
+**Decision:** Build 18 inserts explicit Text actions between photo metadata
+Get Dictionary Value actions and string comparisons/predicates. Preserve the
+existing workflow and references; no relinking or resubmission is required.
+
+**Why:** iPhone imported a source-value If without its comparison value when
+its input was an untyped Dictionary Value. The source plist's string parameter
+and Python control-flow tests did not establish iOS type inference. The new
+regression check rejects direct dictionary-value text conditions, and the
+operator will test Register alone before replacing the other workflows.

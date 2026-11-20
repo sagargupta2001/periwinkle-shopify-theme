@@ -20,6 +20,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from shortcutlib import HAS_VALUE, IS, IS_NOT, NO_VALUE, REPEAT_ITEM, Shortcut, attachment, named, text
 from label_printing import add_label_handoff
+from photo_links import capture_album_snapshot, capture_intake_photo, link_product_photo, resolve_photo_reference, save_intake_photo_link, show_linked_photo
 
 STATUSES = ["NEW", "IN_PROGRESS", "READY_TO_PUBLISH", "LIVE"]
 REQUEST_STATUSES = ["PENDING", "COMPLETED", "REJECTED"]
@@ -34,7 +35,8 @@ URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.my
 ISO = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 ID = "yyyyMMddHHmmss"
 PURPLE, BLUE = 2071128575, 946986751  # client shortcuts, operator shortcuts
-BUILD = 11  # Shown in Work on Product's first menu, to confirm which version a phone has. Raise on each release.
+BUILD = 18  # Shown in Work on Product and Register; raise on each release.
+STATUS_LABELS = {"NEW": "New", "IN_PROGRESS": "In progress", "READY_TO_PUBLISH": "Ready to publish", "LIVE": "Live"}
 
 
 class Store(Shortcut):
@@ -275,6 +277,8 @@ def new_product(folder):
     s.stop()
     s.end_if(check)
 
+    album, photo_name, photo_date = capture_intake_photo(s, photos, sku)
+    before_names = capture_album_snapshot(s, album)
     caption = s.compose("SKU: ", sku, "\nCOST PRICE: ₹", cost, "\nSELLING PRICE: ₹", selling,
                         "\nSTATUS: NEW\nSUBMITTED VIA PERIWINKLE PRODUCT INTAKE", output="Caption")
     s.add("setclipboard", WFInput=attachment(caption), WFLocalOnly=False)
@@ -287,12 +291,18 @@ def new_product(folder):
     s.save(submission, "products/", lower, ".json")
     s.save_row("NEW", lower, row)
     s.log(time_id, iso, lower, "submitted", sku, "PRODUCT_SUBMITTED", "", "NEW", "client")
+    save_intake_photo_link(s, lower, sku, album, photo_name, photo_date, before_names)
 
     # Shown before the Share sheet, because the client needs it while choosing the album.
     s.add("notification", WFNotificationActionTitle="Periwinkle",
-          WFNotificationActionBody="Product details prepared. Select the Periwinkle Shared Album and paste the copied caption.")
+          WFNotificationActionBody=text("Post to ", album, " and paste the copied caption. The photo reference is saved automatically."))
     s.add("share", WFInput=attachment(photos))
-    label = s.pick("Product saved. Once the album post is done:", ["Prepare SKU label", "Finish for now"])
+    label = s.pick("Product saved. Once the album post is done:", ["Prepare SKU label", "Finish for now", "Photos not posted yet"])
+    not_posted = s.if_(label, IS, string="Photos not posted yet")
+    s.alert("Product saved; photos pending", "Post the photos to the named Shared Album, then use Fix Product → Finish photo linking. Do not submit the product again.")
+    s.stop()
+    s.end_if(not_posted)
+    resolve_photo_reference(s, lower, allow_choose=True, notify=True)
     printing = s.if_(label, IS, string="Prepare SKU label")
     add_label_handoff(s, sku)
     s.end_if(printing)
@@ -350,13 +360,17 @@ def fix_product(folder):
     s.stop()
     s.end_if(check)
     s.find_row(lower)
-    started = s.if_(named("rowStatus"), IS_NOT, string="NEW")
-    s.alert("Already being listed", "This product is ", named("rowStatus"), ", so it can't be changed here. Please message the operator with the correction.")
-    s.stop()
-    s.end_if(started)
     row = s.row_fields(named("rowFile"))
     action = s.pick(text(row["sku"], "\nCost: ₹", row["costPrice"], "\nSelling: ₹", row["sellingPrice"], "\n\nWhat needs fixing?"),
-                    ["Correct the prices", "Wrong SKU: cancel this submission", "Leave it as it is"])
+                    ["Finish photo linking", "Correct the prices", "Wrong SKU: cancel this submission", "Leave it as it is"])
+    photos = s.if_(action, IS, string="Finish photo linking")
+    resolve_photo_reference(s, lower, allow_choose=True, notify=True)
+    s.stop()
+    s.end_if(photos)
+    started = s.if_(named("rowStatus"), IS_NOT, string="NEW")
+    s.alert("Already being listed", "This product is ", named("rowStatus"), ", so its prices or SKU can't be changed here. Please message the operator with the correction.")
+    s.stop()
+    s.end_if(started)
 
     prices = s.if_(action, IS, string="Correct the prices")
     cost = s.ask_price("Correct cost price in ₹")
@@ -390,7 +404,23 @@ def fix_product(folder):
 def work_on_product(folder):
     s = Store("Periwinkle – Work on Product", folder, BLUE)
     START, LINK, BACK, FIX = "Start a new product", "Add or fix a Shopify link", "Move a product back", "Correct a product's prices"
-    action = s.pick(f"What are you doing? (build {BUILD})", [START, LINK, BACK, FIX])
+    PHOTO = "View or link product photo"
+    action = s.pick(f"What are you doing? (build {BUILD})", [START, LINK, BACK, FIX, PHOTO])
+
+    branch = s.if_(action, IS, string=PHOTO)
+    sku, lower = s.ask_existing_sku()
+    s.find_row(lower)
+    missing = s.if_(named("rowFile"), NO_VALUE)
+    s.alert("Product not found", "No current register record exists for that category and number.")
+    s.stop()
+    s.end_if(missing)
+    photo_action = s.pick("Product photo", ["View photo", "Link or change photo"])
+    viewing = s.if_(photo_action, IS, string="View photo")
+    show_linked_photo(s, lower)
+    s.else_(viewing)
+    link_product_photo(s, lower, sku)
+    s.end_if(viewing)
+    s.end_if(branch)
 
     branch = s.if_(action, IS, string=START)
     s.names_into("choices", "register/NEW")
@@ -404,13 +434,15 @@ def work_on_product(folder):
     s.stop()
     s.end_if(stale)
     row = s.row_fields(named("rowFile"))
+    show_linked_photo(s, lower, explain_missing=False)
     details = s.compose("SKU: ", row["sku"], "\nCost: ₹", row["costPrice"], "\nSelling: ₹", row["sellingPrice"],
                         "\nSubmitted: ", row["submittedAt"], output="Details")
     s.add("setclipboard", WFInput=attachment(details), WFLocalOnly=False)
     iso, time_id = s.stamps()
     s.save_row("IN_PROGRESS", lower, {**row, "productStatus": "IN_PROGRESS"})
     s.log(time_id, iso, lower, "processing-started", row["sku"], "PROCESSING_STARTED", "NEW", "IN_PROGRESS", "operator")
-    s.alert("Now IN_PROGRESS", details, "\n\nThese details are copied. Find the photos in the Shared Album around the submitted date, then list it in Shopify with Claude.")
+    s.alert("Now IN_PROGRESS", details, "\n\nThese details are copied. Linked photos preview before work starts. "
+            "For an unlinked product, use View or link product photo to select it once. Then list it in Shopify with Claude.")
     s.archive(("register/", named("rowStatus")), lower, "register/_replaced")
     s.end_if(branch)
 
@@ -587,6 +619,95 @@ def process_stock_requests(folder):
     return s
 
 
+def register_product_details(s, lower):
+    """Inspect a current row without changing records or recording activity."""
+    s.find_row(lower)
+    missing = s.if_(named("rowFile"), NO_VALUE)
+    s.alert("Product not found", "No current register record exists for that category and number.")
+    s.stop()
+    s.end_if(missing)
+    row = s.row_fields(named("rowFile"))
+    show_linked_photo(s, lower, explain_missing=False)
+    s.alert(text(row["sku"]), "Status: ", named("rowStatus"), "\nStock: ", row["stockStatus"],
+            "\nCost: ₹", row["costPrice"], "\nSelling: ₹", row["sellingPrice"],
+            "\nSubmitted: ", row["submittedAt"], "\nPublished: ", row["publishedAt"],
+            "\nStock updated: ", row["lastStockUpdateAt"], "\nShopify: ", row["shopifyUrl"],
+            "\nNotes: ", row["operatorNotes"])
+    COPY, LINK, PRINT, PHOTO, DONE = "Copy SKU", "Copy Shopify link", "Prepare SKU label", "Link or change photo", "Finish"
+    action = s.pick("Product actions", [COPY, LINK, PRINT, PHOTO, DONE])
+    branch = s.if_(action, IS, string=PHOTO)
+    link_product_photo(s, lower, row["sku"])
+    s.end_if(branch)
+    branch = s.if_(action, IS, string=COPY)
+    s.add("setclipboard", WFInput=attachment(row["sku"]), WFLocalOnly=True)
+    s.end_if(branch)
+    branch = s.if_(action, IS, string=LINK)
+    valid = s.add("text.match", output="Valid Shopify link", text=text(row["shopifyUrl"]),
+                  WFMatchTextPattern=URL_RULE, WFMatchTextCaseSensitive=False)
+    absent = s.if_(valid, NO_VALUE)
+    s.alert("No product link yet", "Use Work on Product to record the Shopify link once the listing exists.")
+    s.stop()
+    s.end_if(absent)
+    s.add("setclipboard", WFInput=attachment(row["shopifyUrl"]), WFLocalOnly=True)
+    s.end_if(branch)
+    branch = s.if_(action, IS, string=PRINT)
+    add_label_handoff(s, row["sku"])
+    s.end_if(branch)
+
+
+def register_browser(s):
+    """Filter file names first; only read the selected product's JSON."""
+    status_filter = s.pick("Which product status?", ["All statuses"] + list(STATUS_LABELS.values()))
+    category = s.pick("Which category?", ["All categories"] + [f"{label} ({code})" for label, code in CATEGORIES])
+    code = s.add("text.match", output="Category code", text=text(category),
+                 WFMatchTextPattern=r"[A-Z]{3}(?=\)$)", WFMatchTextCaseSensitive=True)
+    code_lower = s.add("text.changecase", output="Category key", text=text(code), WFCaseType="lowercase")
+    s.add("setvariable", WFVariableName="browserSeen", WFInput=attachment(s.literal("")))
+    # Furthest status wins, matching find_row(). Mark seen before filtering so an
+    # interrupted move cannot put an old copy back into a previous status list.
+    for status in reversed(STATUSES):
+        loop = s.each(s.list_folder("register/", status))
+        filename = s.add("properties.files", output="Record name", WFInput=attachment(REPEAT_ITEM), WFContentItemPropertyName="Name")
+        valid = s.add("text.match", output="Valid SKU filename", text=text(filename),
+                      WFMatchTextPattern=r"^pbs-[a-z]{3}-[0-9]{3,}(?:\.json)?$", WFMatchTextCaseSensitive=True)
+        usable = s.if_(valid, HAS_VALUE)
+        key = s.add("text.replace", output="Product key", WFInput=text(filename), WFReplaceTextFind=r"\.json$",
+                    WFReplaceTextReplace="", WFReplaceTextRegularExpression=True, WFReplaceTextCaseSensitive=True)
+        seen = s.add("text.match", output="Already listed", text=text(named("browserSeen")),
+                     WFMatchTextPattern=text("(?m)^", key, "$"), WFMatchTextCaseSensitive=True)
+        unseen = s.if_(seen, NO_VALUE)
+        all_seen = s.compose(named("browserSeen"), "\n", key)
+        s.add("setvariable", WFVariableName="browserSeen", WFInput=attachment(all_seen))
+        s.add("setvariable", WFVariableName="browserInclude", WFInput=attachment(s.literal("no")))
+        for allowed in ["All statuses", STATUS_LABELS[status]]:
+            match = s.if_(status_filter, IS, string=allowed)
+            s.add("setvariable", WFVariableName="browserInclude", WFInput=attachment(s.literal("yes")))
+            s.end_if(match)
+        included = s.if_(named("browserInclude"), IS, string="yes")
+        category_match = s.add("text.match", output="Category match", text=text(key),
+                               WFMatchTextPattern=text("^pbs-", code_lower, "-"), WFMatchTextCaseSensitive=True)
+        all_categories = s.if_(category, IS, string="All categories")
+        s.add("setvariable", WFVariableName="browserCategory", WFInput=attachment(s.literal("yes")))
+        s.else_(all_categories)
+        s.add("setvariable", WFVariableName="browserCategory", WFInput=attachment(category_match))
+        s.end_if(all_categories)
+        matches = s.if_(named("browserCategory"), HAS_VALUE)
+        sku = s.add("text.changecase", output="SKU", text=text(key), WFCaseType="UPPERCASE")
+        label = s.compose(sku, " · ", STATUS_LABELS[status])
+        s.add("appendvariable", WFVariableName="browserChoices", WFInput=attachment(label))
+        s.end_if(matches)
+        s.end_if(included)
+        s.end_if(unseen)
+        s.end_if(usable)
+        s.end_each(loop)
+    s.stop_if_empty("browserChoices", "No matching products", "No current products match those filters. Try another status or category.")
+    choice = s.choose("Choose a product", "browserChoices")
+    sku = s.add("text.match", output="Selected SKU", text=text(choice),
+                WFMatchTextPattern=r"^PBS-[A-Z]{3}-[0-9]{3,}", WFMatchTextCaseSensitive=True)
+    lower = s.add("text.changecase", output="Selected key", text=text(sku), WFCaseType="lowercase")
+    return lower
+
+
 def register(folder):
     s = Store("Periwinkle – Register", folder, BLUE)
 
@@ -618,7 +739,17 @@ def register(folder):
         s.add("openin", WFInput=attachment(saved), WFOpenInAskWhenRun=False, WFOpenInAppIdentifier="com.apple.Numbers",
               WFApp={"BundleIdentifier": "com.apple.Numbers", "Name": "Numbers", "TeamIdentifier": "0000000000"})
 
-    view = s.pick("Which view?", ["Products", "Stock requests", "Activity log"])
+    BROWSE, FIND, EXPORT = "Browse products", "Find a product", "Export to Numbers"
+    action = s.pick(f"Register (build {BUILD})", [BROWSE, FIND, EXPORT])
+    branch = s.if_(action, IS, string=BROWSE)
+    register_product_details(s, register_browser(s))
+    s.end_if(branch)
+    branch = s.if_(action, IS, string=FIND)
+    _, lower = s.ask_existing_sku()
+    register_product_details(s, lower)
+    s.end_if(branch)
+    exporting = s.if_(action, IS, string=EXPORT)
+    view = s.pick("Which table?", ["Products", "Stock requests", "Activity log"])
     branch = s.if_(view, IS, string="Products")
     fields = ["sku", "costPrice", "sellingPrice", "productStatus", "stockStatus", "shopifyUrl", "submittedAt", "publishedAt",
               "lastStockUpdateAt", "operatorNotes"]
@@ -636,6 +767,7 @@ def register(folder):
     csv_rows("rows", [("log",)], fields, "sku")
     publish("SKU,Timestamp,EventType,PreviousValue,NewValue,Source,Notes", "rows", "Activity Log")
     s.end_if(branch)
+    s.end_if(exporting)
     return s
 
 

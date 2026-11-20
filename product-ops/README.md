@@ -9,7 +9,11 @@ scripts.
 this repo is public, so git ignores that folder.
 
 The complete rebuild sources are `build/build.py`, `build/shortcutlib.py` and
-`build/label_printing.py`. New Product and Print Product Label include the
+`build/label_printing.py`, and `build/photo_links.py`. Register and Work on
+Product can preview linked Shared Album photos without saving image copies. New Product and Print Product Label include the
 NIIMBOT PDF handoff. `build/stage_client_release.py` copies only the signed client
 set to a versioned shared iCloud folder, with installation instructions and a
 hash manifest. See the [release instructions](../docs/product-operations/building-and-signing.md#rebuild-and-share-a-release).
+
+[Recovery](../docs/product-operations/recovery.md) documents the complete folder
+layout, metadata restoration and rebuilding account references after deletion.

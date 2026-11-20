@@ -23,12 +23,14 @@ Each one has its own page, with a diagram of what it does.
 | [Work on Product](work-on-product.md) | Operator | Start a product, record its link, move it back, correct prices |
 | [Publish Products](publish-products.md) | Operator | Mark a batch of ready products as LIVE |
 | [Process Stock Requests](process-stock-requests.md) | Operator | Complete or reject the client's stock requests |
-| [Register](register.md) | Operator | Build the tables you read in Numbers |
+| [Register](register.md) | Operator | Browse/find products and optionally export tables to Numbers |
 
 Also here:
 - [Rebuild and share a release](building-and-signing.md#rebuild-and-share-a-release):
   reproduce all workflows from source and stage the client's four files in iCloud.
 - [Installation](installation.md): setting up a phone, and sharing with the client.
+- [Recovery](recovery.md): recreate the entire folder structure, restore metadata,
+  preserve SKU numbering and rebuild account references after deletion.
 - [Building and signing](building-and-signing.md): recreating or changing the
   shortcuts, and the iPhone behaviours they're written around.
 - [Listing checklist](listing-checklist.md): what a Shopify listing needs.
@@ -84,10 +86,12 @@ pieces are one of a kind, so that's usually 1.
    message the operator.
 
 **Operator**
-1. Run Register → Products to see what's waiting.
+1. Run Register → Browse products → New to see what's waiting.
 2. Run Work on Product → Start a new product. The details are copied, ready
    for Claude.
-3. Find the photos in the album using the submitted date, and run
+3. New Product build 18 confirms the actual posted album photo during intake. For an older
+   record only, link it in Register or Work on Product once. Later visits preview
+   directly from the Shared Album. Run
    `/add-products list <SKU>` in Claude Code with a photo. It creates the draft and
    gives you the store link. Then add the photos in Shopify.
 4. Run Work on Product → Add or fix a Shopify link.
@@ -116,6 +120,8 @@ Periwinkle Product Operations/
   stock-requests/_handled/<time>/   The original of each processed request
   log/<time>-<sku>-<event>.json     One file per event, never changed
   views/*.csv                       Tables for Numbers, rebuilt on demand
+  photo-links/<sku>.json            Album/name/date reference only, no image bytes
+  photo-pending/<sku>.json          Pending album-name snapshot, then completion marker
 ```
 
 File names use the SKU in lowercase, which makes duplicate checks
@@ -125,9 +131,10 @@ leave those in place. [Installation](installation.md#initial-files) lists what t
 folder needs before first use.
 
 **Why one small file per event:** two phones editing one file can produce sync
-conflicts and lost records. New files can't overwrite each other. The only records
+conflicts and lost records. New files can't overwrite each other. The product records
 that get overwritten are a product's row and, when the client corrects prices, its
-submission. Only one person edits those at a time: the client while it's `NEW`, the
+submission. Photo links and pending snapshots are also updated during client
+confirmation or recovery. Only one person edits those at a time: the client while it's `NEW`, the
 operator after that.
 
 **Storage:** records are a few hundred bytes each, so thousands take a few MB.
@@ -140,6 +147,7 @@ Photos stay in the Shared Album and never enter this folder.
 | Product row | `sku`, `costPrice`, `sellingPrice`, `productStatus`, `stockStatus`, `shopifyUrl`, `submittedAt`, `publishedAt`, `lastStockUpdateAt`, `operatorNotes` |
 | Stock request | `requestId`, `sku`, `requestedStockStatus`, `requestStatus`, `requestedAt`, `processedAt`, `operatorNotes` |
 | Activity log | `timestamp`, `sku`, `eventType`, `previousValue`, `newValue`, `source`, `notes` |
+| Photo link | `version`, `sku`, `albumName`, `photoName`, `photoTakenAt`; intake also sets `source` |
 
 Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
 `SUBMISSION_CANCELLED`, `PROCESSING_STARTED`, `SHOPIFY_URL_RECORDED`,
@@ -155,9 +163,8 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
 - **Before using a category that has older products,** set its starting number. See
   [Installation](installation.md#initial-files). Otherwise the register starts at `001`,
   which may match an SKU already in Shopify.
-- Where the operator types a full SKU, the shortcut accepts letters, numbers, hyphens,
-  dots and underscores. A slash would break the file path, so old SKUs like
-  `PBS/SAR/069` are rejected.
+- Operator manual lookup also uses category plus number. Retired SKU formats
+  are not offered during this catalogue rebuild.
 - Duplicates are only checked against this register, not against SKUs already
   in Shopify. If an old product is still active with the same SKU, Shopify
   won't warn you here.
@@ -168,8 +175,9 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
   into it changes nothing and is lost on the next refresh. Shortcuts can only
   add rows to Numbers, not read or update them, so a live workbook can't do
   duplicate checks or status changes.
-- **Photo search doesn't work.** Searching Photos for an SKU doesn't find the
-  album photo, because the caption is stored as a comment. Use the register's
+- **SKU-comment search is not used.** Build 13 can preview a manually linked
+  photo from its Shared Album by name/date. New Product build 18 confirms the
+  posted reference during intake; cross-account matching still needs testing. For an unlinked photo, use the register's
   submitted date to find photos. See [Next phase](#next-phase).
 - **Posting isn't confirmed.** The record is saved before the Share sheet opens,
   because Shortcuts can't tell whether the client posted. If the client cancels,

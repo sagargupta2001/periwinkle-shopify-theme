@@ -41,3 +41,16 @@ flowchart TD
 The operator handles it:
 - A wrong price: [Work on Product](work-on-product.md) → Correct a product's prices.
 - A wrong SKU: Move a product back to `NEW`, and the client can then cancel it here.
+
+## Finish photo linking (build 17)
+
+Choose category and number, then Finish photo linking. This resumes a pending
+Shared Album post using its before-post name snapshot. Wait until the image has
+appeared in the target album, then confirm the newly posted image. Several new
+images require a client selection and confirmation. Finish this before creating
+another product in that same album.
+
+Only photo-links and photo-pending metadata can change in this branch; product
+status, prices, stock requests and activity records do not. This photo-only
+operation can finish after listing has started. Existing price correction and
+SKU cancellation remain restricted to NEW products.
