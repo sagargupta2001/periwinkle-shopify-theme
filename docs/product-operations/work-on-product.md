@@ -13,6 +13,7 @@ flowchart TD
     A --> L[Add or fix a Shopify link]
     A --> B[Move a product back]
     A --> F["Correct a product's prices"]
+    A --> P[View or link product photo]
 ```
 
 ## Start a new product
@@ -24,14 +25,15 @@ flowchart TD
     B -->|Yes| C[Choose one]
     C --> D{"Already further along?"}
     D -->|Yes| D1["Clear the leftover NEW copy<br/>and say which status it's in"] --> STOP
-    D -->|No| E["Copy its details for Claude"]
+    D -->|No| P["Preview linked Shared Album photo, if any"]
+    P --> E["Copy its details for Claude"]
     E --> F["Save register/IN_PROGRESS/sku.json<br/>Write PROCESSING_STARTED to the log"]
     F --> G[/"Now IN_PROGRESS, with the details"/]
     G --> H["Move the NEW row to register/_replaced/"]
 ```
 
-Find the photos in the album using the submitted date, because Photos can't
-search by SKU. Then list the piece with `/add-products list <SKU>` in Claude Code, which
+From build 13, a linked Shared Album photo previews before the status changes.
+For an unlinked piece, use View or link product photo to select it once. Then list the piece with `/add-products list <SKU>` in Claude Code, which
 follows the [listing checklist](listing-checklist.md).
 
 ## Add or fix a Shopify link
@@ -94,3 +96,20 @@ flowchart TD
 
 This works at any status. It doesn't change the original submission in `products/`,
 which keeps what the client first sent.
+
+## View or link product photo
+
+Build 13 added this read-only product-photo branch; builds 14–15 fix first-use
+and saved-link discovery. New Product build 15 supplies references automatically;
+manual linking is for old records and corrections. Choose the category and
+number, then View photo or Link or change photo. Linking creates only
+`photo-links/<sku>.json`; it does not change product status, prices, stock or
+activity entries. Select a photo from the named Shared Album, inspect its
+preview, and confirm the link once.
+
+Future views use the stored album, exact photo name (without adding an
+extension) and Date Taken. The image remains in the Shared Album. No image
+copy is saved, and lookup never falls back to a personal-library copy. See
+[Register](register.md#shared-album-photo-links) for matching, removal behaviour
+and the remaining phone checks. The same helper runs automatically before
+Start a new product's status change when a link already exists.

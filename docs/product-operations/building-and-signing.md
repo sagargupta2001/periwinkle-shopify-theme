@@ -1,130 +1,139 @@
 # Building and signing
 
-The shortcuts are generated from scripts in [`product-ops/build/`](../../product-ops/build/),
-so they can be recreated if one is deleted, and changes are reviewed like any other code.
-**Change the scripts, not the shortcut in the app.** A change made in the app is lost at
-the next build.
+The current release is **build 18**. Change the generators, not the installed
+shortcut: app-only edits disappear on rebuild. Every operational workflow can
+be recreated from source plus the two private account-specific folder references.
+See [Recovery](recovery.md) before recreating a deleted operations folder.
 
-| File | What it does |
+## Sources
+
+| File | Purpose |
 |---|---|
-| `shortcutlib.py` | Writes the shortcut file format: actions, variables, ifs, loops and menus |
-| `build.py` | One function per shortcut, plus signing |
-| `label_printing.py` | Generates SKU-only PDF labels on iPhone and hands them to NIIMBOT |
-| `stage_client_release.py` | Stages the four client files, installation notes and hash manifest in shared iCloud Drive |
-| `test_build.py` | Checks each shortcut for known mistakes, with no phone or signing |
-| `test_label_printing.py` | Validates generated PDFs, safe SKU handling and read-only reprints |
-| `printing_experiment.py`, `test_printing_experiment.py` | Recreate the isolated PNG/PDF investigation; not part of releases |
-| `setup_folder.py` | Creates the record folders and `settings.json` |
+| `build.py` | One builder per shortcut; account binding and Apple signing |
+| `shortcutlib.py` | Plist actions, variables, menus and control flow |
+| `photo_links.py` | Category albums, uploaded-photo confirmation, pending snapshots and previews |
+| `label_printing.py` | SKU-only PDF generation and NIIMBOT handoff |
+| `setup_folder.py` | Complete folder structure and non-overwriting initial settings/SKU starts |
+| `stage_client_release.py` | Client-only installer package, README and verified hash manifest |
+| `test_*.py` | Generator, PDF, photo-flow, folder recovery and data-safety checks |
+| `photo_lookup_experiment.py`, `printing_experiment.py` | Reproducible diagnostics; not operational releases |
 
-Signed files and folder references contain iCloud IDs, and this repo is public. They go
-in `product-ops/local/`, which git ignores.
+Signed files, folder references, backups and generated previews stay under
+ignored `product-ops/local/`: they can contain account-specific iCloud IDs.
+Never commit them to this public repository. Temporary diagnostic exports and
+superseded development installers have been cleaned up; their source remains.
 
-## Build everything
+## Build all workflows from scratch
 
-Needs a Mac with Shortcuts, signed in to iCloud, and Python 3. This assumes the folder
-reference is saved at `product-ops/local/operator-folderref.shortcut`.
-
-```bash
-python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/signed
-```
-
-Options:
-- `--role client` or `--role operator` builds one side only.
-- `--only register` builds shortcuts whose name contains that text.
-
-The file name becomes the shortcut's name on import, so `build.py` names the files.
-
-## Rebuild and share a release
-
-All runtime actions are generated from the repo; there are no app-only edits to
-recreate. The two saved folder-reference files are the only account-specific
-inputs. They stay under ignored `product-ops/local/`, because they contain iCloud
-IDs. If one is lost, recreate it on that person's phone using the instructions
-below; source code alone cannot reconstruct the account's folder IDs.
-
-Build 11 uses category plus number for every manual SKU selection, including
-Work on Product → Move a product back and Correct a product's prices. Existing
-product-list pickers remain lists. New Product and Print Product Label retain
-the build 10 PDF label integration (NIIMBOT Add and Print are manual).
-
-From the repo root:
+Use a Mac with Shortcuts, Python 3, internet for Apple's signing service, and a
+saved reference for each account. From the repo root:
 
 ```bash
-python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-11/operator --role all
-python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-11/client --role client
-python3 product-ops/build/stage_client_release.py product-ops/local/releases/build-11/client "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations/shortcuts/client-build-11"
+python3 product-ops/build/setup_folder.py
+python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-18/operator --role all
+python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-18/client --role client
 ```
 
-The first command builds all eight workflows for the operator's Apple Account;
-the second builds only the four client workflows with her folder reference.
-The final command copies the four signed client files and writes README.txt
-and manifest.json, then verifies every copy. It rejects unexpected shortcut
-files, unsigned plists, and overwriting a different version in the destination.
-Use a new version folder after raising BUILD for a later release.
+The first build produces all eight workflows for the operator's account,
+including client functions for own-phone tests. The second produces only the
+four client functions for the client's account. Their folder references differ,
+even though both accounts access the same shared folder.
 
-Keep operator files local. The client installs from Files → iCloud Drive →
-Periwinkle Product Operations → shortcuts → client-build-11. This is separate
-from products/, register/, log/ and views/: installing never resets those records.
-Only source/build instructions belong in Git; the generated release directories
-and account references remain ignored.
-
-## Changing a shortcut
-
-1. Pull `main`, and edit the shortcut's function in `build.py`.
-2. Raise `BUILD` in `build.py`. It shows in Work on Product's first menu, so you can
-   check which version a phone has.
-3. Run the checks, from `product-ops/build/`:
+`--only register`, `--only "work on product"`, `--only "new product"` and
+`--only "fix product"` rebuild individual workflows. The filename determines
+the imported shortcut's name. To replace the operator's existing unprefixed
+names, make filename aliases in a private installation directory:
 
 ```bash
-python3 -m unittest test_build
+mkdir -p product-ops/local/releases/build-18/install
+cp "product-ops/local/releases/build-18/operator/Periwinkle – Register.shortcut" "product-ops/local/releases/build-18/install/Register.shortcut"
+cp "product-ops/local/releases/build-18/operator/Periwinkle – Work on Product.shortcut" "product-ops/local/releases/build-18/install/Work on Product.shortcut"
+cp "product-ops/local/releases/build-18/operator/Periwinkle – New Product.shortcut" "product-ops/local/releases/build-18/install/New Product.shortcut"
+cp "product-ops/local/releases/build-18/operator/Periwinkle – Fix Product.shortcut" "product-ops/local/releases/build-18/install/Fix Product.shortcut"
 ```
 
-For label PDF validation, use the bundled Python runtime with `pypdf`,
-ReportLab and Pillow and run `python3 -m unittest test_build
-test_printing_experiment test_label_printing` from the same folder.
+The current operator installers are in **iCloud Drive → Periwinkle Operator
+Install - Build 18 - 2026-11-20**, a private folder outside the shared operations
+folder. They must not be installed on the client's account. The signed build-18
+files and predecessor backups remain private/local; older development exports
+are archived under `product-ops/local/backups/`.
 
-4. Build with `--only`, close the old shortcut's editor, and import the new file.
-   Choose Replace if offered. An open old editor can leave a duplicate behind;
-   verify the new tile/build before removing the older tile. Keep an exported
-   backup locally when updating an installed workflow.
-5. Test it on an iPhone. The Mac's command line can't show prompts, so it can't test these.
-6. Update that shortcut's page in these docs, in the same PR.
+## Package the client's files
 
-Using a new action? Test it on an iPhone, then add it to `TESTED_ACTIONS` in `test_build.py`.
+```bash
+python3 product-ops/build/stage_client_release.py product-ops/local/releases/build-18/client "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations/shortcuts/client-build-18"
+```
+
+Only the expected four signed client files are accepted. The script rejects
+missing/extra files, unsigned plists and overwriting different existing files.
+It writes README.txt and manifest.json, then verifies copied bytes. Use a new
+release folder for a later build. Operator files and raw folder-reference
+exports never go into this shared package.
+
+The client opens **Files → iCloud Drive → Periwinkle Product Operations →
+shortcuts → client-build-18**, replacing New Product and Fix Product. Update
+Stock and Print Product Label are included for recovery and did not change in
+this release. Installation never resets the register.
+
+## Test and install a change
+
+1. Fetch the current main branch and edit the generators. Raise BUILD for an
+   operational release; Register and Work on Product show it in their first menu.
+2. Run all checks from the repo root:
+
+```bash
+python3 -m unittest discover -s product-ops/build
+```
+
+PDF/printing checks need pypdf, ReportLab and Pillow. The bundled Codex Python
+runtime includes them; use it when the system Python lacks them.
+
+3. Build and sign. Decode each signed file with read_workflow() to verify the
+   account binding and action graph. Verify copies against SHA-256 hashes.
+4. Preserve a signed predecessor as a private file. Close old editors, import
+   using the existing name and choose Replace. Verify the build and one current
+   tile. Do not create Previous Version tiles in the synced library.
+5. Test on an iPhone. The Mac CLI cannot validate interactive prompts or iOS
+   import/type inference. A new action identifier must pass phone testing before
+   entering TESTED_ACTIONS. Record results in [Test report](test-report.md).
+6. Update the workflow page, decisions and recovery instructions as needed in
+   the same PR.
+
+**Build 18 phone result:** Register successfully previewed the existing
+PBS-SAR-006 photo after explicit Text conversion for dictionary comparisons.
+Full new intake/post/confirm/resume, cross-account delivery and photo-removal
+behaviour remain rollout checks; generator tests do not establish those results.
+
+## For a new Apple Account or recreated folder
+
+A folder reference holds account-specific identifiers and cannot be written by
+hand. Recreating a folder with the same name does not recreate those IDs.
+
+1. On the intended person's iPhone, create a temporary shortcut with one
+   **Get Contents of Folder** action. Pick the actual shared operations folder.
+2. Share that shortcut as a file (Anyone/File option), then transfer it to the Mac.
+3. Save it privately as operator-folderref.shortcut or client-folderref.shortcut
+   under product-ops/local/. Never leave the raw export in the shared folder.
+4. Rebuild for that account, replace its installed workflows, then delete the
+   temporary reference shortcut. Verify the other account independently.
+
+`read_folder_reference()` extracts the reference; `read_workflow()` decodes raw
+or Apple-signed files using openssl, aea and aa. The saved references can be
+reused only while they still point to the intended folder.
 
 ## Adding an SKU category
 
-1. Add it to `CATEGORIES` in `build.py`, with a three-capital code.
-2. Add it to [sku-codes.md](../sku-codes.md).
-3. Rebuild and reinstall the client's shortcuts. A category missing from `sku-start.json`
-   starts at `001`, so that file only needs changing if numbers are already in use.
+Add the code to CATEGORIES and its exact Shared Album name to CATEGORY_ALBUMS,
+create/share that album, then rebuild. An unmapped future category prompts for
+an album name. Set sku-start.json to the highest previously used number when
+numbers already exist outside the register; do not reset it during recovery.
 
 ## Signing
 
-`build.py` calls Apple's own tool:
-
-```bash
-shortcuts sign --mode anyone --input raw.shortcut --output "Periwinkle – Register.shortcut"
-```
-
-- **`anyone`** lets the file install on any iPhone, rather than only for people who know
-  you. Nothing here embeds a password or Apple ID.
-- It sends the shortcut to Apple's servers and needs internet.
-- Apple's server sometimes answers 502. `build.py` retries with growing delays, and
-  waits between shortcuts.
-
-## For a new Apple Account
-
-A folder reference can't be written by hand. It holds IDs specific to the account, so one
-has to be made on that person's iPhone:
-
-1. Create a shortcut named `folderref` with one action, **Get Contents of Folder**.
-2. Tap **Folder** in the action and pick the Periwinkle folder.
-3. In the list, long-press it, choose **Share**, set **Options** to **Anyone** or **File**,
-   and choose **Save to Files**.
-4. Copy the file to `product-ops/local/`, and delete it from the shared folder.
-
-`build.py` reads the reference out of that signed file.
+`build.py` uses Apple's own `shortcuts sign --mode anyone`. It needs internet,
+sends the workflow to Apple for validation, retries transient failures, and
+waits between files. Anyone mode allows installation without requiring the
+recipient to know the sender; the folder reference remains account-specific.
 
 ## iPhone behaviours these shortcuts rely on
 
@@ -150,8 +159,18 @@ Two earlier explanations turned out to be wrong, in case they come up again: the
 action, and running from a menu, weren't the causes of the ToolDialogHandler error. Delete
 and move both work; only values used afterwards fail.
 
-## Reading a signed shortcut
 
-To see what's inside a signed file, for example how the app stored a setting, extract the
-signing key from it and unpack it. `read_folder_reference()` in `build.py` shows how, using
-`openssl`, `aea` and `aa`.
+## Additional phone findings from builds 13–18
+
+- Shared Album upload can replace an IMG filename with a UUID and change its
+  date. Capture the confirmed posted asset, not the original selection's identity.
+- Nested Repeat Item variables have distinct names. Photo folder discovery and
+  file enumeration use sequential loops to avoid referring to the outer item.
+- A missing-file/blank placeholder was not a safe Has Value gate. Enumerate real
+  files and use explicit found flags before parsing or querying Photos.
+- An If directly on untyped Dictionary Value imported with an empty comparison.
+  Photo fields are materialized through Text before string predicates.
+- The Quick Look identifier is `is.workflow.actions.previewdocument`.
+  `is.workflow.actions.quicklook` is invalid.
+- Metadata snapshots/confirmed references contain no image bytes. Views always
+  check current Shared Album membership; no personal-library fallback is used.

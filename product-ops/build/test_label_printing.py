@@ -43,7 +43,11 @@ class LabelPdfChecks(unittest.TestCase):
         actions = shortcut.actions
         share = next(i for i, a in enumerate(actions) if action_name(a) == "share")
         end = actions[share + 1:]
-        self.assertFalse({"documentpicker.save", "file.move", "file.delete"}.intersection(action_name(a) for a in end))
+        self.assertFalse({"file.move", "file.delete"}.intersection(action_name(a) for a in end))
+        for action in end:
+            if action_name(action) == "documentpicker.save":
+                path = action["WFWorkflowActionParameters"]["WFFileDestinationPath"]["Value"]["string"]
+                self.assertTrue(path.startswith(("photo-links/", "photo-pending/")), path)
         pdf = next(a["WFWorkflowActionParameters"] for a in end
                    if a["WFWorkflowActionParameters"].get("WFTextActionText", {}).get("Value", {}).get("string", "").startswith("%PDF-1.4"))
         self.assertEqual(len(list(references(pdf))), 2)  # font field and SKU field, never the intake caption

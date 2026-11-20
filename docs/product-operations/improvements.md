@@ -33,7 +33,7 @@ the job.
 | 4 | Publish Products | If a run stops after saving `LIVE` but before moving the old row, the product shows up again. Publishing it again changes its published date and adds a second log entry. | Check for a `LIVE` row first. If there is one, clear the leftover copy, as Start a new product does. |
 | 5 | Work on Product: Move a product back | If a run stops before the old row moves, the furthest status still wins, so the product looks unchanged while the log says it moved. Running it again fixes it. | Make the alert say what to do, or have Register flag it (see 7). |
 | 6 | Fix Product | If the client corrects prices just as the operator starts the product, the correction lands in a leftover `NEW` row. The operator's row keeps the old prices, while the log shows the new ones. | Have Register flag it (see 7). It should be rare, so don't add more than that. |
-| 7 | Register | It reads conflict copies and leftover rows, so a product can appear twice. | Skip conflict copies, as other flows do. Add a Problems view for leftover rows, rows with no submission and prices that differ from the log. |
+| 7 | Register exports | CSV export can read conflict copies and leftover rows, so a product can appear twice. Build 12's browser skips conflicts and deduplicates by furthest status. | Apply equivalent handling to exports. Add a Problems view for leftover rows, rows with no submission and prices that differ from the log. |
 | 8 | Work on Product | The link check allows a `"` in a URL, and a quote would make the saved row unreadable. | Tighten `URL_RULE` to reject quotes. |
 
 ## Catching setup problems
@@ -110,6 +110,14 @@ A public album link doesn't help. It's for viewing and joining, not posting, and
 expose the cost prices in the captions.
 
 ## Finding photos
+
+**Current (build 18):** Register and Work on Product preview metadata-linked
+Shared Album photos. Register's existing PBS-SAR-006 preview passed on the
+operator's iPhone after the Text typing fix. New Product captures a before-post
+name snapshot and the client confirms the actual uploaded asset; Fix Product
+resumes pending confirmation. This replaces the assumption that original file
+names survive upload. Full intake/resume, cross-account and deletion tests
+remain rollout checks. See [Register](register.md#shared-album-photo-links).
 
 The client sends one original photo of each piece, taken on the spot. The operator uses it to make
 the Gemini images, and plans to keep it in Shopify for reference.

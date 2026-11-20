@@ -4,6 +4,8 @@
     python3 -m unittest test_build
 """
 import re
+import plistlib
+import tempfile
 import unittest
 
 import build
@@ -14,7 +16,7 @@ TESTED_ACTIONS = {
     "alert", "appendvariable", "ask", "calculateexpression", "choosefromlist", "choosefrommenu", "conditional", "count",
     "date", "detect.dictionary", "documentpicker.open", "documentpicker.save", "exit", "file", "file.delete",
     "file.getfoldercontents", "file.move", "format.date", "gettext", "getvalueforkey", "notification", "openin",
-    "properties.files", "repeat.each", "selectphoto", "setclipboard", "setitemname", "setvariable", "share", "statistics",
+    "properties.files", "properties.images", "filter.photos", "previewdocument", "repeat.each", "selectphoto", "setclipboard", "setitemname", "setvariable", "share", "statistics",
     "text.changecase", "text.combine", "text.match", "text.replace", "text.trimwhitespace",
 }
 READS_FILE = {"detect.dictionary", "getvalueforkey"}
@@ -78,6 +80,18 @@ class ShortcutChecks(unittest.TestCase):
                     self.assertIn(used, seen, f"{s.name}: {action_name(action)} uses a later output")
                 seen.add(params["UUID"])
 
+    def test_text_conditions_do_not_take_untyped_dictionary_values_directly(self):
+        # On iPhone, If may import without its comparison value when its input
+        # is an untyped Dictionary Value. Text materialization gives a valid UI.
+        for shortcut in self.shortcuts:
+            kinds = {a["WFWorkflowActionParameters"]["UUID"]: action_name(a) for a in shortcut.actions}
+            for action in shortcut.actions:
+                p = action["WFWorkflowActionParameters"]
+                if action_name(action) != "conditional" or "WFConditionalActionString" not in p:
+                    continue
+                for output in references(p["WFInput"]):
+                    self.assertNotEqual(kinds.get(output), "getvalueforkey", shortcut.name)
+
     def test_values_from_a_file_are_not_used_after_it_moves(self):
         """Doing so stops the run on iPhone with a ToolDialogHandler error, even through a Text action."""
         for s in self.shortcuts:
@@ -117,9 +131,41 @@ class ShortcutChecks(unittest.TestCase):
         category_menus = [a["WFWorkflowActionParameters"] for a in shortcut.actions
                           if action_name(a) == "choosefrommenu"
                           and a["WFWorkflowActionParameters"].get("WFMenuPrompt") == "Which category?"]
-        self.assertEqual(len(category_menus), 2)
+        self.assertEqual(len(category_menus), 3)
         for menu in category_menus:
             self.assertEqual(menu["WFMenuItems"], [f"{label} ({code})" for label, code in build.CATEGORIES])
+
+    def test_every_shortcut_can_be_serialized(self):
+        # A bare Var in a text-only field looks fine in memory but cannot import.
+        with tempfile.TemporaryDirectory() as folder:
+            for i, shortcut in enumerate(self.shortcuts):
+                path = f"{folder}/{i}.shortcut"
+                shortcut.write(path)
+                with open(path, "rb") as source:
+                    self.assertEqual(len(plistlib.load(source)["WFWorkflowActions"]), len(shortcut.actions))
+
+    def test_register_inspection_never_writes_product_stock_or_activity_records(self):
+        for build_flow in [build.register_browser, lambda s: build.register_product_details(s, build.named("key"))]:
+            shortcut = build.Store("Inspection", {"filename": "test"}, build.BLUE)
+            build_flow(shortcut)
+            for action in shortcut.actions:
+                self.assertNotIn(action_name(action), {"file.move", "file.delete", "share"})
+                if action_name(action) == "documentpicker.save":
+                    path = action["WFWorkflowActionParameters"]["WFFileDestinationPath"]["Value"]["string"]
+                    self.assertTrue(path.startswith(("photo-links/", "photo-pending/")), path)
+
+    def test_register_browse_does_not_load_every_json_record(self):
+        shortcut = build.Store("Browse", {"filename": "test"}, build.BLUE)
+        build.register_browser(shortcut)
+        self.assertNotIn("detect.dictionary", [action_name(a) for a in shortcut.actions])
+        patterns = [a["WFWorkflowActionParameters"]["WFMatchTextPattern"] for a in shortcut.actions
+                    if action_name(a) == "text.match"
+                    and isinstance(a["WFWorkflowActionParameters"]["WFMatchTextPattern"], str)]
+        filename_rule = next(p for p in patterns if p.startswith("^pbs-"))
+        for good in ["pbs-dup-001", "pbs-min-1000.json"]:
+            self.assertRegex(good, filename_rule)
+        for bad in [".DS_Store", "_folder.json", "pbs-dup-001 2.json", "pbs-dup-001 (conflicted copy).json"]:
+            self.assertNotRegex(bad, filename_rule)
 
 
 class SkuRules(unittest.TestCase):
