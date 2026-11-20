@@ -42,13 +42,13 @@ def references(value):
 
 class ShortcutChecks(unittest.TestCase):
     def setUp(self):
-        self.shortcuts = [builder({"filename": "test"}) for builder in build.CLIENT + build.OPERATOR]
+        self.shortcuts = [builder({"filename": "test"}) for builder in build.CLIENT + build.OPERATOR + build.BUNDLES]
 
     def test_names_are_unique_and_prefixed(self):
         names = [s.name for s in self.shortcuts]
         self.assertEqual(len(names), len(set(names)))
         for name in names:
-            self.assertTrue(name.startswith("Periwinkle – "), name)
+            self.assertTrue(name.startswith(("Periwinkle – ", "Periwinkle - ")), name)
 
     def test_only_tested_actions_are_used(self):
         for s in self.shortcuts:
@@ -116,7 +116,7 @@ class ShortcutChecks(unittest.TestCase):
     def test_records_are_never_deleted(self):
         """Only Register deletes, and only its rebuilt Numbers copy."""
         for s in self.shortcuts:
-            if s.name != "Periwinkle – Register":
+            if s.name not in {"Periwinkle – Register", "Periwinkle - Operator"}:
                 self.assertNotIn("file.delete", [action_name(a) for a in s.actions], s.name)
 
     def test_manual_full_sku_entry_is_not_offered(self):

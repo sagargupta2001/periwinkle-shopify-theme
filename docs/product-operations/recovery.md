@@ -87,9 +87,9 @@ current membership. CSVs are derived views and cannot restore all source data.
    and have both accounts open it in Files. Create fresh account-specific
    folder references pointing to that root. A same-name replacement has new
    folder IDs, so old installed references must not be assumed to work.
-5. Follow [Building and signing](building-and-signing.md) to rebuild all eight
-   operator-account workflows and the four client-account workflows. Install
-   each account's own files, choosing Replace. If restored installer directories
+5. Follow [Building and signing](building-and-signing.md) to rebuild both
+   operator-account role bundles and the single client-account Client bundle.
+   Install each account's own files, choosing Replace. If restored installer directories
    contain different signed files, stage rebuilt files in a new release directory;
    the packaging script intentionally refuses to overwrite a different release.
 6. Keep the existing Shared Albums when they still exist, and verify both

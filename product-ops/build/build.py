@@ -9,6 +9,7 @@ docs/product-operations/building-and-signing.md, which also lists the iPhone
 behaviours these shortcuts are written around.
 """
 import argparse
+import copy
 import os
 import plistlib
 import struct
@@ -35,7 +36,7 @@ URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.my
 ISO = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 ID = "yyyyMMddHHmmss"
 PURPLE, BLUE = 2071128575, 946986751  # client shortcuts, operator shortcuts
-BUILD = 18  # Shown in Work on Product and Register; raise on each release.
+BUILD = 19  # Shown in role menus and operation menus; raise on each release.
 STATUS_LABELS = {"NEW": "New", "IN_PROGRESS": "In progress", "READY_TO_PUBLISH": "Ready to publish", "LIVE": "Live"}
 
 
@@ -773,6 +774,54 @@ def register(folder):
 
 CLIENT = [new_product, update_stock, fix_product, print_product_label]
 OPERATOR = [work_on_product, publish_products, process_stock_requests, register]
+CLIENT_MENU = [("New Product", new_product), ("Update Stock", update_stock),
+               ("Fix Product", fix_product), ("Print Product Label", print_product_label)]
+OPERATOR_MENU = [("Register", register), ("Work on Product", work_on_product),
+                 ("Publish Products", publish_products), ("Process Stock Requests", process_stock_requests)]
+
+
+def role_bundle(folder, role, color, operations):
+    """Inline independent operations into one menu, with one account binding.
+
+    There is no Run Shortcut dependency or enclosing repeat loop. Exactly one
+    menu branch runs per invocation, so operation variables and Repeat Items keep
+    their existing meaning. The modular builders remain the source of truth.
+    """
+    s = Store(f"Periwinkle - {role}", folder, color)
+    menu = s.menu(f"Periwinkle - {role} (build {BUILD})", [label for label, _ in operations])
+    for label, builder in operations:
+        child = builder(folder)
+        if child.questions:
+            raise ValueError("Bundled operations cannot have position-dependent import questions")
+        root = child.actions[0]
+        if root["WFWorkflowActionIdentifier"] != "is.workflow.actions.file":
+            raise ValueError(f"{child.name}: expected its account folder binding first")
+        old_root = root["WFWorkflowActionParameters"]["UUID"]
+
+        def bind(value):
+            if isinstance(value, dict):
+                return {key: (s.root.output_uuid if key == "OutputUUID" and item == old_root else bind(item))
+                        for key, item in value.items()}
+            if isinstance(value, list):
+                return [bind(item) for item in value]
+            return value
+
+        s.case(menu, label)
+        s.actions.extend(bind(copy.deepcopy(child.actions[1:])))
+        s.stop()
+    s.end_menu(menu)
+    return s
+
+
+def client_bundle(folder):
+    return role_bundle(folder, "Client", PURPLE, CLIENT_MENU)
+
+
+def operator_bundle(folder):
+    return role_bundle(folder, "Operator", BLUE, OPERATOR_MENU)
+
+
+BUNDLES = [client_bundle, operator_bundle]
 
 
 def read_workflow(path):
@@ -805,10 +854,10 @@ def main():
     parser.add_argument("folderref")
     parser.add_argument("output")
     parser.add_argument("--role", choices=["client", "operator", "all"], default="all")
-    parser.add_argument("--only", help="build only shortcuts whose name contains this text")
+    parser.add_argument("--only", help="build only role bundles whose name contains this text")
     args = parser.parse_args()
     folder = read_folder_reference(args.folderref)
-    builders = {"client": CLIENT, "operator": OPERATOR, "all": CLIENT + OPERATOR}[args.role]
+    builders = {"client": [client_bundle], "operator": [operator_bundle], "all": BUNDLES}[args.role]
     os.makedirs(args.output, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         for builder in builders:

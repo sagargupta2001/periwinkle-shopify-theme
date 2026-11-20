@@ -731,3 +731,27 @@ its input was an untyped Dictionary Value. The source plist's string parameter
 and Python control-flow tests did not establish iOS type inference. The new
 regression check rejects direct dictionary-value text conditions, and the
 operator will test Register alone before replacing the other workflows.
+
+### 36. Distribute two self-contained role shortcuts; keep source operations modular
+
+20 November 2026.
+
+**Decision:** Build 19 produces Periwinkle - Client and Periwinkle - Operator.
+Each has the role's four operations as its first menu. Existing builders remain
+independent source modules and are inlined at build time, with one account-bound
+root reference and an explicit stop after each branch. There are no Run Shortcut
+dependencies and no enclosing repeat loop. One operation runs per launch.
+
+**Why:** Sagar requested fewer tiles and files to install, share and update.
+Modular generators avoid maintaining one large workflow by hand, while each
+person receives one complete file per role. The operator can install both using
+his account reference; only the separately built client-account Client file is
+staged in the shared folder. Packaging checks the supplied client reference,
+current build and role menu before writing.
+
+**Migration:** Product records, stock history, SKU numbering and metadata-only
+photo folders are unchanged. Keep existing operation tiles until the new bundles
+pass iPhone checks, then remove only those tiles. Preserve personal shortcuts,
+Shared Albums, operational data and a private rollback release. Automated branch
+equivalence and signing checks do not replace phone import/runtime or actual
+client-to-operator/physical-print testing. See [Role shortcuts](product-operations/role-shortcuts.md).

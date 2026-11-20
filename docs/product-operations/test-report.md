@@ -1,6 +1,26 @@
 # Test report
 
-## Current verified state — build 18
+## Current release — build 19
+
+20 November 2026. The eight operation builders are now inlined into two
+self-contained role bundles, each with four first-menu choices and one account
+binding. No Run Shortcut dependencies or installed helpers are required.
+Client has 911 actions and Operator has 2,104 actions. The generators are ready;
+Apple signing, installer staging and phone import have not yet been completed
+for this build. Existing build-18 installers remain the deployed release.
+
+The full generator suite passes **54 tests**. New checks compare every inlined
+branch with its original operation after UUID/root normalization, verify menu
+structure and branch stops, and restrict record-file deletion to Register
+exports. Client packaging rejects wrong account bindings, stale build menus and
+extra old-operation files before writing.
+
+Build-19 phone import/runtime, complete new intake/photo confirmation/resume,
+cross-account matching, removal behaviour and physical B1 printing remain
+rollout checks. Existing build-18 operation tiles are retained until bundle
+checks pass. No records or photo metadata are reset by bundling.
+
+## Prior verified phone state — build 18
 
 20 November 2026. Sagar confirmed that Register now successfully previews the
 existing PBS-SAR-006 Shared Album photo. Read-only inspection confirms its
@@ -217,7 +237,7 @@ The four signed client files, README.txt and manifest.json were staged in
 **Periwinkle Product Operations/shortcuts/client-build-11/**. All four copied
 files were read back and their SHA-256 hashes matched. No operator copies or
 folder-reference exports were placed in that package. Source and exact rebuild
-commands are in [Building and signing](building-and-signing.md#rebuild-and-share-a-release).
+commands are in [Building and signing](building-and-signing.md#build-all-workflows-from-scratch).
 
 **Not yet confirmed:** iPhone sync for the operator update, build 11 category
 selection on iPhone, installation of the client package, dynamic SKU PDF

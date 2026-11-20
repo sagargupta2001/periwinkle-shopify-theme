@@ -65,14 +65,21 @@ folder references and rebuilt installers, even if its name is unchanged.
 
 ## 2. The operator's shortcuts
 
-1. Make the [folder reference and build](building-and-signing.md#for-a-new-apple-account).
-2. Open each signed file on the Mac and click **Add Shortcut**. They sync to any iPhone
-   on the same Apple Account.
-3. Close the old shortcut's editor before importing. Choose Replace when offered,
-   then check there's one current copy of each. If an older copy had a different
-   name, remove its tile after identifying the new one. Shortcut tiles and shared
-   product records are separate; do not delete the shared data folders.
-4. Run each once from the Shortcuts app, tapping **Always Allow** on prompts.
+1. Make the [folder reference and build](building-and-signing.md#for-a-new-apple-account-or-recreated-folder)
+   using the operator's account. Build 19 produces Periwinkle - Operator and
+   Periwinkle - Client. Both use that account's folder reference; Client is for
+   own-phone testing.
+2. Open those two signed files on the Mac and click **Add Shortcut** to sync
+   through the same Apple Account, or open them from the private operator
+   installer folder in Files on the iPhone. Keep operator-account files outside
+   the client-shared folder.
+3. On later releases, close the old editor and choose Replace. For this first
+   migration, keep the eight individual operation tiles until the new bundles
+   pass phone checks. Then remove those old tiles only, preserving personal
+   shortcuts, the two role tiles and all shared data. See [Role shortcuts](role-shortcuts.md).
+4. Run from the Shortcuts app, tapping **Always Allow** on prompts. Verify the
+   first menu's build number and an existing Register product/photo before
+   testing writes.
 
 ## 3. Handing over to the client
 
@@ -97,32 +104,33 @@ the client's phone. The logic is identical, and only that reference differs.
 3. On the client's phone, make a shortcut called `folderref` with one action, **Get
    Contents of Folder**, pointing at the shared folder. Share it as a file, and get it to
    the Mac, for example by AirDrop or by saving it in the shared folder.
-4. Build the client's four shortcuts with it. Build 18 includes posted-photo
-   confirmation and resume support with explicit text typing. See the complete
-   [release commands](building-and-signing.md#rebuild-and-share-a-release).
+4. Build the client's single Client bundle with it. Build 19 includes all four
+   client operations and the existing posted-photo confirmation/resume support.
+   See the complete [release commands](building-and-signing.md#build-all-workflows-from-scratch).
 
 ```bash
-python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/client --role client
+python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-19/client --role client
 ```
 
-5. AirDrop the four signed files to the client, who taps each and then **Add Shortcut**. If
-   you're not together, stage them in the shared folder with
-   `stage_client_release.py`. For build 18 she opens **Files → iCloud Drive →
-   Periwinkle Product Operations → shortcuts → client-build-18**, then opens the
-   four .shortcut files and chooses Replace for matching older shortcuts. Keep
-   this version folder for reinstalling. It contains README.txt and a file-hash
-   manifest, and never includes the raw folder-reference file or operator files.
-6. On the client's phone, run New Product with a test SKU, and check the record reaches
-   your phone. Then run Update Stock and Fix Product.
+5. Stage the single signed file using stage_client_release.py and its required
+   --folderref client reference. The client opens **Files → iCloud Drive →
+   Periwinkle Product Operations → shortcuts → client-build-19 → Periwinkle -
+   Client.shortcut** and taps Add Shortcut. Future same-name updates use Replace.
+   Keep this version folder for reinstalling. It includes README.txt and a hash
+   manifest, never the raw reference or operator-account files.
+6. On the client's phone, run Client → New Product with a test SKU and check
+   that its record and confirmed Shared Album photo reach the operator. Test
+   Update Stock, Fix Product and label handoff/printing. Keep the four old tiles
+   until the new bundle passes these checks, then remove only those old tiles.
 
 **Before sharing:** cost prices will be visible to everyone with access to the folder.
 Also delete any `folderref` file left in the folder.
 
 ## Client instructions
 
-Run New Product, Update Stock and Fix Product by opening the **Shortcuts** app and tapping the
-shortcut's tile. Print Product Label is also a client shortcut, for retries and
-reprints without submitting another product. Install NIIMBOT from the App Store
+Open the **Shortcuts** app, tap **Periwinkle - Client**, then choose New Product,
+Update Stock, Fix Product or Print Product Label. Launch it again for the next
+task. Print Product Label supports retries and reprints without another submission. Install NIIMBOT from the App Store
 and connect her B1 inside it. Match the label roll size (the initial PDF template
 is 50 × 30 mm). The client doesn't need the operator shortcuts.
 
