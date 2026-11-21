@@ -1,6 +1,79 @@
 # Test report
 
-## Current verified state — build 18
+## Current release — build 19
+
+20 November 2026. The eight operation builders are now inlined into two
+self-contained role bundles, each with four first-menu choices and one account
+binding. No Run Shortcut dependencies or installed helpers are required.
+Client has 911 actions and Operator has 2,104 actions. After Sagar explicitly
+approved Apple signing, all three files were signed: operator-account Client
+and Operator, plus client-account Client. Each signed payload was decoded and
+its complete action graph compared with a fresh builder after UUID normalization.
+The folder bindings match their intended private references and differ between
+accounts. Apple's signed payload omits WFWorkflowName; the filename determines
+the imported name.
+
+The private **Periwinkle Operator Install - Build 19 - 2026-11-20** iCloud folder
+contains both operator-account files, README.txt and a SHA-256 manifest. The
+shared **shortcuts/client-build-19** folder contains only client-account Client,
+README.txt and manifest.json. Staging rechecked the client binding/current menu;
+copied file bytes were verified. No account identifiers or installers are committed.
+
+Mac import did not complete: the native Import dialog kept Open disabled for
+the signed file, and subsequent UI access timed out. No new installed role tile
+was observed. Files-based iPhone installation and runtime checks are pending;
+the existing build-18 operation tiles/installers remain available.
+
+The full generator suite passes **54 tests**. New checks compare every inlined
+branch with its original operation after UUID/root normalization, verify menu
+structure and branch stops, and restrict record-file deletion to Register
+exports. Client packaging rejects wrong account bindings, stale build menus and
+extra old-operation files before writing.
+
+**21 November readiness review:** All 54 tests were rerun successfully and
+GitHub reported a clean, conflict-free merge. The verified pre-reset backup
+shows SAR-008 with source shared_album_confirmed, a complete pending marker
+and an IN_PROGRESS register row. This establishes successful posted-photo
+confirmation and subsequent operator processing for that test record. It does
+not identify which installed shortcut version ran or establish a later Register
+preview. No blocking source issue was found; the PR is ready for review/merge.
+
+Formal confirmation of both installed build-19 role menus and Register preview,
+delayed-sync resume, cross-account matching, removal behaviour and physical B1
+printing remain rollout checks. Keep older local signed installers for rollback.
+No records or photo metadata are reset by bundling itself; the separate,
+explicitly requested dummy-data reset is recorded below.
+
+**Installer-folder cleanup:** At Sagar's request, the private operator build-18
+folder and shared client-build-11/client-build-18 folders were moved out of
+iCloud to Mac Trash after an 18-file rollback archive was hash-verified under
+ignored product-ops/local/backups/. The missing private operator build-19 folder
+was restored from the signed local files and its account binding/action graphs
+were rechecked. Only private operator build 19 and shared client-build-19 remain
+as iCloud installer folders; both current manifests match their file bytes.
+Installed operation tiles, personal shortcuts, records and Shared Albums were
+unchanged. Older installers remain recoverable locally, without cluttering Files.
+
+## Test register reset for real intake
+
+21 November 2026. Sagar explicitly requested clearing the dummy register to begin
+real products. The reset removed nine test submissions and their current/history
+rows, stock requests, event logs, CSV rows and photo-link/pending metadata.
+All 77 data files plus settings.json and sku-start.json were backed up in a
+hash-verified private ZIP under ignored product-ops/local/backups/; originals were
+also moved to recoverable Mac Trash. Reproducible folder markers were excluded
+from the ZIP. An earlier incomplete backup was not used for the reset.
+
+Post-reset checks found zero products, stock requests, events, photo links or
+pending links; Product Register, Stock Requests and Activity Log CSVs contain
+headers only. Configuration and existing folder identities stayed unchanged,
+preserving account references. All seven SKU starts were already zero and were
+left unchanged, so each category's next suggestion is 001. Signed installers,
+unrelated root documents and Shared Album photos were preserved. No Shopify
+products were changed. Old test album posts/physical labels require separate
+review; an already open Numbers document can still show an old snapshot.
+
+## Prior verified phone state — build 18
 
 20 November 2026. Sagar confirmed that Register now successfully previews the
 existing PBS-SAR-006 Shared Album photo. Read-only inspection confirms its
@@ -217,7 +290,7 @@ The four signed client files, README.txt and manifest.json were staged in
 **Periwinkle Product Operations/shortcuts/client-build-11/**. All four copied
 files were read back and their SHA-256 hashes matched. No operator copies or
 folder-reference exports were placed in that package. Source and exact rebuild
-commands are in [Building and signing](building-and-signing.md#rebuild-and-share-a-release).
+commands are in [Building and signing](building-and-signing.md#build-all-workflows-from-scratch).
 
 **Not yet confirmed:** iPhone sync for the operator update, build 11 category
 selection on iPhone, installation of the client package, dynamic SKU PDF

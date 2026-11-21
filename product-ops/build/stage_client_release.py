@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Stage only the four signed client shortcuts in a versioned shared folder.
+"""Stage the single signed Client bundle in a versioned shared folder.
 
-python3 stage_client_release.py <signed client dir> <shared destination dir>
+python3 stage_client_release.py <signed client dir> <shared destination dir> --folderref <client-folderref.shortcut>
 Run build.py with client-folderref.shortcut and --role client first.
 """
 import argparse
@@ -9,12 +9,12 @@ import hashlib
 import json
 from pathlib import Path
 
-from build import BUILD, CATEGORIES, CLIENT
+from build import BUILD, CATEGORIES, CLIENT_MENU, client_bundle, read_folder_reference, read_workflow
 from photo_links import CATEGORY_ALBUMS
 
 
-def stage(source, destination):
-    expected = {builder({"filename": "manifest"}).name + ".shortcut" for builder in CLIENT}
+def stage(source, destination, folderref):
+    expected = {client_bundle({"filename": "manifest"}).name + ".shortcut"}
     files = {file.name: file for file in source.glob("*.shortcut")}
     if set(files) != expected:
         raise ValueError(f"Expected only the client shortcuts. Missing: {sorted(expected - set(files))}; "
@@ -26,6 +26,15 @@ def stage(source, destination):
         target = destination / name
         if target.exists() and target.read_bytes() != content:
             raise ValueError(f"A different release already exists at {target}; use a new version folder")
+    expected_folder = read_folder_reference(str(folderref))
+    for name, file in files.items():
+        workflow = read_workflow(str(file))
+        actions = workflow["WFWorkflowActions"]
+        if actions[0]["WFWorkflowActionParameters"].get("WFFile") != expected_folder:
+            raise ValueError("Client bundle does not match the supplied client account folder reference")
+        menu = actions[1]["WFWorkflowActionParameters"]
+        if menu.get("WFMenuItems") != [label for label, _ in CLIENT_MENU] or menu.get("WFMenuPrompt") != f"Periwinkle - Client (build {BUILD})":
+            raise ValueError("Expected the self-contained Client role menu")
     manifest = {"build": BUILD, "role": "client", "files": {
         name: {"bytes": len(content), "sha256": hashlib.sha256(content).hexdigest()}
         for name, content in sorted(payloads.items())}}
@@ -35,20 +44,16 @@ def stage(source, destination):
 Install on the CLIENT'S iPhone from Files:
 iCloud Drive → Periwinkle Product Operations → shortcuts → {destination.name}
 
-New Product and Fix Product change in this release. Replace both.
-The other two files are included for complete reinstallation if needed:
-• Periwinkle – New Product
-• Periwinkle – Update Stock
-• Periwinkle – Fix Product
-• Periwinkle – Print Product Label
+Install the ONE file: Periwinkle - Client.shortcut.
+It contains New Product, Update Stock, Fix Product and Print Product Label as
+its first menu options. No separately installed operation shortcuts are needed.
+Choose one operation per run; launch the same Client shortcut for the next task.
 
-Choose Replace when an existing matching shortcut is found. If an older copy
-was renamed (for example, New Product without Periwinkle), keep one current
-copy of each function after installation. Deleting an old shortcut tile does
-not delete product records. Do not delete the shared data folders.
-
-These files use the folder reference made on the client's Apple Account.
-Operator copies must not be installed in their place.
+Choose Replace when updating an existing Periwinkle - Client. For the first
+migration, keep the four old operational shortcuts until the new bundle passes
+phone checks. Then remove those old tiles; do not delete the operations folder.
+These files use the supplied CLIENT account folder reference. The operator's
+Client testing copy has the same name but must remain private on their account.
 
 Create these as Shared Albums and invite the operator's Apple Account:
 {album_list}
@@ -74,8 +79,8 @@ Print Product Label prepares/reprints a label without submitting another product
 Run shortcuts by opening the Shortcuts app and tapping the tile. The previous
 client phone did not reliably start them from a Home Screen icon or widget.
 
-The register still contains testing data. Wait for Sagar's reset/go-ahead
-before entering real products. First confirm a dummy New Product submission
+Operational records are independent of this installer. Sagar confirms when the
+test register is reset and live intake begins. First confirm a New Product submission
 previews correctly on the operator's phone after Shared Album sync: cross-account
 confirmation of the posted album reference has not yet been verified. Also confirm that the new label opens correctly
 and prints at the right size on this phone and printer. PDF import has been
@@ -99,8 +104,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
     parser.add_argument("destination", type=Path)
+    parser.add_argument("--folderref", type=Path, required=True, help="client account folder reference used for signing")
     args = parser.parse_args()
-    manifest = stage(args.source, args.destination)
+    manifest = stage(args.source, args.destination, args.folderref)
     print(f"Verified {len(manifest['files'])} signed client shortcuts in {args.destination}")
 
 

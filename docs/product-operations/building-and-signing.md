@@ -1,6 +1,7 @@
 # Building and signing
 
-The current release is **build 18**. Change the generators, not the installed
+The current signed release is **build 19**; installation packages are staged and
+phone rollout is pending. Build 18 remains installed. Change the generators, not the installed
 shortcut: app-only edits disappear on rebuild. Every operational workflow can
 be recreated from source plus the two private account-specific folder references.
 See [Recovery](recovery.md) before recreating a deleted operations folder.
@@ -9,7 +10,7 @@ See [Recovery](recovery.md) before recreating a deleted operations folder.
 
 | File | Purpose |
 |---|---|
-| `build.py` | One builder per shortcut; account binding and Apple signing |
+| `build.py` | Modular operation builders, two role bundles, account binding and Apple signing |
 | `shortcutlib.py` | Plist actions, variables, menus and control flow |
 | `photo_links.py` | Category albums, uploaded-photo confirmation, pending snapshots and previews |
 | `label_printing.py` | SKU-only PDF generation and NIIMBOT handoff |
@@ -30,55 +31,52 @@ saved reference for each account. From the repo root:
 
 ```bash
 python3 product-ops/build/setup_folder.py
-python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-18/operator --role all
-python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-18/client --role client
+python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-19/operator --role all
+python3 product-ops/build/build.py product-ops/local/client-folderref.shortcut product-ops/local/releases/build-19/client --role client
 ```
 
-The first build produces all eight workflows for the operator's account,
-including client functions for own-phone tests. The second produces only the
-four client functions for the client's account. Their folder references differ,
-even though both accounts access the same shared folder.
+The first build produces **Periwinkle - Operator.shortcut** and
+**Periwinkle - Client.shortcut**, both bound to the operator's account. The
+Client copy is for own-phone testing. The second produces only **Periwinkle -
+Client.shortcut**, bound to the client's account. Their folder references differ,
+even though both accounts access the same shared folder. Keep each account's
+output in its own directory; the two Client files have the same name.
 
-`--only register`, `--only "work on product"`, `--only "new product"` and
-`--only "fix product"` rebuild individual workflows. The filename determines
-the imported shortcut's name. To replace the operator's existing unprefixed
-names, make filename aliases in a private installation directory:
+`--role operator` produces only Operator; `--role client` produces only Client.
+`--only` filters role bundle names, not operation names. Each operation remains
+an independent builder in source, then is inlined beneath the role's first menu.
+There are no Run Shortcut dependencies or separately installed helpers. See
+[Role shortcuts](role-shortcuts.md) for the menu map and migration checks.
+
+The operator's two installers belong in a **private iCloud Drive folder outside
+the shared operations root**, such as **Periwinkle Operator Install - Build 19 -
+2026-11-20**. Use their canonical filenames; no filename aliases are needed.
+Do not distribute these account-bound copies to the client. Keep the preceding
+release privately until the new bundle passes phone checks.
+
+## Package the client's file
 
 ```bash
-mkdir -p product-ops/local/releases/build-18/install
-cp "product-ops/local/releases/build-18/operator/Periwinkle – Register.shortcut" "product-ops/local/releases/build-18/install/Register.shortcut"
-cp "product-ops/local/releases/build-18/operator/Periwinkle – Work on Product.shortcut" "product-ops/local/releases/build-18/install/Work on Product.shortcut"
-cp "product-ops/local/releases/build-18/operator/Periwinkle – New Product.shortcut" "product-ops/local/releases/build-18/install/New Product.shortcut"
-cp "product-ops/local/releases/build-18/operator/Periwinkle – Fix Product.shortcut" "product-ops/local/releases/build-18/install/Fix Product.shortcut"
+python3 product-ops/build/stage_client_release.py product-ops/local/releases/build-19/client "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations/shortcuts/client-build-19" --folderref product-ops/local/client-folderref.shortcut
 ```
 
-The current operator installers are in **iCloud Drive → Periwinkle Operator
-Install - Build 18 - 2026-11-20**, a private folder outside the shared operations
-folder. They must not be installed on the client's account. The signed build-18
-files and predecessor backups remain private/local; older development exports
-are archived under `product-ops/local/backups/`.
-
-## Package the client's files
-
-```bash
-python3 product-ops/build/stage_client_release.py product-ops/local/releases/build-18/client "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations/shortcuts/client-build-18"
-```
-
-Only the expected four signed client files are accepted. The script rejects
-missing/extra files, unsigned plists and overwriting different existing files.
-It writes README.txt and manifest.json, then verifies copied bytes. Use a new
-release folder for a later build. Operator files and raw folder-reference
-exports never go into this shared package.
+Only the single signed Client file is accepted. The script decodes it and
+checks its folder binding against the supplied client reference, its current
+build/menu, missing/extra files, unsigned plists and overwriting different
+existing files. It writes README.txt and manifest.json, then verifies copied
+bytes. Use a new release folder for a later build. Operator-account files and
+raw folder references never go into this shared package.
 
 The client opens **Files → iCloud Drive → Periwinkle Product Operations →
-shortcuts → client-build-18**, replacing New Product and Fix Product. Update
-Stock and Print Product Label are included for recovery and did not change in
-this release. Installation never resets the register.
+shortcuts → client-build-19 → Periwinkle - Client.shortcut** and taps Add Shortcut.
+For future releases choose Replace. During the first migration, keep the four
+old client tiles until phone checks pass, then remove those tiles only.
+Installation never resets the register or changes photo links.
 
 ## Test and install a change
 
 1. Fetch the current main branch and edit the generators. Raise BUILD for an
-   operational release; Register and Work on Product show it in their first menu.
+   operational release; both role shortcuts show it in their first menu.
 2. Run all checks from the repo root:
 
 ```bash
@@ -99,10 +97,11 @@ runtime includes them; use it when the system Python lacks them.
 6. Update the workflow page, decisions and recovery instructions as needed in
    the same PR.
 
-**Build 18 phone result:** Register successfully previewed the existing
+**Prior build 18 phone result:** Register successfully previewed the existing
 PBS-SAR-006 photo after explicit Text conversion for dictionary comparisons.
-Full new intake/post/confirm/resume, cross-account delivery and photo-removal
-behaviour remain rollout checks; generator tests do not establish those results.
+Build 19 bundles and full new intake/post/confirm/resume, cross-account delivery
+and photo-removal behaviour need rollout checks; generator tests do not establish
+those results.
 
 ## For a new Apple Account or recreated folder
 

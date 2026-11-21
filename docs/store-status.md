@@ -4,7 +4,8 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 4 November 2026.
+Last updated: 21 November 2026 (shortcut register reset; other store findings
+below retain their stated audit dates).
 
 ## Open items
 
@@ -41,15 +42,18 @@ visible, then delete it. Add new items with an owner and the date added.
 
       Delete the old drafts once every dupatta is rebuilt. Owner: Sagar.
       Added 1 Nov.
-- [ ] **Clear the shortcut test data before real use.** The client and Sagar are testing the
-      shortcuts for about two weeks from 5 Nov, so the register holds test records such as
-      `PBS-DUP-001`. Before the first real product:
-      1. Clear the records from `products/`, `register/`, `stock-requests/` and `log/`, keeping the
-         folders and their `_keep.txt` files, so numbering restarts at `001`.
-      2. Delete the test posts from the Shared Album.
-      3. Throw away any test labels, because real pieces will reuse those SKUs.
-
-      Owner: Sagar, with Claude clearing the records when asked. Added 5 Nov.
+- [x] **Reset the shortcut register for real use.** Completed at Sagar's request
+      on 21 Nov. A verified private backup preserves all 79 operational data/config
+      files. Nine test products, previous rows, stock requests, logs and photo-link
+      metadata were cleared; the three CSVs now contain headers only. Settings,
+      all shared folder identities, signed shortcuts and Shared Album photos were
+      preserved. Existing zero SKU starts give `001` next in every category.
+      See [the reset record](product-operations/test-report.md#test-register-reset-for-real-intake).
+      Owner: Sagar. Added 5 Nov; completed 21 Nov.
+- [ ] **Review test posts and discard test labels.** The register reset does not
+      remove Shared Album photos or physical labels. Remove only confirmed test
+      posts if needed, and discard labels from dummy products because real pieces
+      will reuse those SKUs. Owner: Sagar and client. Added 21 Nov.
 - [x] **Get the full SKU code list from the client.** Recorded in
       [sku-codes.md](sku-codes.md) (done 4 Nov). Owner: Sagar. Added 1 Nov.
 - [ ] **Confirm what happens to the old EPJ and CMS codes.** They aren't on the

@@ -12,9 +12,15 @@ register but never writes to it
 
 ## The shortcuts
 
-Each one has its own page, with a diagram of what it does.
+Build 19 installs **Periwinkle - Client** and **Periwinkle - Operator**.
+Each starts with four operation choices below. Only Client is shared with the
+client; the operator can install both for testing. One operation runs per launch.
+The generator keeps operations modular and inlines them into the two files,
+so neither file depends on other installed shortcuts.
+[Role shortcuts](role-shortcuts.md) covers installation, updates and migration.
+Each operation still has its own page and diagram.
 
-| Shortcut | Who | What it's for |
+| First-menu operation | Role | What it's for |
 |---|---|---|
 | [New Product](new-product.md) | Client | Submit a new piece with its photos |
 | [Print Product Label](new-product.md#print-again-without-resubmitting) | Client | Prepare or reprint a submitted piece's SKU label in NIIMBOT |
@@ -26,8 +32,8 @@ Each one has its own page, with a diagram of what it does.
 | [Register](register.md) | Operator | Browse/find products and optionally export tables to Numbers |
 
 Also here:
-- [Rebuild and share a release](building-and-signing.md#rebuild-and-share-a-release):
-  reproduce all workflows from source and stage the client's four files in iCloud.
+- [Rebuild and share a release](building-and-signing.md#build-all-workflows-from-scratch):
+  reproduce both role bundles and stage the client's single account-bound file in iCloud.
 - [Installation](installation.md): setting up a phone, and sharing with the client.
 - [Recovery](recovery.md): recreate the entire folder structure, restore metadata,
   preserve SKU numbering and rebuild account references after deletion.
@@ -75,7 +81,7 @@ pieces are one of a kind, so that's usually 1.
 
 ## Daily routine
 
-**Client**
+**Client** — open Periwinkle - Client, then choose the operation.
 1. New piece: run New Product, pick the category, and tap through the suggested number.
    Then paste the caption and post to the album. Choose **Prepare SKU label** to
    open its PDF in NIIMBOT, tap **Add**, and print the label for the piece straight
@@ -85,11 +91,11 @@ pieces are one of a kind, so that's usually 1.
 3. Typed something wrong: run Fix Product straight away. If work has started,
    message the operator.
 
-**Operator**
+**Operator** — open Periwinkle - Operator, then choose the operation.
 1. Run Register → Browse products → New to see what's waiting.
 2. Run Work on Product → Start a new product. The details are copied, ready
    for Claude.
-3. New Product build 18 confirms the actual posted album photo during intake. For an older
+3. New Product (included in build 19) confirms the actual posted album photo during intake. For an older
    record only, link it in Register or Work on Product once. Later visits preview
    directly from the Shared Album. Run
    `/add-products list <SKU>` in Claude Code with a photo. It creates the draft and
@@ -176,7 +182,7 @@ Log event types: `PRODUCT_SUBMITTED`, `PRICE_CORRECTED`,
   add rows to Numbers, not read or update them, so a live workbook can't do
   duplicate checks or status changes.
 - **SKU-comment search is not used.** Build 13 can preview a manually linked
-  photo from its Shared Album by name/date. New Product build 18 confirms the
+  photo from its Shared Album by name/date. New Product (included in build 19) confirms the
   posted reference during intake; cross-account matching still needs testing. For an unlinked photo, use the register's
   submitted date to find photos. See [Next phase](#next-phase).
 - **Posting isn't confirmed.** The record is saved before the Share sheet opens,
