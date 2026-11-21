@@ -45,6 +45,25 @@ as iCloud installer folders; both current manifests match their file bytes.
 Installed operation tiles, personal shortcuts, records and Shared Albums were
 unchanged. Older installers remain recoverable locally, without cluttering Files.
 
+## Test register reset for real intake
+
+21 November 2026. Sagar explicitly requested clearing the dummy register to begin
+real products. The reset removed nine test submissions and their current/history
+rows, stock requests, event logs, CSV rows and photo-link/pending metadata.
+All 77 data files plus settings.json and sku-start.json were backed up in a
+hash-verified private ZIP under ignored product-ops/local/backups/; originals were
+also moved to recoverable Mac Trash. Reproducible folder markers were excluded
+from the ZIP. An earlier incomplete backup was not used for the reset.
+
+Post-reset checks found zero products, stock requests, events, photo links or
+pending links; Product Register, Stock Requests and Activity Log CSVs contain
+headers only. Configuration and existing folder identities stayed unchanged,
+preserving account references. All seven SKU starts were already zero and were
+left unchanged, so each category's next suggestion is 001. Signed installers,
+unrelated root documents and Shared Album photos were preserved. No Shopify
+products were changed. Old test album posts/physical labels require separate
+review; an already open Numbers document can still show an old snapshot.
+
 ## Prior verified phone state — build 18
 
 20 November 2026. Sagar confirmed that Register now successfully previews the

@@ -79,8 +79,8 @@ Print Product Label prepares/reprints a label without submitting another product
 Run shortcuts by opening the Shortcuts app and tapping the tile. The previous
 client phone did not reliably start them from a Home Screen icon or widget.
 
-The register still contains testing data. Wait for Sagar's reset/go-ahead
-before entering real products. First confirm a dummy New Product submission
+Operational records are independent of this installer. Sagar confirms when the
+test register is reset and live intake begins. First confirm a New Product submission
 previews correctly on the operator's phone after Shared Album sync: cross-account
 confirmation of the posted album reference has not yet been verified. Also confirm that the new label opens correctly
 and prints at the right size on this phone and printer. PDF import has been
