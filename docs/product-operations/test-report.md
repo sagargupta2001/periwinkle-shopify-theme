@@ -30,10 +30,19 @@ structure and branch stops, and restrict record-file deletion to Register
 exports. Client packaging rejects wrong account bindings, stale build menus and
 extra old-operation files before writing.
 
-Build-19 phone import/runtime, complete new intake/photo confirmation/resume,
-cross-account matching, removal behaviour and physical B1 printing remain
-rollout checks. Existing build-18 operation tiles are retained until bundle
-checks pass. No records or photo metadata are reset by bundling.
+**21 November readiness review:** All 54 tests were rerun successfully and
+GitHub reported a clean, conflict-free merge. The verified pre-reset backup
+shows SAR-008 with source shared_album_confirmed, a complete pending marker
+and an IN_PROGRESS register row. This establishes successful posted-photo
+confirmation and subsequent operator processing for that test record. It does
+not identify which installed shortcut version ran or establish a later Register
+preview. No blocking source issue was found; the PR is ready for review/merge.
+
+Formal confirmation of both installed build-19 role menus and Register preview,
+delayed-sync resume, cross-account matching, removal behaviour and physical B1
+printing remain rollout checks. Keep older local signed installers for rollback.
+No records or photo metadata are reset by bundling itself; the separate,
+explicitly requested dummy-data reset is recorded below.
 
 **Installer-folder cleanup:** At Sagar's request, the private operator build-18
 folder and shared client-build-11/client-build-18 folders were moved out of
