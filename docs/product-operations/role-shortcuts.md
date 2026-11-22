@@ -57,8 +57,11 @@ command requires the client reference and verifies that binding before writing.
 
 Build 20 is signed and the installation folders above are staged with verified
 copies and hash manifests. Build 19 has been used for real client submissions;
-the client also confirmed physical SKU-only printing. The new price layout needs
-its own iPhone/printer check after Replace. Reprints read the current register
+the client also confirmed physical SKU-only printing. Sagar has since confirmed
+the Operator build-20 label displays the selling price on his phone. Both Mac
+role editors show build 20; his Client testing copy was imported for iCloud sync.
+The client's new price layout still needs its own physical print check after
+Replace. Reprints read the current register
 price; reprint physical labels after price corrections. Automated checks do not
 establish that a new layout imports or prints correctly on iPhone.
 

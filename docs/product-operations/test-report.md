@@ -23,8 +23,11 @@ All **73 tests pass**, including strict PDF parsing, unchanged byte lengths/xref
 offsets across variable SKU/price lengths, price validation, line positioning,
 read-only reprints and current selling-price sourcing. A generated sample PDF
 was rasterized and visually checked: centred SKU above a smaller price line.
-These checks do not prove NIIMBOT imports or physically prints the new layout;
-use an existing real product for the build-20 phone/print check.
+These checks alone do not prove NIIMBOT imports or physically prints the new
+layout. Sagar subsequently replaced Operator on his phone and confirmed the new
+label displays successfully, clarifying that the amount is the selling price.
+No exact SKU/amount or physical build-20 print was reported in that confirmation.
+Use an existing real product for the client's two-line print check.
 
 All three build-20 files were Apple-signed and decoded. Client has 979 actions;
 Operator has 2,132. Each complete action graph matches a fresh generator after
@@ -33,8 +36,14 @@ retain their correct separate folder bindings. The client's single installer,
 README and hash manifest are in **shortcuts/client-build-20**. The operator's
 two installers, instructions and manifest are in the private **Periwinkle
 Operator Install - Build 20 - 2026-11-22** folder. Copied bytes were verified.
-Installed phone shortcuts still require Replace; no automatic phone update is
-claimed. The two preceding build-19 installer folders were ZIP-backed up and
+The Mac editor confirms both installed role menus now say build 20. Operator's
+phone replacement/display was confirmed by Sagar; his operator-account Client
+testing copy was imported on the Mac for iCloud sync. The import briefly exposed
+the former build-19 Client as Client 2; it disappeared as replacement completed.
+The final library contains seven shortcuts: the two roles and five personal
+shortcuts, without a duplicate or diagnostic tile. The client's own-account
+phone installation and new physical price-label test still require confirmation.
+The two preceding build-19 installer folders were ZIP-backed up and
 moved to recoverable Mac Trash, leaving only build 20 visible in iCloud. Signed
 build-19 rollback files and the verified folder backup remain privately local.
 
