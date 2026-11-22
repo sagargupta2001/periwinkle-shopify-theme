@@ -43,6 +43,9 @@ price. The tag is plain on purpose, to keep it apart from the customer-facing
 
 24 October 2026
 
+**Superseded by #39:** the product-processing workflow no longer marks any
+product as a gift. Gifting is deferred to a future separate automation.
+
 **Decision:** Every active product up to ₹5,000 of these types was tagged
 `gift`: Miniature, European jewellery, Ceramics, Wooden Antique Box, Dupatta
 and Saree. That was 282 products. Unstitched salwar suits are left out.
@@ -824,3 +827,31 @@ unchanged. Shared Album deletion remains the user's manual task.
 operator records appeared after opening register/NEW in Files, consistent with
 iCloud loading/sync. Neither observation proves the new two-line layout prints;
 that must be checked after installing build 20 without creating another product.
+
+### 39. Use editorial product heroes; defer all gifting automation
+
+22 November 2026.
+
+**Decision:** New product processing adds no gift tags or gift-collection
+membership, for any category or price. This replaces decision 2's blanket type
+and price eligibility. Price tiers alone never establish gift suitability.
+Design a separate gifting automation later; keep it as a documented TODO.
+
+**Images:** Apparel storefront heroes use a beautiful adult Indian model
+showcasing the actual piece in a restrained premium Indian editorial setting.
+Jewellery uses an appropriate model detail; miniatures/home decor use a styled
+product scene. Portrait 4:5 is the target. Fabric views and close details are
+supporting gallery images. The actual textile/object colour, pattern, border,
+shape and included parts remain the factual constraints. A Banarasi style prompt
+does not turn another saree into silk, zari or a Banarasi weave.
+
+**Why:** The merchant rejected gift classification and fabric-first storefront
+imagery on the first real listing. PBS-SAR-001's two useful detail images were
+retained; an Indian-model editorial image was added and moved to the featured
+position. Its gift tag was removed, clearing both smart gift collections.
+
+**How to apply:** The canonical add-products skill contains category prompts
+and a verified fast path from the first run. Resolve store/collection/location/
+publication context once per batch, reuse known API shapes, checkpoint IDs, and
+verify actual media order/publication. Explicit live-product corrections change
+only the requested fields and never replay intake or initialize inventory again.

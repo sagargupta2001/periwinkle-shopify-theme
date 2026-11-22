@@ -4,8 +4,26 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 21 November 2026 (shortcut register reset; other store findings
-below retain their stated audit dates).
+Last updated: 22 November 2026 (first real listing and editorial-image/gifting
+correction; older findings below retain their stated audit dates).
+
+## Current launch catalogue
+
+The catalogue is being rebuilt with fresh standard SKUs after archiving the
+legacy products. The latest active/draft audit found one new live product:
+[PBS-SAR-001 — Lavender Saree with Pink Floral Motifs](https://periwinklebysherry.com/products/lavender-saree-with-pink-floral-motifs).
+Its model-led editorial hero is first, both supporting detail images remain,
+and it belongs to Periwinkle Sarees with no gift tag or gift collections.
+The register records it as LIVE. PBS-SAR-002 is IN_PROGRESS awaiting its photo.
+
+New product processing does not classify any category or price as a gift.
+A [separate gifting automation](product-operations/improvements.md#deferred-gifting-automation)
+is deferred. The skill now includes category-specific editorial prompts and
+the verified API fast path from the first live run. Shipping weights still
+follow the existing zero-weight convention pending actual category averages.
+
+The older SKU/stock/collection counts below describe their dated legacy audits,
+not the active launch catalogue after this rebuild.
 
 ## Open items
 

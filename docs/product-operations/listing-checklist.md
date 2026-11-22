@@ -23,7 +23,8 @@ the place to change what the skill checks. Each line points to the decision behi
   Sarees* and miniatures to *Periwinkle Miniatures* by hand, because those
   collections are manual (decision 5).
 - **Tags:**
-  - `gift` for gift-worthy pieces at ₹5,000 or less (decisions 1–2).
+  - No `gift` tag or gift-collection membership for any category or price.
+    Gifting is deferred to a separate future automation (decision 39).
   - Hashtags (`#pattachitra`, `#kanthastitch`…), only from those already in the store
     and only when the craft is clear.
   - Material tags for miniatures.
@@ -39,10 +40,13 @@ the place to change what the skill checks. Each line points to the decision behi
   (decision 16). Taxable off, like the rest of the store.
 - **Weight:** 0 until category averages are set, then the average for the type
   (decision 13).
-- **Photos:** use the client's own pieces. The agent prepares and inspects a
-  faithful 4:5 main image plus at least one genuine supporting image/detail.
-  Manual Gemini editing is optional. Do not invent unseen views or change the
-  item's colour/pattern/shape, and never use shopping-app screenshots.
+- **Photos:** use the client's own piece as the factual reference. Apparel gets
+  a premium 4:5 Indian-model editorial hero; jewellery uses an appropriate model
+  detail, and objects a styled product hero. Fabric/close-up images support the
+  hero rather than lead the storefront. Use the skill's category prompts, preserve
+  actual colour/pattern/border/shape, and verify the hero is the featured media.
+  Editorial styling does not establish fabric, craft or unseen product facts.
+  Keep genuine supporting views/details; never use shopping-app screenshots.
 
 After each batch, audit for duplicate titles, shared descriptions, blank or duplicate
 SKUs, missing product types and zero weights, and record the results in

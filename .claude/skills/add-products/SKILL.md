@@ -31,8 +31,13 @@ the client adds a row; the user's invocation starts a batch.
   not an instruction to replace another SKU's image or publish unrelated products.
 
 Only handle product submissions. Do not reset the register, process stock
-requests, edit existing LIVE products, change store/theme settings, add tracking
-tags to Shopify, or resurrect archived products as part of this skill.
+requests, change store/theme settings, add tracking tags, or resurrect archived
+products. Default batches leave existing LIVE products alone. An explicit request
+to correct a named live product authorizes that correction only; preserve its
+identity, price, stock, publication time and existing media unless asked otherwise.
+Do not mark any product as a gift, add gift tags or place it in gift collections.
+This applies to every category and price; gifting is deferred to a separate future
+automation, not an intake decision or an additional question for the user.
 
 For status-only requests, run read_register.py and compare exact SKUs with
 Shopify without entering the processing flow. Report current statuses, pending
@@ -44,6 +49,9 @@ Do not claim rows, request processing photos, or repair anything in this mode.
 1. Read [listing rules](references/shopify-listing.md) and the repository's
    [listing checklist](../../../docs/product-operations/listing-checklist.md).
    The process is described in [agent processing](../../../docs/product-operations/agent-processing.md).
+   Read the [fast path](references/shopify-fast-path.md) for verified operation
+   shapes and batch-level lookups. Reuse them instead of rediscovering the schema
+   for every SKU; refresh only changed, unfamiliar or rejected fields.
 2. Check that the intended store is Periwinkle By Sherry / periwinklebysherry.com,
    the Shopify read/write/upload tools are connected, image editing is available,
    and the register can be read. Report a missing capability accurately. Do not
@@ -90,13 +98,18 @@ checkpoint `stage: blocked` with a short reason and advance to the next candidat
 **Inspect and prepare images.** Inspect the actual attached file first. Identify
 only visible features and client-provided facts. Do not invent fabric, dimensions,
 origin, a reverse side or packaging. Omit optional unknowns; ask only when a
-required fact or usable photo is missing. Use the available built-in image-editing
-skill/tool, with the attached file as reference, to make a faithful 4:5 main
-image and at least one genuine supporting view/detail crop. A single source does
-not authorize inventing unseen angles. Preserve the piece's pattern, colour,
-shape, texture and included items. Inspect the outputs against the source and
-verify actual dimensions/aspect ratio before upload. If an edit changes the
-product, retry narrowly or request a better source; do not publish a misleading edit.
+required fact or usable photo is missing. Read the matching category prompt in
+[product imagery](references/product-imagery.md). For apparel, make a premium
+4:5 editorial hero with an adult Indian model showcasing the actual product;
+for jewellery use the appropriate model detail, and for objects use the styled
+product hero. A fabric close-up or detail crop is a supporting image, not the
+storefront hero. Also prepare a genuine supporting view/detail from the source.
+The merchant authorizes editorial model/drape styling, not an invented textile:
+lock the actual colour, motifs, border, texture, garment details and included
+pieces. Do not transfer Banarasi/zari/silk claims from a style example to another
+product. Inspect the outputs against the source, check the portrait dimensions,
+and verify the actual featured media ID after upload. If the source cannot
+support a faithful hero, request a better source instead of guessing its design.
 Manual Gemini editing is no longer required. The user reviews finished listings,
 so do not impose an image approval step for routine, faithful results.
 
@@ -109,7 +122,8 @@ reuse them. Otherwise request this SKU's photo again, not every earlier photo.
 
 **Create/reuse the listing.** Follow the listing reference, checking exact and
 legacy SKU forms before creating anything. Complete content, taxonomy,
-collections, category metafields, variant, price/cost and inventory. Use ordinary
+collections, category metafields, variant, price/cost and inventory. Exclude gift
+tags and gift collections for every category. Use ordinary
 write tools, not a panel that requires the user to press Save. Checkpoint product
 and media IDs immediately after successful external writes. Check current Shopify
 state after a timeout before retrying. Never create a second product or upload
@@ -117,7 +131,9 @@ another copy merely because the prior tool response was lost. Never restock an
 already active product on retry.
 
 **Upload and record its link.** Upload the finished images from chat/local files
-using the connector's file-reference path; do not open a manual file picker.
+using the connector's working file-reference path; do not open a manual file picker.
+The first live run verified upload_image(imageFile=the original generated path)
+without merchant clicks; see the fast path for the bounded upload_file fallback.
 Attach uploaded file IDs to the product using the connector's documented
 reference-attachment operation, avoiding a second upload by URL. Reuse known
 file IDs on resume. Audit the completed draft, reread the register and record
