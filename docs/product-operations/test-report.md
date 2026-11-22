@@ -70,6 +70,28 @@ as iCloud installer folders; both current manifests match their file bytes.
 Installed operation tiles, personal shortcuts, records and Shared Albums were
 unchanged. Older installers remain recoverable locally, without cluttering Files.
 
+## Sequential product-processing skill — 22 November 2026
+
+Sagar chose one manual photo handoff per SKU: invoke the skill in a fresh session,
+read the queue, request one photo from the existing preview shortcut, finish its
+images/listing/publication/register updates, then ask for the next. The canonical
+add-products skill now describes that flow and has a Codex discovery symlink and
+UI metadata. Manual Gemini editing, image upload and Shopify-link/status entry
+are removed from the normal agent route; tool-enforced approvals still apply.
+
+The logged helper is covered by **16 filesystem tests**, including CLI read-only
+queue/claim execution, full state transitions, row/event preservation, retries,
+interruption after five write phases, publication recovery with a fresh receipt,
+client corrections, link changes, pending out-of-stock requests, conflicts and
+fresh-session ownership. The full suite passes **70 tests**. The skill's official
+frontmatter validator passes; setup recreation/rerun checks now include agent
+jobs, transaction intents and temporary metadata staging.
+
+These were isolated fixtures, not live iCloud/Shopify writes. No production
+records, images, prices, inventory or products were changed while updating the
+skill. A full real product batch and fresh-session host UI discovery remain to
+be observed in actual use; tests do not establish image fidelity or API success.
+
 ## Test register reset for real intake
 
 21 November 2026. Sagar explicitly requested clearing the dummy register to begin

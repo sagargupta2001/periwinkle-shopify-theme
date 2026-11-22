@@ -9,6 +9,7 @@ from build import CATEGORIES
 ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
     "~/Library/Mobile Documents/com~apple~CloudDocs/Periwinkle Product Operations")
 FOLDERS = ["products", "log", "views", "photo-links", "photo-pending", "shortcuts",
+           "agent/jobs", "agent/transactions", "agent/tmp",
            "register/NEW", "register/IN_PROGRESS", "register/READY_TO_PUBLISH", "register/LIVE",
            "stock-requests/PENDING", "stock-requests/COMPLETED", "stock-requests/REJECTED",
            # Superseded records are moved here, never deleted

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prints the shortcuts' register as JSON. It only reads: the shortcuts own these files.
+"""Prints the product register as JSON. This script is read-only.
 
     python3 read_register.py [--sku PBS-DUP-004] [--root <folder>]
 
@@ -36,7 +36,12 @@ def read_folder(folder, problems):
         else:
             try:
                 with open(path, encoding="utf-8") as f:
-                    records[name] = json.load(f)
+                    value = json.load(f)
+                    if not isinstance(value, dict):
+                        raise ValueError("Expected a JSON object")
+                    if not isinstance(value.get("sku"), str) or not value["sku"].strip():
+                        raise ValueError("Record has no string SKU")
+                    records[name] = value
             except (OSError, ValueError) as error:
                 problems.append(f"Can't read {path}: {error}")
     return records

@@ -1,14 +1,16 @@
 # Product operations
 
 How a new piece gets from the client to a live Shopify product, and how stock
-changes reach Shopify, using only Apple Shortcuts on two iPhones, a shared
-iCloud folder and Numbers. There is no server, database or paid app.
+changes reach Shopify, using Apple Shortcuts, a shared iCloud folder, optional
+Numbers exports and the operator's agent-assisted listing workflow.
 
 These shortcuts keep the record of what's been submitted, what's being worked on,
 and what's live or out of stock. They never change Shopify. Shopify is updated by the
-operator, by hand or with the `/add-products` skill in Claude Code, which reads this
-register but never writes to it
-([decision 24](../decisions.md#24-add-products-lists-what-the-register-holds-and-never-tracks-status)).
+operator, by hand or with the **add-products** skill. The skill now accepts one
+pasted photo per SKU and completes images, listing, publication and logged
+register updates through a controlled helper. This supersedes decision 24's
+read-only/manual-handoff boundary; see [agent processing](agent-processing.md)
+and [decision 37](../decisions.md#37-process-products-one-by-one-with-a-photo-handoff-and-logged-agent-updates).
 
 ## The shortcuts
 
@@ -32,6 +34,8 @@ Each operation still has its own page and diagram.
 | [Register](register.md) | Operator | Browse/find products and optionally export tables to Numbers |
 
 Also here:
+- [Agent processing](agent-processing.md): invoke the skill, paste one requested
+  SKU photo at a time, and review the finished live listings.
 - [Rebuild and share a release](building-and-signing.md#build-all-workflows-from-scratch):
   reproduce both role bundles and stage the client's single account-bound file in iCloud.
 - [Installation](installation.md): setting up a phone, and sharing with the client.
@@ -93,19 +97,19 @@ pieces are one of a kind, so that's usually 1.
 3. Typed something wrong: run Fix Product straight away. If work has started,
    message the operator.
 
-**Operator** — open Periwinkle - Operator, then choose the operation.
-1. Run Register → Browse products → New to see what's waiting.
-2. Run Work on Product → Start a new product. The details are copied, ready
-   for Claude.
-3. New Product (included in build 19) confirms the actual posted album photo during intake. For an older
-   record only, link it in Register or Work on Product once. Later visits preview
-   directly from the Shared Album. Run
-   `/add-products list <SKU>` in Claude Code with a photo. It creates the draft and
-   gives you the store link. Then add the photos in Shopify.
-4. Run Work on Product → Add or fix a Shopify link.
-5. Run `/add-products live <SKU>`, which checks the [listing checklist](listing-checklist.md)
-   and publishes it. Then run Publish Products.
-6. Run Process Stock Requests.
+**Operator** — use [agent processing](agent-processing.md) for the usual listing route.
+1. Invoke **$add-products** in a fresh Codex session in this repo, or **/add-products**
+   in Claude Code. The agent reads the queue and claims only the current SKU.
+2. When it asks for that SKU's photo, open the existing Register/Work on Product
+   preview and paste the image into chat. The agent prepares images, completes
+   and publishes the listing, saves its link and records LIVE before asking for
+   the next SKU. You do not manually paste Shopify links or mark publication.
+3. Review the final product links and any blocked items. Printing/attaching labels
+   remains manual for the client. Process Stock Requests remains a separate workflow.
+
+For manual listing, the Operator menu still supports Work on Product → Start,
+Add or fix a Shopify link and Publish Products. Do not use the manual and agent
+writers concurrently on the same SKU. Status-only agent requests are read-only.
 
 ## Where the data lives
 
@@ -130,6 +134,9 @@ Periwinkle Product Operations/
   views/*.csv                       Tables for Numbers, rebuilt on demand
   photo-links/<sku>.json            Album/name/date reference only, no image bytes
   photo-pending/<sku>.json          Pending album-name snapshot, then completion marker
+  agent/jobs/<sku>.json              Agent submission identity, stage and Shopify/media IDs
+  agent/transactions/<uuid>.json     Recoverable before/after row and event intents
+  agent/tmp/                        Atomic metadata staging only, no photo files
 ```
 
 File names use the SKU in lowercase, which makes duplicate checks

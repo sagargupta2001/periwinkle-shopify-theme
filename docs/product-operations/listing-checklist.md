@@ -39,8 +39,10 @@ the place to change what the skill checks. Each line points to the decision behi
   (decision 16). Taxable off, like the rest of the store.
 - **Weight:** 0 until category averages are set, then the average for the type
   (decision 13).
-- **Photos:** use the client's own pieces, refined in Gemini at 4:5. Never use
-  screenshots from shopping apps.
+- **Photos:** use the client's own pieces. The agent prepares and inspects a
+  faithful 4:5 main image plus at least one genuine supporting image/detail.
+  Manual Gemini editing is optional. Do not invent unseen views or change the
+  item's colour/pattern/shape, and never use shopping-app screenshots.
 
 After each batch, audit for duplicate titles, shared descriptions, blank or duplicate
 SKUs, missing product types and zero weights, and record the results in

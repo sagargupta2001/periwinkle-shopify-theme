@@ -45,6 +45,9 @@ inside it, so a missing folder stops the shortcut.
 | `photo-links/` | Confirmed/pending SKU-to-Shared-Album references; metadata only |
 | `photo-pending/` | Before-post album-name snapshots, replaced with completion markers |
 | `shortcuts/` | Account-specific client installer packages, created by the staging script |
+| `agent/jobs/` | Submission-bound agent checkpoints and Shopify/media IDs |
+| `agent/transactions/` | Recoverable logged register-transition intents |
+| `agent/tmp/` | Atomic metadata staging; no image storage |
 | `_keep.txt` in **each folder above** | A one-line placeholder that keeps the folder from being empty, so iCloud always keeps it. Shortcuts skip it. |
 | `settings.json` | Valid statuses, default currency (INR) and time zone (Asia/Kolkata), for reference. No shortcut reads it today. |
 | `sku-start.json` | Each category's starting number, all 0 to begin with, so the first suggestion is `001`. New Product reads it. |

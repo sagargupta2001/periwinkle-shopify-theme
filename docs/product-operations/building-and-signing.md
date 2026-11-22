@@ -16,6 +16,7 @@ See [Recovery](recovery.md) before recreating a deleted operations folder.
 | `label_printing.py` | SKU-only PDF generation and NIIMBOT handoff |
 | `setup_folder.py` | Complete folder structure and non-overwriting initial settings/SKU starts |
 | `stage_client_release.py` | Client-only installer package, README and verified hash manifest |
+| `.claude/skills/add-products/register_ops.py` | Logged agent start/link/publication updates; independent of installed shortcut builds |
 | `test_*.py` | Generator, PDF, photo-flow, folder recovery and data-safety checks |
 | `photo_lookup_experiment.py`, `printing_experiment.py` | Reproducible diagnostics; not operational releases |
 
