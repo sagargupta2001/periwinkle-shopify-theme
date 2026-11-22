@@ -1,5 +1,42 @@
 # Test report
 
+## First real two-product batch — 22 November 2026
+
+The add-products skill completed PBS-SAR-001 and PBS-SAR-002 from the shared
+register using one pasted source photo per SKU. Both are ACTIVE and published
+to the Online Store, with canonical links and LIVE/publishedAt register entries.
+Each has one Default Title variant, its exact SKU, register-matching price/cost,
+tracked quantity one, DENY overselling, taxable false, requiresShipping true,
+Saris taxonomy, existing colour references and Periwinkle Sarees membership.
+
+Merchant review corrected the first product's gift classification and fabric-first
+presentation. It now has the Indian-model editorial hero featured and its two
+original supporting images retained. The second followed the revised image and
+no-gifts rules from the start: model-led teal saree hero plus a supporting detail,
+with the unrelated fish-print background/hanger excluded from the product.
+
+All five media are READY and both featured IDs match their intended model heroes.
+No gift tags or gift collection membership remain on either new listing. A final
+active/draft search returned exactly two products with unique titles/SKUs,
+different descriptions and populated product types. The register reader found no
+record problems or pending stock requests; the processing helper reported no
+remaining products or pending transactions. Zero shipping weights are retained
+under the existing convention and remain an unresolved store setup item.
+
+The second SKU reused the current batch context and verified operation shapes,
+without additional schema discovery. Its image calls completed in about 21 and
+24 seconds; direct upload_image with original generated paths succeeded for both.
+Product metadata, variant settings, colour, media references and compare-and-set
+inventory were completed in one mutation after readiness checks. Every root's
+userErrors was empty. Its persisted idempotency key and inventoryInitialized
+checkpoint prevent repeat initialization on resume.
+
+Private receipts, image hashes, prompts and full API verification snapshots remain
+under ignored product-ops/local/; job/transaction metadata and activity events are
+in the shared operations folder. Temporary working source/generated copies were
+removed only after media/publication verification. Source Shared Album references,
+submitted records, price/cost, stock fields and previous history were preserved.
+
 ## Build 20 — selling-price labels and live intake, 22 November 2026
 
 Sagar confirmed PBS-SAR-001 and PBS-SAR-002 are real final submissions. Both

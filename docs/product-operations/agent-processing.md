@@ -113,5 +113,8 @@ published PBS-SAR-001 and logged its register transitions successfully. Merchant
 review then replaced its fabric-first presentation with an Indian-model hero,
 retained both detail images, and removed gift classification. Shopify verified
 the hero first, all three media READY and only Sarees collection membership.
-The second product remains in progress awaiting its photo; this is not evidence
-that a complete two-product batch has finished.
+The second product, PBS-SAR-002, subsequently completed the full route with a
+model-led hero and one supporting detail. Final Shopify/register reads verified
+both products live, unique SKUs/titles/descriptions, correct prices and one-piece
+tracked inventory, no gift membership and an empty processing queue. Zero shipping
+weights remain the known store setup limitation. See [the batch audit](test-report.md#first-real-two-product-batch--22-november-2026).
