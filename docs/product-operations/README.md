@@ -37,6 +37,8 @@ Also here:
 - [Installation](installation.md): setting up a phone, and sharing with the client.
 - [Recovery](recovery.md): recreate the entire folder structure, restore metadata,
   preserve SKU numbering and rebuild account references after deletion.
+- [Mac photo export](mac-photo-export.md): verified Photos UI export, temporary
+  working copies and the still-experimental command-line shortcut route.
 - [Building and signing](building-and-signing.md): recreating or changing the
   shortcuts, and the iPhone behaviours they're written around.
 - [Listing checklist](listing-checklist.md): what a Shopify listing needs.
