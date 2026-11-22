@@ -1,6 +1,6 @@
 # Two role shortcuts
 
-Build 19 packages the existing operations into two self-contained shortcuts.
+Build 20 packages the existing operations into two self-contained shortcuts.
 Install one tile per role instead of maintaining eight separate operation tiles.
 
 | Periwinkle - Client | Periwinkle - Operator |
@@ -10,8 +10,8 @@ Install one tile per role instead of maintaining eight separate operation tiles.
 | Fix Product | Publish Products |
 | Print Product Label | Process Stock Requests |
 
-These are the first menu options. Existing operation menus and behaviour follow
-unchanged. Choose one operation per run; launch the role shortcut again for the
+These are the first menu options. Build 20 adds the selling price beneath the
+SKU in New Product, Client Print Product Label and Operator Register labels. Choose one operation per run; launch the role shortcut again for the
 next task. There is no menu loop around the operation's existing Repeat actions.
 Cancel stops the run, and the role menu displays the build number.
 
@@ -40,25 +40,27 @@ command requires the client reference and verifies that binding before writing.
 1. Follow [Building and signing](building-and-signing.md) to generate the two
    operator-account files and one client-account file in separate directories.
 2. On Sagar's phone, open the two files from the private **Periwinkle Operator
-   Install - Build 19 - 2026-11-20** iCloud folder and add them. On the client's
+   Install - Build 20 - 2026-11-22** iCloud folder and choose Replace. On the client's
    phone, open the one Client file from the shared **Periwinkle Product Operations
-   → shortcuts → client-build-19** folder. Future same-name updates use Replace.
-3. Keep the old operation tiles during the first check. Verify the build-19
+   → shortcuts → client-build-20** folder. Future same-name updates use Replace.
+3. Keep the old operation tiles during the first check. Verify the build-20
    menu, then Operator → Register → an existing product's details/photo. Open
-   Client and check all four first-menu choices. Do a dummy intake, photo
-   confirmation/resume and client-to-operator handoff before live use. Verify
-   label import and physical printing separately with the client's B1.
+   Client and check all four first-menu choices. Live intake has begun: reprint an
+   existing real product to test both Client label paths and the Register label.
+   Verify the SKU and selling price in NIIMBOT and on the client's B1. New intake
+   must show the same two-line layout; do not reset records for this check.
 4. After those checks pass, remove the old role's operation tiles from Shortcuts.
    Remove only the eight operation tiles on Sagar's account and four on the
    client's account; preserve personal shortcuts and the two new role tiles.
    Keep a signed predecessor privately for rollback. Never delete the shared
    operations folder or Shared Albums as part of this migration.
 
-Build 19 is signed and the installation folders above are staged with verified
-copies and hash manifests. iPhone import/runtime checks are pending. Mac import
-did not complete, so no new synced tile was observed. Existing build-18 tiles
-remain available until the checks above pass. An automated action comparison
-does not establish iOS import behaviour for the larger bundles.
+Build 20 is signed and the installation folders above are staged with verified
+copies and hash manifests. Build 19 has been used for real client submissions;
+the client also confirmed physical SKU-only printing. The new price layout needs
+its own iPhone/printer check after Replace. Reprints read the current register
+price; reprint physical labels after price corrections. Automated checks do not
+establish that a new layout imports or prints correctly on iPhone.
 
 ## Rollback and recovery
 

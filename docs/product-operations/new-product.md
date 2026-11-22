@@ -6,7 +6,7 @@
 Records a new piece, copies a caption, and opens the Share sheet so the client
 can post the photos to the Shared Album. The client picks a category and usually just
 taps through the suggested number. After sharing, **Prepare SKU label** builds a
-SKU-only PDF and opens NIIMBOT; **Finish for now** keeps the album caption on the
+PDF with the SKU and selling price below it and opens NIIMBOT; **Finish for now** keeps the album caption on the
 clipboard and ends the shortcut.
 
 ## What happens
@@ -35,7 +35,7 @@ flowchart TD
     O --> P[Share sheet opens]
     P --> Q["Client chooses Shared Album,<br/>picks Periwinkle, pastes, taps Post"]
     Q --> R{"Prepare SKU label?"}
-    R -->|Yes| S["Copy SKU only, build label PDF,<br/>open NIIMBOT"]
+    R -->|Yes| S["Copy SKU, build SKU + selling-price PDF,<br/>open NIIMBOT"]
     R -->|Finish for now| T[Done]
     S --> U["Client taps Add,<br/>then prints in NIIMBOT"]
 ```
@@ -52,19 +52,35 @@ SUBMITTED VIA PERIWINKLE PRODUCT INTAKE
 
 Paste this caption into the album **before** choosing Prepare SKU label. The
 label handoff then replaces the clipboard with the SKU alone. Printing never
-includes cost price, selling price or product status.
+includes cost price or product status. Build 20 adds the selling price below the
+SKU, for example:
+
+```text
+PBS-SAR-001
+Rs. 3500
+```
+
+The ASCII `Rs.` currency prefix avoids the missing rupee glyph in the standard
+PDF font. A positive price with up to two decimal places is required; unsupported
+values stop label preparation rather than changing the price. The clipboard still
+contains only the SKU.
 
 ## Print again without resubmitting
 
-Run **Periwinkle – Print Product Label**, choose the category and number, and it
-checks that the submission exists before opening its label in NIIMBOT. It only
-reads the submission folder and never changes product, stock or log records.
+Run **Periwinkle - Client → Print Product Label**, choose the category and number,
+and it reads the current register row before opening its label in NIIMBOT. It
+uses that row's current selling price, including price corrections, rather than
+the original submission price. **Operator → Register → product → Prepare SKU
+label** uses the same generator and current price. Neither reprint path changes
+product, stock or log records. Replace the physical label after a price change.
 Use this after an interrupted print or to replace a damaged label; do not run
 New Product again just to get another label.
 
 The label is currently 50 × 30 mm. Confirm the client's actual roll dimensions
-before physical printing. NIIMBOT's Crop and split → **Add** step remains manual,
-and sending a PDF does not confirm that a physical label printed.
+before physical printing. NIIMBOT's Crop and split → **Add** and **Print** steps
+remain manual. On 22 November the client confirmed the previous SKU-only label
+physically printed on the B1. The build-20 two-line price layout needs its own
+phone import/print check using an existing product, without another submission.
 
 ## How the number is chosen
 

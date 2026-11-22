@@ -77,7 +77,8 @@ the job.
 - **25 — SKU labels:** New Product offers Prepare SKU label after album sharing,
   copies only the SKU, and opens its PDF in NIIMBOT. Print Product Label handles
   retries without another submission. PDF import passed on the operator's phone;
-  dynamic SKU generation and physical printing still need confirmation. See
+  the client confirmed physical SKU-only printing on 22 November. Build 20 adds
+  selling prices and still needs its two-line print check. See
   [New Product](new-product.md#print-again-without-resubmitting).
 - **20 — operator SKU entry:** Move back and Correct prices now use category
   plus number, as requested, instead of a full typed SKU. Existing list pickers
