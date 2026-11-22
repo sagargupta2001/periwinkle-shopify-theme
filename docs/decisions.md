@@ -43,6 +43,9 @@ price. The tag is plain on purpose, to keep it apart from the customer-facing
 
 24 October 2026
 
+**Superseded by #39:** the product-processing workflow no longer marks any
+product as a gift. Gifting is deferred to a future separate automation.
+
 **Decision:** Every active product up to ₹5,000 of these types was tagged
 `gift`: Miniature, European jewellery, Ceramics, Wooden Antique Box, Dupatta
 and Saree. That was 282 products. Unstitched salwar suits are left out.
@@ -526,8 +529,9 @@ could sit unlabelled until then.
   the client writes the SKU on a temporary sticker or tag, and prints the labels later using the album's
   captions. The register's list catches anything missing from the album or cancelled since.
 
-**How to apply:** The label needs only the SKU. Don't print prices on it. Status comments in the album
-are optional notes, and the register remains the record.
+**Original rule (superseded by decision 38):** The label originally contained only
+the SKU. Build 20 adds the selling price at the client's request. Status comments
+in the album are optional notes, and the register remains the record.
 
 ### 26. Stay with the Shared Album, not a Shared Library
 
@@ -547,6 +551,9 @@ it can edit and delete everything, and all of it counts against the creator's iC
 ### 27. Prepare SKU labels as PDFs for NIIMBOT after album sharing
 
 18 November 2026.
+
+The SKU-only content below describes the original release; decision 38 adds
+selling prices while preserving the PDF handoff and manual Add/Print steps.
 
 **Decision:** Build 10 adds Prepare SKU label after New Product's album Share
 sheet. It generates a PDF containing only the SKU and opens NIIMBOT. The client
@@ -793,3 +800,58 @@ remain untouched during Sagar's authorised catalogue rebuild from 001.
 interrupted writes/recovery, stale snapshots, link corrections, invalid receipts
 and fresh-session ownership. A complete real image/Shopify batch is not exercised
 while changing the skill. See [Agent processing](product-operations/agent-processing.md).
+
+### 38. Print selling prices below SKUs in every label path
+
+22 November 2026.
+
+**Decision:** At the client's request, build 20 uses one shared generator for
+New Product's post-share label, Client → Print Product Label and Operator →
+Register → Prepare SKU label. The 50 × 30 mm PDF prints the SKU on the first line
+and the selling price below, prefixed with ASCII Rs. because the standard Courier
+font does not contain a rupee glyph. Cost and status remain excluded. This
+supersedes decision 25's no-prices rule and decision 27's SKU-only content.
+
+**Price source:** Intake uses the entered selling price. Reprints use the current
+register row, including corrections, rather than the original submission. Invalid
+or unsupported price text stops label generation instead of reinterpreting it.
+Changing a price requires reprinting the attached physical label. Add and Print
+remain manual inside NIIMBOT.
+
+**Live data:** Sagar confirmed PBS-SAR-001 and PBS-SAR-002 are real final entries.
+Only the separately identified PBS-SAR-003 dummy and its metadata/activity were
+removed after a verified private backup; the two real entries were hash-checked
+unchanged. Shared Album deletion remains the user's manual task.
+
+**Evidence:** The client confirmed physical SKU-only printing on the B1. Missing
+operator records appeared after opening register/NEW in Files, consistent with
+iCloud loading/sync. Neither observation proves the new two-line layout prints;
+that must be checked after installing build 20 without creating another product.
+
+### 39. Use editorial product heroes; defer all gifting automation
+
+22 November 2026.
+
+**Decision:** New product processing adds no gift tags or gift-collection
+membership, for any category or price. This replaces decision 2's blanket type
+and price eligibility. Price tiers alone never establish gift suitability.
+Design a separate gifting automation later; keep it as a documented TODO.
+
+**Images:** Apparel storefront heroes use a beautiful adult Indian model
+showcasing the actual piece in a restrained premium Indian editorial setting.
+Jewellery uses an appropriate model detail; miniatures/home decor use a styled
+product scene. Portrait 4:5 is the target. Fabric views and close details are
+supporting gallery images. The actual textile/object colour, pattern, border,
+shape and included parts remain the factual constraints. A Banarasi style prompt
+does not turn another saree into silk, zari or a Banarasi weave.
+
+**Why:** The merchant rejected gift classification and fabric-first storefront
+imagery on the first real listing. PBS-SAR-001's two useful detail images were
+retained; an Indian-model editorial image was added and moved to the featured
+position. Its gift tag was removed, clearing both smart gift collections.
+
+**How to apply:** The canonical add-products skill contains category prompts
+and a verified fast path from the first run. Resolve store/collection/location/
+publication context once per batch, reuse known API shapes, checkpoint IDs, and
+verify actual media order/publication. Explicit live-product corrections change
+only the requested fields and never replay intake or initialize inventory again.

@@ -1,5 +1,16 @@
 # Shortcut improvements
 
+## Deferred gifting automation
+
+- [ ] **Design a separate gifting automation.** Sagar deferred gifting on
+  22 November 2026. The intake/listing skill must not mark any product as a gift,
+  add `gift` or assign gift collections, regardless of category or price. Agree
+  on selection criteria, review controls and how the later automation will add/
+  remove tags and maintain tiers before implementing it. Existing gift collection
+  definitions are not an instruction to classify new intake. Owner: Sagar.
+
+## Shortcut backlog
+
 Open ideas and fixes, with completed work noted below. This list was on hold
 until a shortcut worked on the client's iPhone and could change files in the
 shared folder, which passed on 5 November 2026
@@ -77,7 +88,8 @@ the job.
 - **25 — SKU labels:** New Product offers Prepare SKU label after album sharing,
   copies only the SKU, and opens its PDF in NIIMBOT. Print Product Label handles
   retries without another submission. PDF import passed on the operator's phone;
-  dynamic SKU generation and physical printing still need confirmation. See
+  the client confirmed physical SKU-only printing on 22 November. Build 20 adds
+  selling prices and still needs its two-line print check. See
   [New Product](new-product.md#print-again-without-resubmitting).
 - **20 — operator SKU entry:** Move back and Correct prices now use category
   plus number, as requested, instead of a full typed SKU. Existing list pickers

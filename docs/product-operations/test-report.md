@@ -1,5 +1,61 @@
 # Test report
 
+## Build 20 — selling-price labels and live intake, 22 November 2026
+
+Sagar confirmed PBS-SAR-001 and PBS-SAR-002 are real final submissions. Both
+have NEW rows, valid prices and confirmed Shared Album references. The client's
+B1 now physically prints the previous SKU-only label; the earlier blank output
+also affected native templates and the printer self-test, so it was independent
+of the shortcut. The user has not identified which physical adjustment resolved it.
+
+The operator's iPhone initially showed No matching products and a direct Saree/1
+lookup failed. Opening Files → Periwinkle Product Operations → register → NEW
+made Register show the products, consistent with iCloud loading/sync rather than
+missing data. Source and folder bindings were not changed for that recovery.
+
+Build 20 adds selling price beneath the SKU in all three entry points: New
+Product after sharing, Client → Print Product Label, and Operator → Register →
+Prepare SKU label. Reprints now read the current register price, not the original
+submission. The PDF remains 50 × 30 mm; ASCII Rs. avoids an unsupported rupee
+glyph. Cost and status never enter its printed content. Add/Print remain manual.
+
+All **73 tests pass**, including strict PDF parsing, unchanged byte lengths/xref
+offsets across variable SKU/price lengths, price validation, line positioning,
+read-only reprints and current selling-price sourcing. A generated sample PDF
+was rasterized and visually checked: centred SKU above a smaller price line.
+These checks alone do not prove NIIMBOT imports or physically prints the new
+layout. Sagar subsequently replaced Operator on his phone and confirmed the new
+label displays successfully, clarifying that the amount is the selling price.
+No exact SKU/amount or physical build-20 print was reported in that confirmation.
+Use an existing real product for the client's two-line print check.
+
+All three build-20 files were Apple-signed and decoded. Client has 979 actions;
+Operator has 2,132. Each complete action graph matches a fresh generator after
+UUID normalization. Operator-account Client/Operator and client-account Client
+retain their correct separate folder bindings. The client's single installer,
+README and hash manifest are in **shortcuts/client-build-20**. The operator's
+two installers, instructions and manifest are in the private **Periwinkle
+Operator Install - Build 20 - 2026-11-22** folder. Copied bytes were verified.
+The Mac editor confirms both installed role menus now say build 20. Operator's
+phone replacement/display was confirmed by Sagar; his operator-account Client
+testing copy was imported on the Mac for iCloud sync. The import briefly exposed
+the former build-19 Client as Client 2; it disappeared as replacement completed.
+The final library contains seven shortcuts: the two roles and five personal
+shortcuts, without a duplicate or diagnostic tile. The client's own-account
+phone installation and new physical price-label test still require confirmation.
+The two preceding build-19 installer folders were ZIP-backed up and
+moved to recoverable Mac Trash, leaving only build 20 visible in iCloud. Signed
+build-19 rollback files and the verified folder backup remain privately local.
+
+Only the explicitly identified dummy PBS-SAR-003 was removed: its submission,
+NEW row, submission event, photo link and pending-photo marker. A five-file ZIP
+was read back and verified before moving the files to recoverable Mac Trash.
+All ten files for the two real products were hash-checked unchanged. The source
+folder structure, settings, real records, CSV snapshots and Shared Album images
+were preserved; the user handles the dummy album photo separately. The private
+backup/manifest remain under ignored product-ops/local/backups/. Since the
+latest dummy's submission is gone, the next suggested saree number is 003.
+
 ## Mac Shared Album export — 22 November 2026
 
 Sagar approved enabling Shared Albums on the Mac; iCloud Photos remained off.
@@ -16,7 +72,7 @@ claim this as a verified unattended Shortcut export. Both temporary diagnostic
 installations were removed; the Mac library is back to seven shortcuts. Source
 and reproduction notes are in [Mac photo export](mac-photo-export.md).
 
-## Current release — build 19
+## Build 19 — original release and rollout history
 
 20 November 2026. The eight operation builders are now inlined into two
 self-contained role bundles, each with four first-menu choices and one account

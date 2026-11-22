@@ -3,7 +3,7 @@
 **Who runs it:** the operator. **Source:** `register` in
 [`build.py`](../../product-ops/build/build.py).
 
-Build 18 includes the product browser introduced in build 12, with linked Shared Album previews. Browse by status and category, or find a
+Build 20 includes the product browser introduced in build 12, with linked Shared Album previews. Browse by status and category, or find a
 piece by category plus number. Inspect its prices, stock, dates, Shopify link and
 notes without opening Numbers. CSV exports remain available separately.
 
@@ -19,6 +19,10 @@ notes without opening Numbers. CSV exports remain available separately.
 - **Product actions:** Copy SKU, Copy Shopify link, Prepare SKU label, Link or change photo, or Finish.
   Link copying stops with an explanation if no valid store link exists. NIIMBOT
   still requires Add and Print manually.
+
+Build 20's Prepare SKU label prints the SKU and the current selling price below
+it, using the same PDF generator as both Client label entry points. Cost is never
+printed. Reprint and replace a physical label after a price correction.
 
 Browsing lists filenames before reading the selected record, avoiding a full
 JSON-to-CSV rebuild just to inspect one piece. It skips hidden files and conflict
@@ -64,6 +68,11 @@ the client the latest tables too.
 
 ## Good to know
 
+- **iCloud may need to load the folder first.** On 22 November the operator's
+  iPhone showed no matching products and direct lookup failed, although two
+  valid NEW records were visible on the Mac. Opening Files → Periwinkle Product
+  Operations → register → NEW made them appear in Register. Download cloud-marked
+  files and retry before assuming a submission is missing or recreating it.
 - **It's a snapshot.** Run Export to Numbers again to refresh it. Anything typed into the
   table is lost, because nothing flows back to the records.
 - **Export rows and browser choices aren't sorted.** Sort or filter exports in Numbers.
@@ -74,16 +83,16 @@ the client the latest tables too.
 
 ## Build and installation
 
-Recreate the signed operator file from source:
+Recreate the signed Operator role file from source:
 
 ```bash
-python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-18/operator --role operator --only register
+python3 product-ops/build/build.py product-ops/local/operator-folderref.shortcut product-ops/local/releases/build-20/operator --role operator
 ```
 
-Import it under the existing name **Register**, and verify the first menu says
-**Register (build 18)**. Preserve the old signed file locally as a backup rather
-than creating a Previous Version shortcut in the synced library. Client New Product and Fix Product are also updated in client-build-18; use
-each account's own installers.
+Import **Periwinkle - Operator.shortcut**, choose Replace, then select Register
+and verify **Register (build 20)**. Preserve the previous signed file privately
+rather than creating a Previous Version tile. The client uses the separately
+account-bound **shortcuts/client-build-20** installer; see [Building and signing](building-and-signing.md).
 
 ## Why it's built this way
 

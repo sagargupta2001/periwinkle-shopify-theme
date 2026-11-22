@@ -71,21 +71,27 @@ No image copy is saved in Drive. If the post is still syncing, use Fix Product
 If Prepare SKU label was chosen, NIIMBOT then opens the PDF;
 tap Add, then Print. Print is manual. Confirm the B1 is connected in NIIMBOT
 and that its label roll matches the current 50 × 30 mm PDF.
+Build 20 prints the SKU on the first line and the selling price below it,
+for example Rs. 3500. Cost price is never printed. Rs. avoids unsupported rupee
+glyphs in the PDF font. Prices must be positive with at most two decimal places.
 
 Update Stock, Fix Product and Print Product Label: choose a category and
 enter only the number. Dupatta + 4 means PBS-DUP-004. Leading zeros are optional.
 Print Product Label prepares/reprints a label without submitting another product.
+It reads the current register selling price, so reprinting after a price correction
+uses the corrected price. Replace any old physical label when its price changes.
 
 Run shortcuts by opening the Shortcuts app and tapping the tile. The previous
 client phone did not reliably start them from a Home Screen icon or widget.
 
-Operational records are independent of this installer. Sagar confirms when the
-test register is reset and live intake begins. First confirm a New Product submission
-previews correctly on the operator's phone after Shared Album sync: cross-account
-confirmation of the posted album reference has not yet been verified. Also confirm that the new label opens correctly
-and prints at the right size on this phone and printer. PDF import has been
-tested on Sagar's phone; the client's physical B1 print and the new dynamic
-SKU label generation still need confirmation.
+Operational records are independent of this installer. Live intake has begun;
+do not reset the register or create another product just to test a label.
+The client has confirmed the previous SKU-only label physically prints on the B1.
+After replacing the shortcut, test the new two-line layout through Print Product
+Label using an existing product; confirm SKU, selling price and size on the paper.
+The build-20 price layout still needs this phone/printer check.
+If products are missing on the operator's phone, open Files → Periwinkle Product
+Operations → register → NEW and let it load/download, then retry the shortcut.
 
 Keep this version folder for reinstalling. manifest.json records file hashes.
 """

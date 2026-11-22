@@ -49,12 +49,23 @@ the skill does not process them or publish through an unresolved out-of-stock re
 ## What the agent completes
 
 The skill checks SKU collisions, observes product facts from the pasted source,
-prepares a faithful 4:5 main image and genuine supporting image/detail, inspects
+prepares a premium 4:5 editorial hero and genuine supporting image/detail, inspects
 the files, fills the listing checklist, creates/reuses a draft, configures its
 default variant, price/cost, inventory, category/metafields, tags and collections,
 uploads and attaches finished media, publishes to the Online Store and verifies
 the result. It then records the product URL, LIVE status and publishedAt with
 the same activity-event schema used by the operator shortcuts.
+
+The hero uses an Indian model for apparel/jewellery, and a styled product scene
+for objects. Plain fabric and detail views remain later gallery images. The
+skill includes [category prompts](../../.claude/skills/add-products/references/product-imagery.md)
+and a [verified API fast path](../../.claude/skills/add-products/references/shopify-fast-path.md)
+so each fresh session can reuse the successful operation shapes and resolve
+store settings once per batch. The example Banarasi art direction does not
+authorize Banarasi/silk/zari claims for unrelated products.
+
+No product is marked as a gift, at any price or in any category. A separate
+gifting automation is [deferred](improvements.md#deferred-gifting-automation).
 
 Unknown optional fabric/dimension/origin details are omitted, not invented.
 Missing required information or a misleading image blocks the affected SKU.
@@ -97,6 +108,10 @@ are removed once final Shopify media is verified.
 The helper is tested against isolated filesystem fixtures, including interruption
 after each write phase, stale rows, publication receipts, link corrections,
 conflict copies and retry behaviour. Those tests do not establish actual Shopify
-creation, image quality or a complete live batch. No products were created or
-published while making this skill update; validate the first actual run with its
-real tool results and final product review.
+creation or image quality on their own. The first live run on 22 November
+published PBS-SAR-001 and logged its register transitions successfully. Merchant
+review then replaced its fabric-first presentation with an Indian-model hero,
+retained both detail images, and removed gift classification. Shopify verified
+the hero first, all three media READY and only Sarees collection membership.
+The second product remains in progress awaiting its photo; this is not evidence
+that a complete two-product batch has finished.

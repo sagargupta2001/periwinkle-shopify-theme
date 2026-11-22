@@ -36,7 +36,7 @@ URL_RULE = (r"^https://(www\.)?(periwinklebysherry\.com|periwinkle-by-sherry\.my
 ISO = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 ID = "yyyyMMddHHmmss"
 PURPLE, BLUE = 2071128575, 946986751  # client shortcuts, operator shortcuts
-BUILD = 19  # Shown in role menus and operation menus; raise on each release.
+BUILD = 20  # Shown in role menus and operation menus; raise on each release.
 STATUS_LABELS = {"NEW": "New", "IN_PROGRESS": "In progress", "READY_TO_PUBLISH": "Ready to publish", "LIVE": "Live"}
 
 
@@ -305,7 +305,7 @@ def new_product(folder):
     s.end_if(not_posted)
     resolve_photo_reference(s, lower, allow_choose=True, notify=True)
     printing = s.if_(label, IS, string="Prepare SKU label")
-    add_label_handoff(s, sku)
+    add_label_handoff(s, sku, selling)
     s.end_if(printing)
     return s
 
@@ -313,12 +313,13 @@ def new_product(folder):
 def print_product_label(folder):
     s = Store("Periwinkle – Print Product Label", folder, PURPLE)
     sku, lower = s.ask_existing_sku()
-    product = s.lookup("products", lower, ".json")
-    missing = s.if_(product, NO_VALUE)
+    s.find_row(lower)
+    missing = s.if_(named("rowFile"), NO_VALUE)
     s.alert("SKU not found", "Check the category and number. No product was created or changed.")
     s.stop()
     s.end_if(missing)
-    add_label_handoff(s, sku)
+    row = s.row_fields(named("rowFile"))
+    add_label_handoff(s, row["sku"], row["sellingPrice"])
     return s
 
 
@@ -652,7 +653,7 @@ def register_product_details(s, lower):
     s.add("setclipboard", WFInput=attachment(row["shopifyUrl"]), WFLocalOnly=True)
     s.end_if(branch)
     branch = s.if_(action, IS, string=PRINT)
-    add_label_handoff(s, row["sku"])
+    add_label_handoff(s, row["sku"], row["sellingPrice"])
     s.end_if(branch)
 
 

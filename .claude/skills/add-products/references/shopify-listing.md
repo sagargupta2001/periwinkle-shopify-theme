@@ -43,15 +43,15 @@ their actual content before recovering ownership. Ambiguity blocks the SKU.
 
 Resolve category/collections against the current store. Existing baseline:
 
-| Code | Product type / taxonomy baseline | Manual collection handle | Gift eligibility |
-|---|---|---|---|
-| SAR | Saree / aa-1-23-2-1 | periwinkle-sarees | Yes |
-| DUP | Dupatta / aa-2-31-4 | frontpage | Yes |
-| SKZ | Unstitched Salwar Suit / aa-1-19-4 | periwinkle-salwar-suit-sets | No |
-| MIN | Miniature / hg-3 | periwinkle-miniatures | Yes |
-| HOM | Actual visible object; discover taxonomy | periwinkle-ceramics for ceramics; verify other objects | Yes |
-| JEW | Earrings/necklace/ring; aa-6-6 for earrings, discover others | periwinkle-jewellery-india-hasn-t-seen-yet | Only when the European collection designation is established |
-| RED | Actual identifiable ready-made garment; discover taxonomy | Resolve existing appropriate collection | Resolve from established store rules |
+| Code | Product type / taxonomy baseline | Manual collection handle |
+|---|---|---|
+| SAR | Saree / aa-1-23-2-1 | periwinkle-sarees |
+| DUP | Dupatta / aa-2-31-4 | frontpage |
+| SKZ | Unstitched Salwar Suit / aa-1-19-4 | periwinkle-salwar-suit-sets |
+| MIN | Miniature / hg-3 | periwinkle-miniatures |
+| HOM | Actual visible object; discover taxonomy | periwinkle-ceramics for ceramics; verify other objects |
+| JEW | Earrings/necklace/ring; aa-6-6 for earrings, discover others | periwinkle-jewellery-india-hasn-t-seen-yet |
+| RED | Actual identifiable ready-made garment; discover taxonomy | Resolve existing appropriate collection |
 
 Validate the baseline against live store/taxonomy data; IDs use the
 gid://shopify/TaxonomyCategory/ prefix. Do not create a new collection or change
@@ -61,7 +61,10 @@ focused question. Do not ask routinely when the object is identifiable.
 
 Reuse existing product hashtags only when the visible craft/material is clear.
 For miniatures add an established material tag where known, since it drives
-smart collections. Add `gift` only for an eligible type priced at ₹5,000 or less.
+smart collections. Add no gift tags and no gift-collection membership, regardless
+of category or price. Sagar deferred all gifting to a separate future automation
+on 22 November 2026. Do not apply the superseded blanket gift rule from decision 2
+or ask for gift eligibility while processing intake.
 Do not create wf-/album-/processing tags; iCloud remains the workflow authority.
 
 Set plain colour category metafields using existing colour metaobjects. Create
@@ -84,19 +87,23 @@ sold: never set it back to 1. This skill does not process stock requests. Keep
 the existing zero-weight convention until actual category averages are supplied;
 report that unresolved shipping setup rather than invent a weight.
 
-At least two finished images must be attached: a faithful 4:5 main image and a
-genuine supporting image/detail. The agent inspects the actual edited files
-against the source; do not manufacture extra views, alter the sold item or upload
-a shopping-app screenshot. Use stable SKU/hash filenames, descriptive alt text,
-and put the main image first. Persist file IDs; attach existing files using
+Attach a premium 4:5 editorial hero plus at least one genuine supporting detail.
+Use an Indian model for apparel/jewellery and a styled product scene for objects,
+following [the category prompts](product-imagery.md). Detail crops and plain
+fabric photographs are supporting media. Preserve existing useful detail images
+when adding a hero. Inspect the sold item's colour, pattern, border and shape
+against the source; the model/setting must not introduce false product facts.
+Use stable SKU/hash filenames and descriptive alt text. Put the hero first and
+verify its actual featured media ID; adding it last does not feature it. Persist
+file IDs; attach existing files using
 reference attachment, not their CDN URL, so Shopify does not make another copy.
 
 ## Publication
 
 Before publication verify content, SEO, variant/SKU, current cost/price, inventory
 settings, quantity, at least two processed images, vendor, taxonomy, applicable
-colour/fabric values, manual collection membership and the price-dependent gift
-tag. Pending out-of-stock requests or an OUT_OF_STOCK register row block intake.
+colour/fabric values, manual collection membership and absence of gift tags or
+gift collections. Pending out-of-stock requests or an OUT_OF_STOCK register row block intake.
 
 Set ACTIVE and publish to the Online Store only, then query the actual publication
 state using the current schema. Do not publish other sales channels implicitly.

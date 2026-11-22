@@ -14,11 +14,15 @@ and [decision 37](../decisions.md#37-process-products-one-by-one-with-a-photo-ha
 
 ## The shortcuts
 
-Build 19 installs **Periwinkle - Client** and **Periwinkle - Operator**.
+Build 20 installs **Periwinkle - Client** and **Periwinkle - Operator**.
 Each starts with four operation choices below. Only Client is shared with the
 client; the operator can install both for testing. One operation runs per launch.
 The generator keeps operations modular and inlines them into the two files,
 so neither file depends on other installed shortcuts.
+All three label entry points now print the selling price below the SKU. Reprints
+use the current register price; costs never appear on the label. The client has
+confirmed physical SKU-only printing on the B1; the new price layout needs a
+print check after installing build 20.
 [Role shortcuts](role-shortcuts.md) covers installation, updates and migration.
 Each operation still has its own page and diagram.
 
