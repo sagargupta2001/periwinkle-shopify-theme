@@ -1,5 +1,21 @@
 # Test report
 
+## Mac Shared Album export — 22 November 2026
+
+Sagar approved enabling Shared Albums on the Mac; iCloud Photos remained off.
+The Sarees album synced with five photos. Native Photos → File → Export →
+Export Unmodified Original produced a valid 4032 × 3024 JPEG (2,114,628 bytes),
+with the filename matching the previously confirmed iPhone reference. It was
+decoded and visually checked, then the temporary image/directory were removed.
+The source photo, operational data and Shopify were unchanged.
+
+The separate Shortcut CLI prototype did not pass: its runs returned exit zero
+without image or text-report output. The missing input-type declaration was
+noticed; enabling Files did not produce a successful command-line run. Do not
+claim this as a verified unattended Shortcut export. Both temporary diagnostic
+installations were removed; the Mac library is back to seven shortcuts. Source
+and reproduction notes are in [Mac photo export](mac-photo-export.md).
+
 ## Current release — build 19
 
 20 November 2026. The eight operation builders are now inlined into two
