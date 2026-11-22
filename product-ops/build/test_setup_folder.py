@@ -17,6 +17,7 @@ class FolderSetup(unittest.TestCase):
             root = Path(temporary) / "Periwinkle Product Operations"
             self.run_setup(root)
             for folder in ["products", "products/_cancelled", "log", "views", "photo-links", "photo-pending", "shortcuts",
+                           "agent/jobs", "agent/transactions", "agent/tmp",
                            "register/NEW", "register/IN_PROGRESS", "register/READY_TO_PUBLISH", "register/LIVE",
                            "register/_replaced", "register/_cancelled", "stock-requests/PENDING",
                            "stock-requests/COMPLETED", "stock-requests/REJECTED", "stock-requests/_handled"]:
@@ -34,6 +35,8 @@ class FolderSetup(unittest.TestCase):
                 "products/pbs-sar-409.json": '{"sku":"PBS-SAR-409"}',
                 "photo-links/pbs-sar-409.json": '{"source":"shared_album_confirmed","photoName":"upload-uuid"}',
                 "photo-pending/pbs-min-1001.json": '{"state":"pending","beforeNames":"␟existing␟"}',
+                "agent/jobs/pbs-sar-409.json": '{"sku":"PBS-SAR-409","stage":"draft_created"}',
+                "agent/transactions/test.json": '{"state":"pending"}',
             }
             for name, content in payloads.items():
                 (root / name).write_text(content)

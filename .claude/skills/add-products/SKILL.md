@@ -1,218 +1,164 @@
 ---
 name: add-products
-description: List a product the client submitted through the Periwinkle shortcuts in Shopify. Reads the register in iCloud, compares it with Shopify, creates the draft listing from the register's SKU and prices and the photos provided, and takes finished listings live. Use when the user runs /add-products, asks what's waiting to be listed, pastes details copied from Work on Product, or says a product's photos are done.
-argument-hint: "[status | list <SKU> | live <SKU>]"
+description: Process client-submitted Periwinkle products one by one from the shared register, using one pasted photo per SKU, preparing images, publishing Shopify listings and logging register updates. Use for add-products or requests to process new register products. Status requests remain read-only.
 ---
 
-# Add products
+# Create Periwinkle products
 
-This is the Shopify half of the workflow in
-[docs/product-operations/README.md](../../../docs/product-operations/README.md).
-Every listing must meet the [listing checklist](../../../docs/product-operations/listing-checklist.md).
-If this file and those docs disagree, the docs win.
+Turn the client's NEW submissions into verified live Online Store listings. Sagar's
+normal task is to invoke this skill in a fresh session, paste the requested SKU's
+photo from his existing iPhone preview shortcut, and review the finished products.
+Do the listing, image preparation, upload, publication and logged register updates.
+Ask for **one SKU's photo at a time**, finish that product, then request the next.
 
-## Who owns what
+Run from the Periwinkle repository with access to its iCloud operations folder.
+A phone photo pasted into chat is sufficient image input; Mac Photos and a photo
+export shortcut are not required. An iPhone-only chat without register file
+access cannot run this whole workflow: explain that access gap rather than claim
+that the Shopify connector can read iCloud. This skill does not start itself when
+the client adds a row; the user's invocation starts a batch.
 
-| | Owner | How it changes |
-|---|---|---|
-| SKU, prices, publication and stock status | The register in iCloud | Only the shortcuts, on an iPhone |
-| Listing content, photos, quantity | Shopify | This skill and the admin |
+## Invocation and scope
 
-- **Never write to the register.** Writing there would skip the activity log. Read it
-  with the script below, then tell the user which shortcut to run.
-- **Never keep status in Shopify.** No `wf-` or `album-` tags, or any other tracker
-  (decision 22).
-- **Run only the step asked for.** This skill doesn't change stock. Pending stock requests
-  go through Process Stock Requests, and `status` only reports them.
+- `$add-products`, `/add-products`, `process`, or “process the new products”:
+  process the queue through publication. This is the requested publishing scope;
+  do not add a draft-approval or manual-link step. Honor actual tool approvals.
+- `status`, “what's waiting”, or a skill-maintenance request: read/report only.
+- `process SKU`: process that eligible NEW or agent-owned unfinished SKU only.
+- `list SKU`: prepare a draft and its images, record READY_TO_PUBLISH, then stop.
+- `live SKU`: validate and publish an agent-owned prepared listing, then record LIVE.
+- A pasted image during an active batch answers its current photo request. It is
+  not an instruction to replace another SKU's image or publish unrelated products.
 
-Read the register with this script. It finds a product's real status, and lists anything a
-stopped run left behind under `problems`.
+Only handle product submissions. Do not reset the register, process stock
+requests, edit existing LIVE products, change store/theme settings, add tracking
+tags to Shopify, or resurrect archived products as part of this skill.
+
+For status-only requests, run read_register.py and compare exact SKUs with
+Shopify without entering the processing flow. Report current statuses, pending
+stock requests and mismatches in prices/costs, product links or publication.
+Do not claim rows, request processing photos, or repair anything in this mode.
+
+## Preflight and queue
+
+1. Read [listing rules](references/shopify-listing.md) and the repository's
+   [listing checklist](../../../docs/product-operations/listing-checklist.md).
+   The process is described in [agent processing](../../../docs/product-operations/agent-processing.md).
+2. Check that the intended store is Periwinkle By Sherry / periwinklebysherry.com,
+   the Shopify read/write/upload tools are connected, image editing is available,
+   and the register can be read. Report a missing capability accurately. Do not
+   create products with missing images or pretend an unavailable tool succeeded.
+3. Inspect the queue:
 
 ```bash
-python3 .claude/skills/add-products/read_register.py
-python3 .claude/skills/add-products/read_register.py --sku PBS-DUP-004
+python3 .claude/skills/add-products/register_ops.py queue
 ```
 
-If the Shopify Admin tools (`graphql_query`, `graphql_mutation`) aren't available, say so
-and stop.
+It includes NEW rows and unfinished rows this helper previously claimed, ordered
+by submission time. It excludes unrelated operator-owned work and LIVE rows.
+`read_register.py` remains a read-only full-register/status report.
+4. Report the real queue count and a compact SKU list. Freeze the candidate SKU
+   list for this invocation; refresh each row before work and never revisit a
+   skipped/blocked SKU in the same batch. Later client submissions can wait for
+   the next invocation. Never claim all NEW rows in advance.
+5. Resolve only helper-owned pending transactions using the recovery procedure
+   below. Unexplained duplicate/conflict rows block the affected SKU. Flag
+   pending stock requests; do not publish a SKU with an unresolved out-of-stock
+   request. Continue other independent products where possible.
 
-## Pick the step
+## One product at a time
 
-- Nothing, `status`, "what's waiting": **Status**
-- `list <SKU>`, or details pasted from Work on Product: **List**
-- `live <SKU>`, "photos done for …": **Live**
+**Read and claim.** Obtain a fresh snapshot (`snapshot --sku SKU`). Current row
+prices include corrections; the original submission's prices are not authoritative.
+Selling price must be positive and above cost, and stock must be IN_STOCK. Claim
+only the current NEW SKU with `start --sku SKU --expected-sha256 HASH`. This logs
+PROCESSING_STARTED and moves it to IN_PROGRESS. A resumed agent-owned row needs
+no duplicate start. Do not adopt unrelated IN_PROGRESS work automatically.
 
-If it's unclear, show Status and ask.
+**Ask for its photo.** Use ordinary chat so the user can attach an image, not a
+text-only question widget. For example:
 
-## Status
+> First: **PBS-SAR-001**. Please paste its photo from your Register / Work on
+> Product preview. I'll prepare and publish this product before asking for the next.
 
-Run the script. Then look up every SKU in Shopify, in batches of up to 25, with
-`productVariants(query: "sku:A OR sku:B")`. Report each group with its next action:
+Wait for the photo. Do not ask for all nine images at once, guess which SKU an
+ambiguous attachment belongs to, search album comments, or require a new photo
+shortcut. An explicit SKU caption overrides the assumed queue association: if it
+names a different product, clarify before using it. If the user skips this SKU,
+checkpoint `stage: blocked` with a short reason and advance to the next candidate.
 
-| Register | Shopify | Next action |
-|---|---|---|
-| `NEW` | Any | Run Work on Product → Start a new product |
-| `IN_PROGRESS` | Not there | `/add-products list <SKU>` |
-| `IN_PROGRESS` | Draft | Add photos if needed, then Work on Product → Add or fix a Shopify link |
-| `IN_PROGRESS` | Active | Work on Product → Add or fix a Shopify link → I've checked it's live |
-| `READY_TO_PUBLISH` | Draft | `/add-products live <SKU>` |
-| `READY_TO_PUBLISH` | Active | Run Publish Products |
+**Inspect and prepare images.** Inspect the actual attached file first. Identify
+only visible features and client-provided facts. Do not invent fabric, dimensions,
+origin, a reverse side or packaging. Omit optional unknowns; ask only when a
+required fact or usable photo is missing. Use the available built-in image-editing
+skill/tool, with the attached file as reference, to make a faithful 4:5 main
+image and at least one genuine supporting view/detail crop. A single source does
+not authorize inventing unseen angles. Preserve the piece's pattern, colour,
+shape, texture and included items. Inspect the outputs against the source and
+verify actual dimensions/aspect ratio before upload. If an edit changes the
+product, retry narrowly or request a better source; do not publish a misleading edit.
+Manual Gemini editing is no longer required. The user reviews finished listings,
+so do not impose an image approval step for routine, faithful results.
 
-Flag these as mismatches, and don't fix them without asking:
-- `READY_TO_PUBLISH` or `LIVE`, but the SKU isn't in Shopify
-- `LIVE`, but the product isn't Active or isn't on the Online Store
-- The register's selling price or cost differs from Shopify's
-- The register's `shopifyUrl` handle differs from the product's handle
-- `OUT_OF_STOCK` on record with a quantity above 0. `IN_STOCK` with a quantity of 0 may just
-  mean it sold, so mention it without calling it an error.
-- Any `problems` from the script
+Use ignored `product-ops/local/processing/<sku>-<submission-identity>/` for working
+files. `submission-identity` is the first 12 hex characters of SHA-256 of
+`sku + newline + submittedAt`. Preserve interrupted working files only while
+needed to resume; keep photo bytes out of the shared register and public Git.
+If a fresh session still has valid working files or verified uploaded media,
+reuse them. Otherwise request this SKU's photo again, not every earlier photo.
 
-Also list pending stock requests with each product's Shopify quantity, and point to Process
-Stock Requests. `LIVE` products with no mismatch only need a count.
+**Create/reuse the listing.** Follow the listing reference, checking exact and
+legacy SKU forms before creating anything. Complete content, taxonomy,
+collections, category metafields, variant, price/cost and inventory. Use ordinary
+write tools, not a panel that requires the user to press Save. Checkpoint product
+and media IDs immediately after successful external writes. Check current Shopify
+state after a timeout before retrying. Never create a second product or upload
+another copy merely because the prior tool response was lost. Never restock an
+already active product on retry.
 
-## List
+**Upload and record its link.** Upload the finished images from chat/local files
+using the connector's file-reference path; do not open a manual file picker.
+Attach uploaded file IDs to the product using the connector's documented
+reference-attachment operation, avoiding a second upload by URL. Reuse known
+file IDs on resume. Audit the completed draft, reread the register and record
+its canonical store URL through `ready --sku SKU --expected-sha256 HASH --url URL`.
+This logs SHOPIFY_URL_RECORDED and moves it to READY_TO_PUBLISH. The user does
+not paste the link or run an additional status shortcut.
 
-Run this once per SKU. It's safe to run again: step 3 finds the earlier draft.
+**Publish and verify.** Unless the user requested draft-only, recheck the listing,
+current prices/stock and newly arrived pending out-of-stock requests. Then activate
+and publish to the Online Store, then read Shopify
+again to confirm its publication, exact SKU and listing fields. An ACTIVE status
+alone, a draft admin link or an HTTP 200 page is not proof of Online Store
+publication. Build a fresh verification receipt from the actual tool results as
+specified below; never fabricate it to satisfy the helper. Use `publish --sku SKU
+--expected-sha256 HASH --receipt FILE` to log PRODUCT_PUBLISHED and record LIVE.
+If Shopify succeeded but the register update failed, report that exact split and
+resume the record update after re-verification; do not create/publish again.
 
-**1. Check the register.** Run the script with `--sku`. Use the row's prices, because
-`products/` keeps what was first submitted and the row has any corrections. Pasted details
-only tell you which SKU to use.
-- Not found: stop. It has to go through New Product first.
-- `NEW`: stop, and ask the user to run Work on Product → Start a new product, so the register
-  shows it's being worked on.
-- `IN_PROGRESS`: continue.
-- `READY_TO_PUBLISH` or `LIVE`: stop and report. It's already past this step.
-- Selling price of 0, or not above cost: ask before continuing.
+**Advance.** Give a brief success line with the product link, clean the temporary
+source and generated working copies after Shopify media is verified, and ask for
+only the next SKU's photo. Keep going until the frozen queue is finished or the
+user stops. Final report: live product links, drafts/blocked SKUs and exact reasons,
+and any remaining image/print checks. Do not claim actual B1 printing occurred.
 
-**2. Get the photos.** You can't see the Shared Album. The user has to attach a photo or give
-a local path, and step 5 needs it. If there's none, ask, reminding them of the row's
-`submittedAt` date so they can find it in the album. Never describe a piece you haven't seen.
+## Logged register updates and checkpoints
 
-**3. Look for the SKU in Shopify.** The register can't see older products, and older SKUs use
-another format, so search for both forms: `sku:PBS-SAR-069 OR sku:PBS/SAR/069`. Shopify's
-matching is loose, so compare the results in code, ignoring case.
-- No match: continue.
-- One match on a Draft with this exact SKU: it's the earlier attempt. Fill in only what's
-  missing, and don't create a second product.
-- Anything else: stop and report which product holds it. Two pieces sharing an SKU can mean
-  the wrong one gets packed. The client may need Fix Product to cancel and resubmit.
+Use `register_ops.py`; do not hand-edit rows, CSVs or invent status flags in
+Shopify. The helper archives previous rows, writes the existing activity events,
+uses current-row fingerprints and journals multi-file changes for recovery.
+It preserves SKU, prices, stock fields, notes, submission identity and source
+photo links. Its lock coordinates local helper processes, not all iCloud devices.
+Do not have the client/operator simultaneously edit the same SKU during a run.
 
-**4. Find the category.** Take the code from the SKU, then look up the collection by handle
-with `collections(query: "handle:<handle>")`.
+See [register helper](references/register-helper.md) for exact commands, checkpoint
+fields, publication receipts and interruption recovery. Keep job state in
+`agent/jobs/` and transaction intents in `agent/transactions/` within the shared
+operations root so a new session can resume. These contain metadata only.
 
-| Code | Product type | Taxonomy category | Manual collection handle | Gift set |
-|---|---|---|---|---|
-| DUP | Dupatta | `aa-2-31-4` | `frontpage` | Yes |
-| SAR | Saree | `aa-1-23-2-1` | `periwinkle-sarees` | Yes |
-| SKZ | Unstitched Salwar Suit | `aa-1-19-4` | `periwinkle-salwar-suit-sets` | No |
-| MIN | Miniature | `hg-3` | `periwinkle-miniatures` | Yes |
-| HOM | Ceramics or Wooden Antique Box: ask | Ask | `periwinkle-ceramics` | Yes |
-| JEW | European earrings, necklace or ring: ask | `aa-6-6` for earrings, otherwise search | `periwinkle-jewellery-india-hasn-t-seen-yet` | Only if European |
-| RED | No type yet: ask | Ask | Ask | Ask |
-
-Taxonomy IDs are written `gid://shopify/TaxonomyCategory/<id>`. Search with
-`taxonomy { categories(search:) }` when you need one that isn't here, and add it to this
-table. An unknown code: stop and ask. See [docs/sku-codes.md](../../../docs/sku-codes.md).
-
-**5. Write the content, from what the photo shows** (decision 17):
-- **Title:** colour, craft, fabric if clearly identifiable, motif and type. For example, "Teal
-  Pattachitra Dupatta with Tree of Life". No brand names or "(Copy)" (decisions 9–11).
-- **Description:** one or two short `<p>` paragraphs. Leave out fabric, length or dye if you
-  aren't sure. Never guess.
-- **SEO description:** one plain sentence of 140–155 characters, with no price or "buy now".
-  Leave the SEO title empty.
-- **Hashtags:** only from `productTags(first: 250)`, and only when the craft or fabric is clear.
-  Suggest a new one to the user instead of creating it. Miniatures also need their material
-  tag where it's clear (`#glass`, `#wooden`, `#porcelain`), because it drives their smart
-  collections (decision 4).
-- **`gift` tag:** add it if the type is in the gift set and the selling price is ₹5,000 or
-  less (decision 2).
-
-**6. Create the draft** with `productCreate`, passing `status: DRAFT`, `title`, `handle` (from
-the title), `descriptionHtml`, `seo: {description}`, `productType`, `vendor: "Periwinkle By
-Sherry"`, `category`, `tags` and `collectionsToJoin`. Select the default variant's `id`, and its
-inventory item's `id`.
-
-Then set the category metafields with `metafieldsSet`, as `list.metaobject_reference` with a
-JSON array of metaobject IDs:
-- **Colour** (`shopify.color-pattern`): the main one or two colours you can see. Reuse a plain
-  name from `metaobjects(type: "shopify--color-pattern")`. If a plain colour is missing, create
-  it in the same shape. Don't create shade names like "dusty rose".
-- **Fabric** (`shopify.fabric`): only if the client stated it. Reuse an existing
-  `shopify--fabric` metaobject.
-
-**7. Set the variant.** There's one product and one variant, the *Default Title*. Use
-`productVariantsBulkUpdate` with `price` from `sellingPrice`, `taxable: false`,
-`inventoryPolicy: DENY`, and `inventoryItem: {sku, cost, tracked: true, requiresShipping: true}`,
-with `cost` from `costPrice`. Use the SKU exactly as the row has it. Leave the weight at 0 until
-averages are recorded (decision 13).
-
-**8. Set the quantity to 1**, unless the user says otherwise. Read the current quantity first,
-then use this at `gid://shopify/Location/102961152023` ("Shop location"):
-
-```graphql
-mutation SetQuantity($input: InventorySetQuantitiesInput!, $key: String!) {
-  inventorySetQuantities(input: $input) @idempotent(key: $key) {
-    userErrors { code field message }
-  }
-}
-```
-
-Each quantity needs `changeFromQuantity`, set to the current quantity. `$key` is a new UUID from
-`uuidgen`, reused only if you're retrying the same change. If the item isn't stocked there yet,
-use `inventoryActivate` with `available`, which needs `@idempotent` too.
-
-**9. Report.** Show:
-- the title, colours, hashtags and whether it got the `gift` tag, plus anything you were unsure
-  of, such as "fabric not stated, looks like cotton";
-- the admin link;
-- the store link: `https://periwinklebysherry.com/products/<handle>`.
-
-Then tell the user what's left:
-1. Add the client's photos, refined in Gemini at 4:5, in the admin. This skill doesn't
-   upload them.
-2. Run Work on Product → Add or fix a Shopify link, paste the store link, and choose
-   *Not yet: mark READY_TO_PUBLISH*.
-3. Run `/add-products live <SKU>`.
-
-## Live
-
-Run the script with `--sku`, and load the product by SKU. If it's already Active and on the
-Online Store, change nothing and go to the last paragraph of this section.
-
-The register must say `IN_PROGRESS` or `READY_TO_PUBLISH`. Then check all of these:
-
-- At least two images, and no raw album photo or screenshot. Ask if you can't tell.
-- The title isn't a placeholder, and the description and SEO description are there.
-- `hasOnlyDefaultVariant` is true, and the SKU matches the register exactly.
-- **Price and cost match the register's row now.** Either could have been corrected since the
-  draft was made.
-- Quantity of 1 or more, tracked, policy DENY, taxable off.
-- Vendor and taxonomy category are set. Colour is set where the piece has a clear one.
-- It's in its manual collection, and the `gift` tag is right for its current price.
-
-If anything fails, list it and change nothing. Otherwise, use `productUpdate` to set
-`status: ACTIVE`, then `publishablePublish` for the Online Store only. Find that publication with
-`publications { nodes { id catalog { title } } }`, and confirm with
-`publishedOnPublication(publicationId:)`.
-
-Give the store link, and the one shortcut left to run:
-- `READY_TO_PUBLISH`: run Publish Products.
-- `IN_PROGRESS`: run Work on Product → Add or fix a Shopify link → *I've checked it's live*.
-
-Remind the user to print the label from Shopify.
-
-## Rules
-
-- Check `userErrors` on every mutation. If a step fails, stop and report what's done and what
-  isn't. Running the step again carries on from there.
-- Use GraphQL variables for description HTML. Documents are limited to 16,384 characters.
-- The Admin tools reject deprecated fields. Use `sources` rather than `ruleSet`,
-  `publishedOnPublication` rather than `publishedOnCurrentPublication`, and `catalog { title }`
-  rather than `Publication.name`. `onlineStoreUrl` comes back empty here, so build store links
-  from the handle.
-- Search filters such as `tracked:` are silently ignored, so filter in code.
-- Smart collections recount asynchronously, so counts can look stale just after a change.
-- Something structural, such as a new code or category, belongs in
-  [docs/sku-codes.md](../../../docs/sku-codes.md) or
-  [docs/decisions.md](../../../docs/decisions.md). Say so.
+For missing information, invalid media or SKU collisions, block only the affected
+SKU and explain the specific need. Honor connector approval prompts; this skill
+cannot suppress host-enforced confirmations. Never turn a failed read, unknown
+quantity or missing permission into an assumed success.
+After two targeted retries with the same unresolved image/tool failure, preserve
+the partial state, block that SKU and report it rather than loop indefinitely.

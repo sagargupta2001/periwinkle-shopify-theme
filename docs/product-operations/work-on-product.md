@@ -1,5 +1,11 @@
 # Periwinkle – Work on Product
 
+This page describes the manual Operator-menu route. In the usual
+[agent-processing flow](agent-processing.md), the add-products skill performs
+the logged start/link/publication updates itself; the operator only supplies
+one requested SKU photo at a time and reviews the results. Both routes share
+the register/event schema; do not run them concurrently on the same SKU.
+
 **Who runs it:** the operator. **Source:** `work_on_product` in
 [`build.py`](../../product-ops/build/build.py).
 

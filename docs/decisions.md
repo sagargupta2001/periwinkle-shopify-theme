@@ -755,3 +755,41 @@ pass iPhone checks, then remove only those tiles. Preserve personal shortcuts,
 Shared Albums, operational data and a private rollback release. Automated branch
 equivalence and signing checks do not replace phone import/runtime or actual
 client-to-operator/physical-print testing. See [Role shortcuts](product-operations/role-shortcuts.md).
+
+### 37. Process products one by one with a photo handoff and logged agent updates
+
+22 November 2026.
+
+**Decision:** Sagar invokes add-products in a fresh session. The agent checks NEW
+submissions and its own unfinished jobs, asks for one SKU's photo, and completes
+that product's image preparation, Shopify listing, Online Store publication and
+logged register update before requesting the next photo. Sagar uses the existing
+iPhone preview shortcut to paste the requested image and reviews final listings.
+No new phone shortcut or Mac Photos export is required for the normal route.
+
+**Ownership:** The JSON register remains authoritative. The controlled
+register_ops.py helper now performs operator start/link/publication transitions
+with existing event types, archived old rows, row fingerprints and recoverable
+transaction intents. It cannot change submitted SKU/prices or stock fields.
+This supersedes decision 24's read-only/manual-link boundary for explicit agent
+processing runs. Status-only requests remain read-only. No Shopify workflow tags
+or second status database are introduced.
+
+**Fresh sessions:** One canonical skill is shared by Claude's .claude entry and
+a Codex .agents/skills discovery link. Metadata-only jobs/transactions live in
+the shared operations folder. Reuse verified product/media IDs on retry, never
+duplicate a product or restock one that may already have sold. The agent session
+still needs iCloud file access; an ordinary mobile chat does not gain that access
+merely by receiving a photo. Connector-required approvals remain applicable.
+
+**Images and publication:** Built-in image editing can replace manual Gemini
+work. Use a faithful 4:5 main image plus a genuine supporting image/detail;
+inspect both against the source and never invent unseen product features.
+Only mark LIVE after fresh Shopify verification. Keep the client-owned label
+printing and separate stock-request workflow. Historical archived SKU matches
+remain untouched during Sagar's authorised catalogue rebuild from 001.
+
+**Validation:** Filesystem fixture tests cover row preservation, audit history,
+interrupted writes/recovery, stale snapshots, link corrections, invalid receipts
+and fresh-session ownership. A complete real image/Shopify batch is not exercised
+while changing the skill. See [Agent processing](product-operations/agent-processing.md).

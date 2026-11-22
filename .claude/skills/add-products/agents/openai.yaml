@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Periwinkle Products"
+  short_description: "Process products with one photo handoff at a time"
+  default_prompt: "Use $add-products to process new register products one by one, asking me for each SKU photo and publishing completed listings."

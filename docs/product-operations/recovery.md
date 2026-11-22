@@ -47,6 +47,10 @@ Periwinkle Product Operations/
   photo-links/
   photo-pending/
   shortcuts/
+  agent/
+    jobs/
+    transactions/
+    tmp/
 ```
 
 Timestamped archive subfolders, actual JSON records and CSV exports are created
@@ -77,7 +81,7 @@ current membership. CSVs are derived views and cannot restore all source data.
    original data preserves history that setup cannot reconstruct.
 2. If recreating an empty root, run setup and restore the data directories and
    configuration from backup: products, register, stock-requests, log,
-   photo-links, photo-pending, settings.json and sku-start.json. CSV views can
+   photo-links, photo-pending, agent, settings.json and sku-start.json. CSV views can
    be regenerated. Rebuild installer packages rather than relying on old files.
 3. If records/counters cannot be restored, establish the highest previously
    allocated SKU number in every category and update sku-start.json before new
@@ -111,3 +115,12 @@ the two account references while they remain valid. Keep the current signed
 release or regenerate it from source. The repository's ignored local development
 archive only preserves old installers/diagnostics and is not a complete live-data
 backup. Never put these private files in the public Git repository.
+
+Agent jobs and transaction intents contain metadata only. Preserve them with the
+register so a fresh session can resume its own unfinished products without
+duplicating Shopify listings or media. Pending transactions require the helper's
+recovery procedure; a publication recovery requires a fresh Shopify verification.
+Temporary staged metadata can remain after a crash, but is not image storage.
+See [agent processing](agent-processing.md). A deliberate future dummy-register
+reset must also clear the corresponding agent jobs/intents after backing up;
+recovery of real operational data must preserve them and SKU high-water marks.

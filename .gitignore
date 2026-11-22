@@ -1,3 +1,4 @@
 # Signed shortcuts and folder references hold personal iCloud IDs, and this repo is public
 product-ops/local/
 product-ops/build/__pycache__/
+.claude/skills/add-products/__pycache__/
