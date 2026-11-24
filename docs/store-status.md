@@ -4,17 +4,28 @@ A living snapshot of the Periwinkle store: what is still open before and after
 launch, and how the store is set up today. Rewrite it as things change. For
 *why* the store is set up this way, see [decisions.md](decisions.md).
 
-Last updated: 22 November 2026 (first real listing and editorial-image/gifting
-correction; older findings below retain their stated audit dates).
+Last updated: 24 November 2026 (second live batch and Salwar Kameez imagery;
+older findings below retain their stated audit dates).
 
 ## Current launch catalogue
 
 The catalogue is being rebuilt with fresh standard SKUs after archiving the
-legacy products. The latest active/draft audit found one new live product:
-[PBS-SAR-001 — Lavender Saree with Pink Floral Motifs](https://periwinklebysherry.com/products/lavender-saree-with-pink-floral-motifs).
-Its model-led editorial hero is first, both supporting detail images remain,
-and it belongs to Periwinkle Sarees with no gift tag or gift collections.
-The register records it as LIVE. PBS-SAR-002 is IN_PROGRESS awaiting its photo.
+legacy products. The two completed batches contain:
+
+- [PBS-SAR-001 — Lavender Saree with Pink Floral Motifs](https://periwinklebysherry.com/products/lavender-saree-with-pink-floral-motifs), ₹3,500, model-led hero and two supporting details.
+- [PBS-SAR-002 — Teal Saree with Geometric Leaf Motifs](https://periwinklebysherry.com/products/teal-saree-with-geometric-leaf-motifs), ₹4,999, model-led hero and one supporting detail.
+- [PBS-SAR-003 — Teal Blue Saree with Pink Striped Pallu](https://periwinklebysherry.com/products/teal-blue-saree-with-pink-striped-pallu), ₹2,999.
+- [PBS-SAR-004 — Yellow Saree with Taupe Geometric Pallu](https://periwinklebysherry.com/products/yellow-saree-with-taupe-geometric-pallu), ₹12,500.
+- [PBS-SAR-005 — Plum Checked Saree with Teal Patterned Pallu](https://periwinklebysherry.com/products/plum-checked-saree-with-teal-patterned-pallu), ₹11,500.
+- [PBS-SKZ-001 — Black Unstitched Salwar Suit with Colourful Geometric Motifs](https://periwinklebysherry.com/products/black-unstitched-salwar-suit-with-colourful-geometric-motifs), ₹7,850.
+
+Each completed listing was verified ACTIVE and published to the Online Store,
+with one tracked piece, overselling disabled and its appropriate category
+collection. Register rows are LIVE with canonical links and publication times.
+The 24 November four-product audit verified unique titles/SKUs/descriptions,
+populated types, no gifts, and model heroes first with a supporting detail each.
+Fourteen later NEW submissions remain unclaimed for the next batch; there are
+no pending transactions or stock requests. See [the batch audit](product-operations/test-report.md#four-product-batch--24-november-2026).
 
 New product processing does not classify any category or price as a gift.
 A [separate gifting automation](product-operations/improvements.md#deferred-gifting-automation)

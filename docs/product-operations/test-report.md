@@ -1,5 +1,78 @@
 # Test report
 
+## Four-product batch — 24 November 2026
+
+The frozen batch completed all four submissions, one pasted source photo per
+SKU, with verified Online Store publication and logged LIVE register entries:
+
+| SKU | Product | Selling price |
+|---|---|---|
+| PBS-SAR-003 | [Teal Blue Saree with Pink Striped Pallu](https://periwinklebysherry.com/products/teal-blue-saree-with-pink-striped-pallu) | ₹2,999 |
+| PBS-SAR-004 | [Yellow Saree with Taupe Geometric Pallu](https://periwinklebysherry.com/products/yellow-saree-with-taupe-geometric-pallu) | ₹12,500 |
+| PBS-SAR-005 | [Plum Checked Saree with Teal Patterned Pallu](https://periwinklebysherry.com/products/plum-checked-saree-with-teal-patterned-pallu) | ₹11,500 |
+| PBS-SKZ-001 | [Black Unstitched Salwar Suit with Colourful Geometric Motifs](https://periwinklebysherry.com/products/black-unstitched-salwar-suit-with-colourful-geometric-motifs) | ₹7,850 |
+
+Fresh Shopify and register reads verified exact SKUs, matching prices/costs,
+unique titles and descriptions, populated product types, one Default Title
+variant each, tracked quantity one, DENY overselling, taxable false and shipping
+required. All eight images are READY at 1122 × 1402 px, with the intended model
+hero first and one supporting textile detail per product. Each listing has its
+appropriate category collection and existing plain-colour references; none has
+gift tags or gift membership. Historical archived SAR-003 and SKZ-001 listings
+were left untouched. Zero shipping weights remain the existing unresolved setup
+item. No pending transactions, stock requests or register problems were found.
+
+The first Salwar Kameez submission validated the current taxonomy as
+aa-1-23-10, Salwar Kameez & Suit Sets, replacing the stale skill baseline.
+Sagar explicitly requested a model wearing a salwar kameez visualization.
+The hero preserves the photographed neckline, motifs, checked hem and tasselled
+coordinating fabric; the listing identifies the sale as unstitched and the model
+as one possible tailored look. The category prompt records this distinction and
+retains a fabric-presentation fallback when design evidence is insufficient.
+
+The helper preserved submission identity, prices, stock fields and Shared Album
+references while logging processing, canonical URLs and publication. Working
+image copies were deleted after verified upload/publication; private prompts,
+hashes and receipts remain outside Git. Fourteen later NEW submissions were
+visible at the closing audit and were left unclaimed for the next invocation.
+
+## First real two-product batch — 22 November 2026
+
+The add-products skill completed PBS-SAR-001 and PBS-SAR-002 from the shared
+register using one pasted source photo per SKU. Both are ACTIVE and published
+to the Online Store, with canonical links and LIVE/publishedAt register entries.
+Each has one Default Title variant, its exact SKU, register-matching price/cost,
+tracked quantity one, DENY overselling, taxable false, requiresShipping true,
+Saris taxonomy, existing colour references and Periwinkle Sarees membership.
+
+Merchant review corrected the first product's gift classification and fabric-first
+presentation. It now has the Indian-model editorial hero featured and its two
+original supporting images retained. The second followed the revised image and
+no-gifts rules from the start: model-led teal saree hero plus a supporting detail,
+with the unrelated fish-print background/hanger excluded from the product.
+
+All five media are READY and both featured IDs match their intended model heroes.
+No gift tags or gift collection membership remain on either new listing. A final
+active/draft search returned exactly two products with unique titles/SKUs,
+different descriptions and populated product types. The register reader found no
+record problems or pending stock requests; the processing helper reported no
+remaining products or pending transactions. Zero shipping weights are retained
+under the existing convention and remain an unresolved store setup item.
+
+The second SKU reused the current batch context and verified operation shapes,
+without additional schema discovery. Its image calls completed in about 21 and
+24 seconds; direct upload_image with original generated paths succeeded for both.
+Product metadata, variant settings, colour, media references and compare-and-set
+inventory were completed in one mutation after readiness checks. Every root's
+userErrors was empty. Its persisted idempotency key and inventoryInitialized
+checkpoint prevent repeat initialization on resume.
+
+Private receipts, image hashes, prompts and full API verification snapshots remain
+under ignored product-ops/local/; job/transaction metadata and activity events are
+in the shared operations folder. Temporary working source/generated copies were
+removed only after media/publication verification. Source Shared Album references,
+submitted records, price/cost, stock fields and previous history were preserved.
+
 ## Build 20 — selling-price labels and live intake, 22 November 2026
 
 Sagar confirmed PBS-SAR-001 and PBS-SAR-002 are real final submissions. Both

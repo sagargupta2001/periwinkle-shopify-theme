@@ -13,6 +13,13 @@ Image generation itself took about 24 seconds for the fabric view and 19 seconds
 for its detail; the later model-led hero took about 45 seconds. These are observed
 durations, not a promised SLA. The missing editorial hero caused avoidable rework.
 
+The second SKU completed using the revised route: its hero/detail calls took
+about 21/24 seconds, batch collection/location/publication/colour context was
+reused, no schema rediscovery or upload widget was needed, and product/variant/
+colour/media/inventory updates were combined after file-readiness and quantity
+checks. Final reads verified both listings and an empty queue. Reuse this route
+without dropping image QA, compare-and-set stock guards or logged register writes.
+
 ## Resolve once per batch
 
 - Confirm store/domain/currency; the live store's myshopifyDomain is

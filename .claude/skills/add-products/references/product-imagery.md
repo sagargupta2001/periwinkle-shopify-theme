@@ -54,6 +54,24 @@ example did not authorize gold zari or a silk finish on this saree.
 
 ## SKZ — unstitched salwar suit sets
 
+Sagar requested a model wearing a salwar kameez visualization on 24 November
+2026. When the source establishes the neckline/front panel, motifs and hem,
+use this prompt. Keep the listing type unstitched and state that the model image
+illustrates one possible tailored look; plain styling trousers are not evidence
+of an included piece. Preserve the evidenced coordinating fabric and trim.
+
+> Create a premium 4:5 Indian fashion editorial of an adult Indian woman wearing
+> a conservative salwar kameez styling visualization made from the ACTUAL
+> unstitched fabric. Preserve [base colour], [neckline decoration], [motifs and
+> spacing], [hem/border] and [visible coordinating fabric/trim]. Use a simple
+> silhouette and plain sleeves/trousers as styling without invented decorative
+> details. Show the front and neckline clearly in a quiet heritage setting with
+> soft daylight. Do not imply the tailored cut is supplied or invent additional
+> matching pieces, fabric composition, embroidery or a reverse view.
+
+If the source cannot establish the defining front design, present the actual
+fabric instead of inventing it:
+
 > Create an Indian fashion editorial featuring an adult model presenting the
 > ACTUAL unstitched fabric set. Arrange/drape only the pieces visible in the
 > reference over restrained plain styling; show [body fabric], [borders] and any
@@ -61,9 +79,9 @@ example did not authorize gold zari or a silk finish on this saree.
 > and texture. Keep it visibly a presentation of unstitched material, not proof of
 > a finished tailored suit. Use a premium 4:5 portrait and quiet heritage setting.
 
-Do not invent a neckline, sleeve cut, matching trousers, dupatta or stitched
-embellishment. A finished-suit visualization needs explicit direction and enough
-design evidence; otherwise showcase the actual fabric without claiming a cut.
+Do not invent neckline decoration, matching trousers, dupatta or stitched
+embellishment. A finished-suit visualization needs enough design evidence;
+otherwise showcase the actual fabric without claiming a cut.
 
 ## RED — ready-made clothing
 
