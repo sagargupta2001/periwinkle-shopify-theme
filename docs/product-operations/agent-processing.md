@@ -118,3 +118,9 @@ model-led hero and one supporting detail. Final Shopify/register reads verified
 both products live, unique SKUs/titles/descriptions, correct prices and one-piece
 tracked inventory, no gift membership and an empty processing queue. Zero shipping
 weights remain the known store setup limitation. See [the batch audit](test-report.md#first-real-two-product-batch--22-november-2026).
+
+The 24 November batch subsequently published SAR-003, SAR-004, SAR-005 and
+SKZ-001 with model heroes, supporting details and verified LIVE register entries.
+It also verified the current Salwar Kameez taxonomy and the merchant-requested
+tailored visualization for unstitched sets. Later submissions remain queued for
+the next invocation; see [the four-product audit](test-report.md#four-product-batch--24-november-2026).

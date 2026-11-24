@@ -1,5 +1,41 @@
 # Test report
 
+## Four-product batch — 24 November 2026
+
+The frozen batch completed all four submissions, one pasted source photo per
+SKU, with verified Online Store publication and logged LIVE register entries:
+
+| SKU | Product | Selling price |
+|---|---|---|
+| PBS-SAR-003 | [Teal Blue Saree with Pink Striped Pallu](https://periwinklebysherry.com/products/teal-blue-saree-with-pink-striped-pallu) | ₹2,999 |
+| PBS-SAR-004 | [Yellow Saree with Taupe Geometric Pallu](https://periwinklebysherry.com/products/yellow-saree-with-taupe-geometric-pallu) | ₹12,500 |
+| PBS-SAR-005 | [Plum Checked Saree with Teal Patterned Pallu](https://periwinklebysherry.com/products/plum-checked-saree-with-teal-patterned-pallu) | ₹11,500 |
+| PBS-SKZ-001 | [Black Unstitched Salwar Suit with Colourful Geometric Motifs](https://periwinklebysherry.com/products/black-unstitched-salwar-suit-with-colourful-geometric-motifs) | ₹7,850 |
+
+Fresh Shopify and register reads verified exact SKUs, matching prices/costs,
+unique titles and descriptions, populated product types, one Default Title
+variant each, tracked quantity one, DENY overselling, taxable false and shipping
+required. All eight images are READY at 1122 × 1402 px, with the intended model
+hero first and one supporting textile detail per product. Each listing has its
+appropriate category collection and existing plain-colour references; none has
+gift tags or gift membership. Historical archived SAR-003 and SKZ-001 listings
+were left untouched. Zero shipping weights remain the existing unresolved setup
+item. No pending transactions, stock requests or register problems were found.
+
+The first Salwar Kameez submission validated the current taxonomy as
+aa-1-23-10, Salwar Kameez & Suit Sets, replacing the stale skill baseline.
+Sagar explicitly requested a model wearing a salwar kameez visualization.
+The hero preserves the photographed neckline, motifs, checked hem and tasselled
+coordinating fabric; the listing identifies the sale as unstitched and the model
+as one possible tailored look. The category prompt records this distinction and
+retains a fabric-presentation fallback when design evidence is insufficient.
+
+The helper preserved submission identity, prices, stock fields and Shared Album
+references while logging processing, canonical URLs and publication. Working
+image copies were deleted after verified upload/publication; private prompts,
+hashes and receipts remain outside Git. Fourteen later NEW submissions were
+visible at the closing audit and were left unclaimed for the next invocation.
+
 ## First real two-product batch — 22 November 2026
 
 The add-products skill completed PBS-SAR-001 and PBS-SAR-002 from the shared

@@ -47,7 +47,7 @@ Resolve category/collections against the current store. Existing baseline:
 |---|---|---|
 | SAR | Saree / aa-1-23-2-1 | periwinkle-sarees |
 | DUP | Dupatta / aa-2-31-4 | frontpage |
-| SKZ | Unstitched Salwar Suit / aa-1-19-4 | periwinkle-salwar-suit-sets |
+| SKZ | Unstitched Salwar Suit / aa-1-23-10 (Salwar Kameez & Suit Sets, verified 24 Nov 2026) | periwinkle-salwar-suit-sets |
 | MIN | Miniature / hg-3 | periwinkle-miniatures |
 | HOM | Actual visible object; discover taxonomy | periwinkle-ceramics for ceramics; verify other objects |
 | JEW | Earrings/necklace/ring; aa-6-6 for earrings, discover others | periwinkle-jewellery-india-hasn-t-seen-yet |
